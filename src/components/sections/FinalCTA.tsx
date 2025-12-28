@@ -5,7 +5,7 @@ export default function FinalCTA() {
     <section className="py-16 md:py-24 bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 md:px-6 text-center">
         <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-text">
-          ¿Quieres recibir el próximo drop?
+          ¿Quieres recibir la próxima publicación?
         </h2>
 
         <div className="mt-8">
@@ -15,7 +15,7 @@ export default function FinalCTA() {
         </div>
 
         <p className="mt-6 text-sm text-muted-2">
-          Solo drops y actualizaciones importantes. Cero spam.
+          Solo publicaciones y actualizaciones importantes. Cero spam.
         </p>
       </div>
     </section>

@@ -4,19 +4,19 @@ import { FinalCTA } from '@/components/sections'
 
 export const metadata: Metadata = {
   title: 'Cómo funciona | ChicImportUSA',
-  description: 'Conoce cómo funcionan los drops de ChicImportUSA. Solo gestionamos pedidos de productos publicados en cada drop.',
+  description: 'Conoce cómo funcionan las publicaciones de ChicImportUSA. Solo gestionamos pedidos de productos disponibles en cada publicación.',
 }
 
 const steps = [
   {
     number: '1',
-    title: 'Drop publicado',
-    description: 'Publicamos por WhatsApp los productos disponibles con fotos, referencias, precios y fecha de cierre del drop.',
+    title: 'Nueva publicación',
+    description: 'Publicamos por WhatsApp los productos disponibles con fotos, referencias, precios y fecha de cierre.',
   },
   {
     number: '2',
     title: 'Selección del producto',
-    description: 'Revisas el drop y eliges lo que te interesa. Solo puedes pedir productos que estén en el drop vigente.',
+    description: 'Revisas la publicación y eliges lo que te interesa. Solo puedes pedir productos de la publicación vigente.',
   },
   {
     number: '3',
@@ -31,7 +31,7 @@ const steps = [
 ]
 
 const doList = [
-  'Publicar drops con productos disponibles',
+  'Publicar productos disponibles periódicamente',
   'Confirmar pedidos por WhatsApp',
   'Acompañar todo el proceso de compra',
   'Transparencia total en cada paso',
@@ -45,16 +45,16 @@ const dontList = [
 
 const faqs = [
   {
-    question: '¿Puedo pedir algo que no esté en el drop?',
-    answer: 'No. Solo gestionamos pedidos de productos publicados en cada drop.',
+    question: '¿Puedo pedir algo que no esté en la publicación?',
+    answer: 'No. Solo gestionamos pedidos de productos disponibles en cada publicación.',
   },
   {
-    question: '¿Cada cuánto hay drops?',
-    answer: 'De forma periódica. Todos los drops se anuncian por WhatsApp.',
+    question: '¿Cada cuánto hay publicaciones?',
+    answer: 'De forma periódica. Todas las publicaciones se anuncian por WhatsApp.',
   },
   {
     question: '¿Los productos se agotan?',
-    answer: 'Sí. Los drops tienen cupos limitados y fecha de cierre.',
+    answer: 'Sí. Las publicaciones tienen cupos limitados y fecha de cierre.',
   },
 ]
 
@@ -68,9 +68,9 @@ export default function ComoFuncionaPage() {
             Cómo comprar en ChicImportUSA
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-muted max-w-3xl">
-            ChicImportUSA funciona por drops.{' '}
+            ChicImportUSA funciona por publicaciones periódicas.{' '}
             <strong className="text-text font-semibold">
-              Solo se gestionan pedidos de productos publicados en el drop vigente.
+              Solo se gestionan pedidos de productos disponibles en la publicación vigente.
             </strong>
           </p>
         </div>

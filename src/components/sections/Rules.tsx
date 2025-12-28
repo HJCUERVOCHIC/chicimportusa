@@ -1,6 +1,6 @@
 const rules = [
-  { type: 'yes', text: 'Solo productos publicados en cada drop' },
-  { type: 'yes', text: 'Drops con cupos y fecha de cierre' },
+  { type: 'yes', text: 'Solo productos de cada publicación' },
+  { type: 'yes', text: 'Publicaciones con cupos y fecha de cierre' },
   { type: 'no', text: 'No búsquedas personalizadas' },
   { type: 'no', text: 'No stock permanente' },
 ]

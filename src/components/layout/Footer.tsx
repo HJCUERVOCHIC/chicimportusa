@@ -10,7 +10,7 @@ export default function Footer() {
           <div className="space-y-4">
             <p className="font-semibold text-text text-lg">ChicImportUSA</p>
             <p className="text-sm leading-relaxed text-muted">
-              Drops periódicos de moda original desde USA
+              Publicaciones periódicas de moda original desde USA
             </p>
             <Button isWhatsApp>
               Unirme al WhatsApp
@@ -23,8 +23,8 @@ export default function Footer() {
               <Link href="/como-funciona" className="hover:text-text transition">
                 Cómo funciona
               </Link>
-              <Link href="/drops-publicados" className="hover:text-text transition">
-                Drops publicados
+              <Link href="/publicaciones" className="hover:text-text transition">
+                Publicaciones
               </Link>
             </div>
             
@@ -43,7 +43,7 @@ export default function Footer() {
         {/* Nota legal */}
         <div className="mt-8 pt-8 border-t border-border">
           <p className="text-sm leading-relaxed text-muted">
-            ChicImportUSA gestiona pedidos exclusivamente sobre productos publicados en cada drop. 
+            ChicImportUSA gestiona pedidos exclusivamente sobre productos en cada publicación. 
             No manejamos stock permanente ni búsqueda de productos por encargo.
           </p>
         </div>

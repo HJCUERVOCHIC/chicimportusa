@@ -3,13 +3,13 @@ import { Card, Button } from '@/components/ui'
 const steps = [
   {
     number: '1',
-    title: 'Publicamos un drop por WhatsApp',
+    title: 'Publicamos productos por WhatsApp',
     description: 'Anunciamos productos disponibles con fotos, referencias y precios.',
   },
   {
     number: '2',
-    title: 'Eliges dentro del drop',
-    description: 'Solo puedes pedir lo que está publicado en ese drop específico.',
+    title: 'Eliges de la publicación',
+    description: 'Solo puedes pedir lo que está en esa publicación específica.',
   },
   {
     number: '3',
@@ -49,7 +49,7 @@ export default function HowItWorks() {
 
         <div className="mt-10 text-center">
           <Button isWhatsApp>
-            Quiero recibir el próximo drop
+            Quiero recibir la próxima publicación
           </Button>
         </div>
       </div>

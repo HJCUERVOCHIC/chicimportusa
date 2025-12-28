@@ -7,14 +7,14 @@ export default function Hero() {
         <div className="max-w-3xl">
           {/* H1 */}
           <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-text">
-            Drops de moda original desde USA, por WhatsApp
+            Moda original desde USA, por WhatsApp
           </h1>
 
           {/* Subtítulo */}
           <p className="mt-6 text-lg md:text-xl leading-relaxed text-muted">
-            Publicamos productos disponibles en drops periódicos.{' '}
+            Publicamos productos disponibles de forma periódica.{' '}
             <strong className="text-text font-semibold">
-              Solo se pueden pedir los productos anunciados en cada drop.
+              Solo se pueden pedir los productos anunciados en cada publicación.
             </strong>
           </p>
 

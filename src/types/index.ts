@@ -1,6 +1,6 @@
 // Tipos para el modelo de datos de ChicImportUSA
 
-export type DropStatus = 'active' | 'closed'
+export type PublicacionStatus = 'active' | 'closed'
 export type ProductStatus = 'available' | 'closed'
 
 export interface Product {
@@ -13,16 +13,16 @@ export interface Product {
   status: ProductStatus
 }
 
-export interface Drop {
+export interface Publicacion {
   id: string
   title: string
   date: string
-  status: DropStatus
+  status: PublicacionStatus
   products: Product[]
 }
 
-export interface DropsData {
-  drops: Drop[]
+export interface PublicacionesData {
+  publicaciones: Publicacion[]
 }
 
 // Tipos para testimonios

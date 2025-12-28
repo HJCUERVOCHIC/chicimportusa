@@ -28,13 +28,13 @@ export default function ProductCard({ product }: ProductCardProps) {
         <p className="text-sm font-medium text-text">{product.price_ref}</p>
         
         <div className="pt-2 flex items-center justify-between gap-2">
-          <Badge>Drop cerrado</Badge>
+          <Badge>Publicación cerrada</Badge>
           <Button 
             variant="ghost" 
             isWhatsApp 
             className="text-sm px-3 py-1.5"
           >
-            Recibir drops
+            Recibir publicaciones
           </Button>
         </div>
       </div>

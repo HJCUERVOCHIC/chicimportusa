@@ -1,12 +1,12 @@
 # ChicImportUSA
 
-Sitio web oficial de ChicImportUSA - Drops de moda original desde USA por WhatsApp.
+Sitio web oficial de ChicImportUSA - Moda original desde USA por WhatsApp.
 
 ## 🎯 Objetivo
 
 Este sitio **NO es un e-commerce tradicional**. Su objetivo es:
 - Construir confianza y marca
-- Explicar el modelo de drops
+- Explicar el modelo de publicaciones periódicas
 - Mostrar referencias de productos publicados
 - Llevar usuarios a WhatsApp (único canal de pedidos)
 
@@ -25,13 +25,13 @@ src/
 ├── app/                    # App Router (páginas)
 │   ├── page.tsx           # Home
 │   ├── como-funciona/     # Cómo funciona
-│   ├── drops-publicados/  # Drops publicados
+│   ├── publicaciones/     # Publicaciones
 │   └── whatsapp/          # Landing WhatsApp
 ├── components/
 │   ├── ui/                # Componentes base (Button, Card, Badge)
 │   ├── layout/            # Header, Footer
 │   └── sections/          # Secciones reutilizables
-├── data/                  # Datos mock (drops, testimonios)
+├── data/                  # Datos mock (publicaciones, testimonios)
 ├── lib/                   # Utilidades
 └── types/                 # Tipos TypeScript
 ```
@@ -67,8 +67,8 @@ npm start
 
 ## 📋 Reglas de Negocio
 
-- ✅ Solo productos publicados en cada drop
-- ✅ Drops con cupos y fecha de cierre
+- ✅ Solo productos de cada publicación
+- ✅ Publicaciones con cupos y fecha de cierre
 - ❌ No búsquedas personalizadas
 - ❌ No stock permanente
 

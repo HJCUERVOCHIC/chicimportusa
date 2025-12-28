@@ -1,5 +1,5 @@
 import { Card, Button } from '@/components/ui'
-import { testimonialsData } from '@/data/drops'
+import { testimonialsData } from '@/data/publicaciones'
 
 export default function Testimonials() {
   return (
@@ -32,8 +32,8 @@ export default function Testimonials() {
         </div>
 
         <div className="mt-10 text-center">
-          <Button variant="secondary" href="/drops-publicados">
-            Ver drops publicados
+          <Button variant="secondary" href="/publicaciones">
+            Ver publicaciones
           </Button>
         </div>
       </div>

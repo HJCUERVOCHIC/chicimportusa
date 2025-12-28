@@ -8,7 +8,7 @@ import { WHATSAPP_LINK } from '@/types'
 const navLinks = [
   { href: '/', label: 'Inicio' },
   { href: '/como-funciona', label: 'Cómo funciona' },
-  { href: '/drops-publicados', label: 'Drops publicados' },
+  { href: '/publicaciones', label: 'Publicaciones' },
 ]
 
 export default function Header() {

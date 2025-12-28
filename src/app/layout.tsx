@@ -11,12 +11,12 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'ChicImportUSA | Drops de moda original desde USA',
-  description: 'Drops periódicos de moda original desde USA. Tenis, ropa y accesorios de marcas reconocidas. Solo productos publicados en cada drop.',
-  keywords: ['drops', 'moda', 'USA', 'tenis', 'sneakers', 'ropa', 'importación', 'Colombia'],
+  title: 'ChicImportUSA | Moda original desde USA',
+  description: 'Publicaciones periódicas de moda original desde USA. Tenis, ropa y accesorios de marcas reconocidas. Solo productos disponibles en cada publicación.',
+  keywords: ['moda', 'USA', 'tenis', 'sneakers', 'ropa', 'importación', 'Colombia', 'publicaciones'],
   openGraph: {
-    title: 'ChicImportUSA | Drops de moda original desde USA',
-    description: 'Drops periódicos de moda original desde USA por WhatsApp',
+    title: 'ChicImportUSA | Moda original desde USA',
+    description: 'Publicaciones periódicas de moda original desde USA por WhatsApp',
     url: 'https://chicimportusa.com',
     siteName: 'ChicImportUSA',
     locale: 'es_CO',
