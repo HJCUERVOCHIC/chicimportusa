@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { PortableText } from '@portabletext/react'
+import { PortableText, PortableTextComponents } from '@portabletext/react'
 import { Button } from '@/components/ui'
 import { FinalCTA } from '@/components/sections'
 import { getPostBySlug, getAllPostSlugs } from '@/sanity/lib/fetchers'
@@ -48,10 +48,9 @@ export async function generateMetadata({
 }
 
 // Componentes personalizados para Portable Text
-const portableTextComponents = {
+const portableTextComponents: PortableTextComponents = {
   types: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    image: ({ value }: { value: any }) => {
+    image: ({ value }) => {
       const imageUrl = urlForImage(value)?.width(800).auto('format').url()
       if (!imageUrl) return null
       
@@ -59,12 +58,12 @@ const portableTextComponents = {
         <figure className="my-8">
           <Image
             src={imageUrl}
-            alt={value.alt || 'Imagen del artículo'}
+            alt={value?.alt || 'Imagen del artículo'}
             width={800}
             height={500}
             className="rounded-lg w-full"
           />
-          {value.caption && (
+          {value?.caption && (
             <figcaption className="text-center text-sm text-muted mt-2">
               {value.caption}
             </figcaption>
@@ -74,11 +73,12 @@ const portableTextComponents = {
     },
   },
   marks: {
-    link: ({ children, value }: { children: React.ReactNode; value: { href: string } }) => {
-      const isExternal = value.href.startsWith('http')
+    link: ({ children, value }) => {
+      const href = value?.href || '#'
+      const isExternal = href.startsWith('http')
       return (
         <a
-          href={value.href}
+          href={href}
           className="text-accent hover:underline"
           target={isExternal ? '_blank' : undefined}
           rel={isExternal ? 'noopener noreferrer' : undefined}
@@ -89,18 +89,18 @@ const portableTextComponents = {
     },
   },
   block: {
-    h2: ({ children }: { children?: React.ReactNode }) => (
+    h2: ({ children }) => (
       <h2 className="text-2xl font-semibold text-text mt-8 mb-4">{children}</h2>
     ),
-    h3: ({ children }: { children?: React.ReactNode }) => (
+    h3: ({ children }) => (
       <h3 className="text-xl font-semibold text-text mt-6 mb-3">{children}</h3>
     ),
-    blockquote: ({ children }: { children?: React.ReactNode }) => (
+    blockquote: ({ children }) => (
       <blockquote className="border-l-4 border-accent pl-4 my-6 italic text-muted">
         {children}
       </blockquote>
     ),
-    normal: ({ children }: { children?: React.ReactNode }) => (
+    normal: ({ children }) => (
       <p className="text-muted leading-relaxed mb-4">{children}</p>
     ),
   },
