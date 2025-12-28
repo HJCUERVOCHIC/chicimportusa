@@ -18,7 +18,7 @@ export default function Testimonials() {
           {testimonialsData.map((testimonial) => (
             <Card key={testimonial.id} variant="soft">
               <p className="text-muted leading-relaxed">
-                "{testimonial.text}"
+                &ldquo;{testimonial.text}&rdquo;
               </p>
               <div className="mt-4 pt-4 border-t border-border">
                 <p className="font-semibold text-text">{testimonial.name}</p>
