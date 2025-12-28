@@ -1,14 +1,23 @@
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
 
 // Tipos de documentos de Sanity que manejamos
 type DocumentType = 'banner' | 'testimonial' | 'post'
 
-// Mapeo de tipo de documento a rutas a revalidar
-const pathsToRevalidate: Record<DocumentType, string[]> = {
-  banner: ['/'],
-  testimonial: ['/'],
-  post: ['/', '/noticias'],
+// Mapeo de tipo de documento a tags y rutas
+const revalidationConfig: Record<DocumentType, { tags: string[], paths: string[] }> = {
+  banner: {
+    tags: ['banners'],
+    paths: ['/'],
+  },
+  testimonial: {
+    tags: ['testimonials'],
+    paths: ['/'],
+  },
+  post: {
+    tags: ['posts'],
+    paths: ['/', '/noticias'],
+  },
 }
 
 export async function POST(request: NextRequest) {
@@ -29,28 +38,42 @@ export async function POST(request: NextRequest) {
     // Sanity envía el tipo de documento en _type
     const documentType = body._type as DocumentType
     
-    if (!documentType || !pathsToRevalidate[documentType]) {
+    if (!documentType || !revalidationConfig[documentType]) {
       return NextResponse.json(
         { message: 'Unknown document type', type: documentType },
         { status: 400 }
       )
     }
 
-    // Revalidar las rutas correspondientes
-    const paths = pathsToRevalidate[documentType]
-    
-    for (const path of paths) {
-      revalidatePath(path)
+    const config = revalidationConfig[documentType]
+    const revalidatedTags: string[] = []
+    const revalidatedPaths: string[] = []
+
+    // Revalidar tags (más eficiente)
+    for (const tag of config.tags) {
+      revalidateTag(tag)
+      revalidatedTags.push(tag)
     }
 
-    // Si es un post, también revalidar la página específica
+    // Revalidar rutas
+    for (const path of config.paths) {
+      revalidatePath(path)
+      revalidatedPaths.push(path)
+    }
+
+    // Si es un post, también revalidar la página específica y su tag
     if (documentType === 'post' && body.slug?.current) {
-      revalidatePath(`/noticias/${body.slug.current}`)
+      const slug = body.slug.current
+      revalidateTag(`post-${slug}`)
+      revalidatePath(`/noticias/${slug}`)
+      revalidatedTags.push(`post-${slug}`)
+      revalidatedPaths.push(`/noticias/${slug}`)
     }
 
     return NextResponse.json({
       revalidated: true,
-      paths,
+      tags: revalidatedTags,
+      paths: revalidatedPaths,
       documentType,
       timestamp: new Date().toISOString(),
     })
@@ -63,10 +86,11 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// También permitir GET para pruebas manuales
+// GET para pruebas manuales
 export async function GET(request: NextRequest) {
   const secret = request.nextUrl.searchParams.get('secret')
-  const path = request.nextUrl.searchParams.get('path') || '/'
+  const path = request.nextUrl.searchParams.get('path')
+  const tag = request.nextUrl.searchParams.get('tag')
   
   if (secret !== process.env.REVALIDATE_SECRET) {
     return NextResponse.json(
@@ -76,10 +100,27 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    revalidatePath(path)
+    const result: { path?: string; tag?: string } = {}
+
+    if (tag) {
+      revalidateTag(tag)
+      result.tag = tag
+    }
+
+    if (path) {
+      revalidatePath(path)
+      result.path = path
+    }
+
+    // Si no se especifica nada, revalidar home
+    if (!tag && !path) {
+      revalidatePath('/')
+      result.path = '/'
+    }
+
     return NextResponse.json({
       revalidated: true,
-      path,
+      ...result,
       timestamp: new Date().toISOString(),
     })
   } catch (error) {

@@ -1,4 +1,4 @@
-import { client } from './client'
+import { sanityFetch } from './client'
 import {
   activeBannersQuery,
   publishedTestimonialsQuery,
@@ -16,7 +16,11 @@ import type { Banner, Testimonial, Post, PostSlug } from '@/types/sanity'
 
 export async function getActiveBanners(): Promise<Banner[]> {
   try {
-    return await client.fetch(activeBannersQuery)
+    return await sanityFetch<Banner[]>({
+      query: activeBannersQuery,
+      tags: ['banners'],
+      revalidate: 900, // 15 minutos
+    })
   } catch (error) {
     console.error('Error fetching banners:', error)
     return []
@@ -29,7 +33,11 @@ export async function getActiveBanners(): Promise<Banner[]> {
 
 export async function getPublishedTestimonials(): Promise<Testimonial[]> {
   try {
-    return await client.fetch(publishedTestimonialsQuery)
+    return await sanityFetch<Testimonial[]>({
+      query: publishedTestimonialsQuery,
+      tags: ['testimonials'],
+      revalidate: 1800, // 30 minutos
+    })
   } catch (error) {
     console.error('Error fetching testimonials:', error)
     return []
@@ -38,7 +46,12 @@ export async function getPublishedTestimonials(): Promise<Testimonial[]> {
 
 export async function getFeaturedTestimonials(limit: number = 6): Promise<Testimonial[]> {
   try {
-    return await client.fetch(featuredTestimonialsQuery, { limit })
+    return await sanityFetch<Testimonial[]>({
+      query: featuredTestimonialsQuery,
+      params: { limit },
+      tags: ['testimonials'],
+      revalidate: 1800, // 30 minutos
+    })
   } catch (error) {
     console.error('Error fetching featured testimonials:', error)
     return []
@@ -51,7 +64,12 @@ export async function getFeaturedTestimonials(limit: number = 6): Promise<Testim
 
 export async function getLatestPosts(limit: number = 3): Promise<Post[]> {
   try {
-    return await client.fetch(latestPostsQuery, { limit })
+    return await sanityFetch<Post[]>({
+      query: latestPostsQuery,
+      params: { limit },
+      tags: ['posts'],
+      revalidate: 600, // 10 minutos
+    })
   } catch (error) {
     console.error('Error fetching latest posts:', error)
     return []
@@ -60,7 +78,11 @@ export async function getLatestPosts(limit: number = 3): Promise<Post[]> {
 
 export async function getAllPosts(): Promise<Post[]> {
   try {
-    return await client.fetch(allPostsQuery)
+    return await sanityFetch<Post[]>({
+      query: allPostsQuery,
+      tags: ['posts'],
+      revalidate: 600, // 10 minutos
+    })
   } catch (error) {
     console.error('Error fetching all posts:', error)
     return []
@@ -69,7 +91,12 @@ export async function getAllPosts(): Promise<Post[]> {
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
   try {
-    return await client.fetch(postBySlugQuery, { slug })
+    return await sanityFetch<Post | null>({
+      query: postBySlugQuery,
+      params: { slug },
+      tags: ['posts', `post-${slug}`],
+      revalidate: 600, // 10 minutos
+    })
   } catch (error) {
     console.error('Error fetching post by slug:', error)
     return null
@@ -78,7 +105,11 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 
 export async function getAllPostSlugs(): Promise<PostSlug[]> {
   try {
-    return await client.fetch(allPostSlugsQuery)
+    return await sanityFetch<PostSlug[]>({
+      query: allPostSlugsQuery,
+      tags: ['posts'],
+      revalidate: 3600, // 1 hora
+    })
   } catch (error) {
     console.error('Error fetching post slugs:', error)
     return []
