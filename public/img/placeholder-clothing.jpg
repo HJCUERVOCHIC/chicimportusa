@@ -1,0 +1,5 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="400" fill="#F3F4F6"/>
+  <path d="M160 140L200 120L240 140L260 180L240 180L240 280H160V180L140 180L160 140Z" stroke="#9CA3AF" stroke-width="2" fill="none"/>
+  <text x="200" y="320" text-anchor="middle" fill="#9CA3AF" font-family="system-ui" font-size="14">Imagen no disponible</text>
+</svg>

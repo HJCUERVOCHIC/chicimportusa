@@ -1,0 +1,6 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="400" fill="#F3F4F6"/>
+  <path d="M200 140C200 140 140 180 120 220C100 260 120 280 160 280H280C300 280 320 260 300 220C280 180 200 140 200 140Z" stroke="#9CA3AF" stroke-width="2" fill="none"/>
+  <ellipse cx="200" cy="280" rx="80" ry="20" fill="#E5E7EB"/>
+  <text x="200" y="320" text-anchor="middle" fill="#9CA3AF" font-family="system-ui" font-size="14">Imagen no disponible</text>
+</svg>
