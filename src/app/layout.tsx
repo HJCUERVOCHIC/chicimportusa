@@ -8,56 +8,25 @@ const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
   display: 'swap',
-  preload: true,
 })
 
-const BASE_URL = 'https://chicimportusa.com'
-
 export const viewport: Viewport = {
-  themeColor: '#D90429',
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 5,
+  themeColor: '#D90429',
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL(BASE_URL),
+  metadataBase: new URL('https://chicimportusa.com'),
   title: {
-    default: 'ChicImportUSA | Moda original desde USA',
+    default: 'ChicImportUSA | Tenis importados desde Estados Unidos',
     template: '%s | ChicImportUSA',
   },
-  description: 'Publicaciones periódicas de moda original desde USA. Tenis, ropa y accesorios de marcas reconocidas. Envíos a toda Colombia.',
-  keywords: ['moda USA', 'tenis originales', 'sneakers Colombia', 'ropa importada', 'Nike', 'Jordan', 'New Balance', 'importación ropa', 'moda streetwear'],
+  description: 'Publicaciones periódicas de tenis deportivos y casuales importados desde Estados Unidos. Productos seleccionados, proceso claro y gestión directa por WhatsApp.',
+  keywords: ['tenis importados', 'tenis USA', 'tenis deportivos', 'tenis casuales', 'importaciones Colombia', 'ChicImportUSA'],
   authors: [{ name: 'ChicImportUSA' }],
   creator: 'ChicImportUSA',
   publisher: 'ChicImportUSA',
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
-  openGraph: {
-    title: 'ChicImportUSA | Moda original desde USA',
-    description: 'Publicaciones periódicas de moda original desde USA. Tenis, ropa y accesorios por WhatsApp.',
-    url: BASE_URL,
-    siteName: 'ChicImportUSA',
-    locale: 'es_CO',
-    type: 'website',
-    images: [
-      {
-        url: '/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'ChicImportUSA - Moda original desde USA',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'ChicImportUSA | Moda original desde USA',
-    description: 'Publicaciones periódicas de moda original desde USA por WhatsApp.',
-    images: ['/og-image.jpg'],
-  },
   robots: {
     index: true,
     follow: true,
@@ -69,10 +38,43 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  verification: {
-    // Agregar cuando tengas los códigos de verificación
-    // google: 'tu-codigo-google',
+  alternates: {
+    canonical: 'https://chicimportusa.com',
   },
+  openGraph: {
+    type: 'website',
+    locale: 'es_CO',
+    url: 'https://chicimportusa.com',
+    siteName: 'ChicImportUSA',
+    title: 'ChicImportUSA | Tenis importados desde Estados Unidos',
+    description: 'Publicaciones periódicas de tenis deportivos y casuales importados desde Estados Unidos. Productos seleccionados, proceso claro y gestión directa por WhatsApp.',
+    images: [
+      {
+        url: 'https://chicimportusa.com/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'ChicImportUSA - Tenis importados desde Estados Unidos',
+        type: 'image/jpeg',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'ChicImportUSA | Tenis importados desde Estados Unidos',
+    description: 'Publicaciones periódicas de tenis deportivos y casuales importados desde Estados Unidos.',
+    images: ['https://chicimportusa.com/og-image.jpg'],
+    creator: '@chicimportusa',
+  },
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
+  manifest: '/manifest.json',
 }
 
 export default function RootLayout({
@@ -82,17 +84,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" className={inter.variable}>
-      <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/manifest.json" />
-      </head>
       <body className="font-sans antialiased bg-bg text-text">
         <Header />
-        <main className="min-h-screen">
-          {children}
-        </main>
+        <main>{children}</main>
         <Footer />
       </body>
     </html>
