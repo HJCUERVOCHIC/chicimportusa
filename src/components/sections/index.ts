@@ -7,3 +7,4 @@ export { default as FinalCTA } from './FinalCTA'
 export { default as BannerCarousel } from './BannerCarousel'
 export { default as TestimonialsDynamic } from './TestimonialsDynamic'
 export { default as LatestNews } from './LatestNews'
+
