@@ -7,7 +7,7 @@ export default function Hero() {
       {/* Imagen de fondo */}
       <Image
         src="/images/hero-tenis.jpg"
-        alt="Productos importados desde Estados Unidos"
+        alt="Tenis importados desde Estados Unidos"
         fill
         priority
         className="object-cover object-bottom"
@@ -22,12 +22,12 @@ export default function Hero() {
       <div className="relative z-10 max-w-4xl mx-auto px-4 md:px-6 text-center">
         {/* H1 Principal */}
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-tight">
-          Tenis, ropa y accesorios importados desde Estados Unidos
+          Tenis importados desde Estados Unidos
         </h1>
 
         {/* Subtítulo */}
         <p className="mt-4 md:mt-6 text-base sm:text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed">
-          Publicaciones periódicas con referencias disponibles, gestionadas directamente por WhatsApp.
+          Ropa y accesorios disponibles según publicación.
         </p>
 
         {/* Microtexto */}
