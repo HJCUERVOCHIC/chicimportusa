@@ -4,27 +4,27 @@ const categories = [
   {
     title: 'Tenis Deportivos',
     description: 'Running, basketball, training y más de las mejores marcas.',
-    image: '/images/category-deportivos.jpg',
+    image: '/img/categoria-deportivos.jpg',
   },
   {
     title: 'Tenis Casuales',
     description: 'Sneakers y estilos urbanos para el día a día.',
-    image: '/images/category-casuales.jpg',
+    image: '/img/categoria-casuales.jpg',
   },
   {
     title: 'Ropa Deportiva',
     description: 'Conjuntos, camisetas, shorts y más para entrenar con estilo.',
-    image: '/images/category-ropa-deportiva.jpg',
+    image: '/img/categoria-ropa-deportiva.jpg',
   },
   {
     title: 'Ropa Casual',
     description: 'Hoodies, t-shirts, joggers y prendas urbanas importadas.',
-    image: '/images/category-ropa-casual.jpg',
+    image: '/img/categoria-ropa-casual.jpg',
   },
   {
     title: 'Accesorios',
     description: 'Gorras, bolsos, medias y complementos de marca.',
-    image: '/images/category-accesorios.jpg',
+    image: '/img/categoria-accesorios.jpg',
   },
 ]
 
