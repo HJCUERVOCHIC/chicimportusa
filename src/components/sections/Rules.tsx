@@ -1,51 +1,43 @@
+import { CheckCircle } from 'lucide-react'
+
 const rules = [
-  'Solo productos de cada publicación',
-  'Publicaciones con cupos y fecha de cierre',
-  'No búsquedas personalizadas',
-  'No stock permanente',
+  'Solo gestionamos productos de la publicación vigente',
+  'No buscamos referencias personalizadas ni por encargo',
+  'No manejamos stock permanente',
+  'Acompañamos todo el proceso hasta la entrega',
+  'Precios y tiempos claros desde el inicio',
+  'Comunicación directa y transparente por WhatsApp',
 ]
 
 export default function Rules() {
   return (
-    <section className="py-16 md:py-24 bg-[#F7F7F7]">
-      <div className="max-w-4xl mx-auto px-4 md:px-6">
-        {/* Título alineado a la izquierda */}
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-text tracking-tight">
-          Proceso claro y transparente
-        </h2>
+    <section className="py-16 md:py-24 bg-[#FAFAFA]">
+      <div className="max-w-6xl mx-auto px-4 md:px-6">
+        {/* Contenedor centrado */}
+        <div className="max-w-3xl mx-auto">
+          {/* Título */}
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-text tracking-tight text-center">
+            Proceso claro y transparente
+          </h2>
 
-        {/* Texto introductorio */}
-        <p className="mt-4 md:mt-5 text-base md:text-lg text-muted leading-relaxed max-w-2xl">
-          Trabajamos con un modelo simple que nos permite ofrecer productos originales 
-          a precios justos, manteniendo el control del proceso de principio a fin.
-        </p>
+          {/* Subtítulo */}
+          <p className="mt-4 md:mt-5 text-base md:text-lg text-muted text-center leading-relaxed">
+            Queremos que sepas exactamente cómo trabajamos antes de hacer tu primer pedido.
+          </p>
 
-        {/* Línea divisoria sutil */}
-        <div className="mt-8 md:mt-10 border-t border-gray-200" />
-
-        {/* Lista de reglas - vertical simple */}
-        <ul className="mt-8 md:mt-10 space-y-4 md:space-y-5">
-          {rules.map((rule, index) => (
-            <li 
-              key={index}
-              className="flex items-start gap-4"
-            >
-              {/* Marcador sutil - línea vertical */}
-              <span 
-                className="flex-shrink-0 w-0.5 h-6 mt-0.5 bg-gray-300 rounded-full" 
-                aria-hidden="true"
-              />
-              <span className="text-base md:text-lg text-text leading-relaxed">
-                {rule}
-              </span>
-            </li>
-          ))}
-        </ul>
-
-        {/* Microtexto final */}
-        <p className="mt-10 md:mt-12 text-sm text-muted-2 leading-relaxed max-w-xl">
-          Este modelo nos permite mantener precios justos, control del proceso y total transparencia.
-        </p>
+          {/* Lista de reglas */}
+          <ul className="mt-10 md:mt-12 space-y-4">
+            {rules.map((rule, index) => (
+              <li
+                key={index}
+                className="flex items-start gap-3 p-4 bg-white rounded-xl border border-gray-100"
+              >
+                <CheckCircle className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+                <span className="text-base text-text leading-relaxed">{rule}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   )

@@ -1,13 +1,14 @@
 const steps = [
   {
     number: '01',
-    title: 'Publicamos tenis disponibles',
-    description: 'Mostramos las referencias que están disponibles en cada publicación.',
+    title: 'Publicamos productos disponibles',
+    description:
+      'Compartimos por WhatsApp las referencias de tenis, ropa y accesorios disponibles con precios y fecha de cierre.',
   },
   {
     number: '02',
     title: 'Seleccionas dentro de la publicación',
-    description: 'Eliges los tenis que te interesan entre las opciones publicadas.',
+    description: 'Eliges los productos que te interesan entre las opciones publicadas.',
   },
   {
     number: '03',
@@ -17,7 +18,7 @@ const steps = [
   {
     number: '04',
     title: 'Te acompañamos hasta la entrega',
-    description: 'Seguimos el proceso contigo hasta que recibas tus tenis en Colombia.',
+    description: 'Seguimos el proceso contigo hasta que recibas tu pedido en Colombia.',
   },
 ]
 
@@ -32,7 +33,7 @@ export default function HowItWorks() {
 
         {/* Texto introductorio */}
         <p className="mt-5 md:mt-6 text-base md:text-lg text-muted text-center max-w-2xl mx-auto leading-relaxed">
-          ChicImportUSA funciona a través de publicaciones periódicas de tenis deportivos y casuales disponibles. 
+          ChicImportUSA funciona a través de publicaciones periódicas de tenis, ropa casual, deportiva y accesorios disponibles. 
           Cada publicación incluye referencias específicas que pueden solicitarse durante un tiempo determinado.
         </p>
 
