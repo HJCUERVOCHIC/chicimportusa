@@ -6,7 +6,7 @@ export default function Hero() {
     <section className="relative min-h-[85vh] md:min-h-[90vh] flex items-center justify-center overflow-hidden">
       {/* Imagen de fondo */}
       <Image
-        src="/images/hero-tenis.jpg"
+        src="/img/hero-tenis.jpg"
         alt="Tenis importados desde Estados Unidos"
         fill
         priority
