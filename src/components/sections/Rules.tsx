@@ -1,5 +1,3 @@
-import { CheckCircle } from 'lucide-react'
-
 const rules = [
   'Solo gestionamos productos de la publicación vigente',
   'No buscamos referencias personalizadas ni por encargo',
@@ -8,6 +6,24 @@ const rules = [
   'Precios y tiempos claros desde el inicio',
   'Comunicación directa y transparente por WhatsApp',
 ]
+
+function CheckIcon() {
+  return (
+    <svg
+      className="w-5 h-5 text-accent flex-shrink-0"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M5 13l4 4L19 7"
+      />
+    </svg>
+  )
+}
 
 export default function Rules() {
   return (
@@ -32,7 +48,9 @@ export default function Rules() {
                 key={index}
                 className="flex items-start gap-3 p-4 bg-white rounded-xl border border-gray-100"
               >
-                <CheckCircle className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+                <span className="mt-0.5">
+                  <CheckIcon />
+                </span>
                 <span className="text-base text-text leading-relaxed">{rule}</span>
               </li>
             ))}
