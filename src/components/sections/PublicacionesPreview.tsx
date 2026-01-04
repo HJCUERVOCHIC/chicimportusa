@@ -3,7 +3,7 @@
 import { useState, useCallback } from 'react'
 import Link from 'next/link'
 
-const CATALOG_URL = 'https://chicimportusa.vercel.app/catalogo'
+const CATALOG_URL = 'https://chicimportusa.vercel.app/catalogo?embed=1'
 const WHATSAPP_URL = 'https://wa.me/573150619888'
 
 export default function PublicacionesPreview() {

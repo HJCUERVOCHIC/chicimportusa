@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 
-const CATALOG_URL = 'https://chicimportusa.vercel.app/catalogo'
+const CATALOG_URL = 'https://chicimportusa.vercel.app/catalogo?embed=1'
 const WHATSAPP_URL = 'https://wa.me/573150619888'
 const LOAD_TIMEOUT = 15000 // 15 segundos timeout
 
