@@ -12,6 +12,11 @@ const categories = [
     image: '/img/categoria-casuales.jpg',
   },
   {
+    title: 'Ediciones Especiales',
+    description: 'Lanzamientos exclusivos y colaboraciones limitadas.',
+    image: '/img/categoria-ediciones.jpg',
+  },
+  {
     title: 'Ropa Deportiva',
     description: 'Conjuntos, camisetas, shorts y más para entrenar con estilo.',
     image: '/img/categoria-ropa-deportiva.jpg',
