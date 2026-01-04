@@ -8,6 +8,7 @@ import {
   BannerCarousel,
   TestimonialsDynamic,
   LatestNews,
+  PublicacionesPreview,
 } from '@/components/sections'
 import { 
   getActiveBanners, 
@@ -41,6 +42,9 @@ export default async function HomePage() {
       <HowItWorks />
       <Rules />
       <Categories />
+      
+      {/* Preview de publicaciones con enlace a página completa */}
+      <PublicacionesPreview />
       
       {/* Testimonios: usar dinámicos si hay, sino estáticos */}
       {hasTestimonials ? (
