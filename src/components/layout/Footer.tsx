@@ -46,6 +46,18 @@ export default function Footer() {
             ChicImportUSA gestiona pedidos exclusivamente sobre productos en cada publicación. 
             No manejamos stock permanente ni búsqueda de productos por encargo.
           </p>
+          
+          {/* Enlace de administración - discreto */}
+          <div className="mt-6 flex justify-end">
+            <a 
+              href="https://admin.chicimportusa.com/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-xs text-muted-2/50 hover:text-muted transition"
+            >
+              Admin
+            </a>
+          </div>
         </div>
       </div>
     </footer>
