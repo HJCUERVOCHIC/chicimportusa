@@ -25,11 +25,11 @@ export default function Footer() {
             <Link href="/publicaciones" className="hover:text-text transition">
               Publicaciones
             </Link>
-            <Link href="/privacidad" className="hover:text-text transition">
-              Privacidad
+            <Link href="/terminos-y-condiciones" className="hover:text-text transition">
+              Términos y Condiciones
             </Link>
-            <Link href="/terminos" className="hover:text-text transition">
-              Términos
+            <Link href="/politica-de-privacidad" className="hover:text-text transition">
+              Política de Privacidad
             </Link>
             <a 
               href="https://admin.chicimportusa.com/" 
