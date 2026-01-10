@@ -1,6 +1,6 @@
 const rules = [
   'Solo gestionamos productos de la publicación vigente',
-  'No buscamos referencias personalizadas ni por encargo',
+  //'No buscamos referencias personalizadas ni por encargo',
   'No manejamos stock permanente',
   'Acompañamos todo el proceso hasta la entrega',
   'Precios y tiempos claros desde el inicio',
