@@ -9,7 +9,6 @@ import {
   TestimonialsDynamic,
   LatestNews,
   PublicacionesPreview,
-  ProcesoCompra,
 } from '@/components/sections'
 import { 
   getActiveBanners, 
@@ -46,9 +45,6 @@ export default async function HomePage() {
       
       {/* Preview de publicaciones con enlace a página completa */}
       <PublicacionesPreview />
-      
-      {/* Proceso de compra - 5 pasos */}
-      <ProcesoCompra />
       
       {/* Testimonios: usar dinámicos si hay, sino estáticos */}
       {hasTestimonials ? (
