@@ -38,8 +38,8 @@ const doList = [
 ]
 
 const dontList = [
-  'No buscamos productos personalizados ni por encargo',
-  'No recibimos listas para conseguir referencias',
+  //'No buscamos productos personalizados ni por encargo',
+  //'No recibimos listas para conseguir referencias',
   'No manejamos stock permanente',
 ]
 
