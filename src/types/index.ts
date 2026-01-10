@@ -35,5 +35,5 @@ export interface Testimonial {
 }
 
 // Constantes
-export const WHATSAPP_LINK = 'https://wa.me/573150619888'
+export const WHATSAPP_LINK = 'https://chat.whatsapp.com/KXwhlBpFKeh8521CBRvJp6'
 export const WHATSAPP_CTA_TEXT = 'Unirme al WhatsApp'
