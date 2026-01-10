@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { Button } from '@/components/ui'
 
 export default function FinalCTA() {
@@ -19,6 +20,24 @@ export default function FinalCTA() {
           <Button isWhatsApp size="large">
             Unirme al WhatsApp
           </Button>
+          
+          {/* Aviso legal */}
+          <p className="mt-3 text-xs text-white/50 max-w-md mx-auto">
+            Al continuar a WhatsApp, aceptas nuestros{' '}
+            <Link 
+              href="/terminos-y-condiciones" 
+              className="underline hover:text-white/70 transition-colors"
+            >
+              Términos y Condiciones
+            </Link>
+            {' '}y{' '}
+            <Link 
+              href="/politica-de-privacidad" 
+              className="underline hover:text-white/70 transition-colors"
+            >
+              Política de Privacidad
+            </Link>.
+          </p>
         </div>
 
         {/* Microtexto */}
