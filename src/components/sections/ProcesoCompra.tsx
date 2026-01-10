@@ -1,43 +1,42 @@
 'use client'
 
 import Link from 'next/link'
-
-const WHATSAPP_URL = 'https://wa.me/573150619888'
+import { WHATSAPP_LINK } from '@/types'
 
 const pasos = [
   {
     numero: 1,
     titulo: 'Elige tu producto',
     texto: 'Selecciona el producto publicado en el catálogo o en nuestras publicaciones activas.',
-    link: null,
+    conWhatsApp: false,
     nota: null,
   },
   {
     numero: 2,
     titulo: 'Escríbenos por WhatsApp',
     texto: 'Envíanos el enlace o referencia del producto junto con tus datos: talla, color y cualquier detalle importante.',
-    link: WHATSAPP_URL,
+    conWhatsApp: true,
     nota: null,
   },
   {
     numero: 3,
     titulo: 'Confirmación',
     texto: 'Te confirmamos disponibilidad, precio final y tiempos estimados de entrega.',
-    link: null,
+    conWhatsApp: false,
     nota: null,
   },
   {
     numero: 4,
     titulo: 'Pago del 50% para separar',
     texto: 'Una vez confirmado el pedido, realizas el pago del 50% para separar el producto.',
-    link: null,
+    conWhatsApp: false,
     nota: 'Los datos de pago se confirman directamente por WhatsApp.',
   },
   {
     numero: 5,
     titulo: 'Pago restante al llegar',
     texto: 'El 50% restante se paga cuando el producto llegue a Colombia, antes del despacho final.',
-    link: null,
+    conWhatsApp: false,
     nota: null,
   },
 ]
@@ -89,9 +88,9 @@ export default function ProcesoCompra() {
                 <p className="text-gray-600 text-sm leading-relaxed">
                   {paso.texto}
                 </p>
-                {paso.link && (
+                {paso.conWhatsApp && (
                   <a
-                    href={paso.link}
+                    href={WHATSAPP_LINK}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 mt-2 text-sm font-medium text-[#25D366] hover:text-[#20BD5A] transition-colors"
@@ -134,9 +133,9 @@ export default function ProcesoCompra() {
                 <p className="text-gray-600 text-sm leading-relaxed">
                   {paso.texto}
                 </p>
-                {paso.link && (
+                {paso.conWhatsApp && (
                   <a
-                    href={paso.link}
+                    href={WHATSAPP_LINK}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 mt-3 text-sm font-medium text-[#25D366] hover:text-[#20BD5A] transition-colors"
@@ -189,7 +188,7 @@ export default function ProcesoCompra() {
           </button>
           
           <a
-            href={WHATSAPP_URL}
+            href={WHATSAPP_LINK}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-white border-2 border-gray-300 hover:border-gray-400 text-gray-700 hover:text-gray-900 font-semibold rounded-lg transition-colors"

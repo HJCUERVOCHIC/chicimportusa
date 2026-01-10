@@ -2,9 +2,9 @@
 
 import { useState, useCallback } from 'react'
 import Link from 'next/link'
+import { WHATSAPP_LINK } from '@/types'
 
 const CATALOG_URL = 'https://chicimportusa.vercel.app/catalogo?embed=1'
-const WHATSAPP_GROUP_URL = 'https://chat.whatsapp.com/KXwhlBpFKeh8521CBRvJp6'
 
 export default function PublicacionesPreview() {
   const [isLoading, setIsLoading] = useState(true)
@@ -139,7 +139,7 @@ export default function PublicacionesPreview() {
           </Link>
           
           <a
-            href={WHATSAPP_GROUP_URL}
+            href={WHATSAPP_LINK}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-6 py-3 bg-[#25D366] hover:bg-[#20BD5A] text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
