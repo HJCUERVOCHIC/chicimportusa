@@ -7,17 +7,17 @@ export default function Hero() {
     <section className="relative min-h-[85vh] md:min-h-[90vh] flex items-center justify-center overflow-hidden">
       {/* Imagen de fondo */}
       <Image
-        src="/img/hero-tenis.jpg"
-        alt="Productos importados desde Estados Unidos"
+        src="/img/hero-productos.jpg"
+        alt="Productos importados desde Estados Unidos - Tenis, ropa, accesorios y vitaminas"
         fill
         priority
-        className="object-cover object-bottom"
+        className="object-cover object-center"
         sizes="100vw"
         quality={85}
       />
 
-      {/* Overlay sutil */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/20" />
+      {/* Overlay para legibilidad del texto */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-black/30" />
 
       {/* Contenido */}
       <div className="relative z-10 max-w-4xl mx-auto px-4 md:px-6 text-center">
