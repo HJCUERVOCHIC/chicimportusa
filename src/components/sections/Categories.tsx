@@ -17,19 +17,19 @@ const categories = [
     image: '/img/categoria-ediciones.jpg',
   },
   {
-    title: 'Ropa Deportiva',
-    description: 'Conjuntos, camisetas, shorts y más para entrenar con estilo.',
-    image: '/img/categoria-ropa-deportiva.jpg',
-  },
-  {
-    title: 'Ropa Casual',
-    description: 'Hoodies, t-shirts, joggers y prendas urbanas importadas.',
-    image: '/img/categoria-ropa-casual.jpg',
+    title: 'Ropa',
+    description: 'Deportiva y casual, según publicación.',
+    image: '/img/categoria-ropa.jpg',
   },
   {
     title: 'Accesorios',
     description: 'Gorras, bolsos, medias y complementos de marca.',
     image: '/img/categoria-accesorios.jpg',
+  },
+  {
+    title: 'Vitaminas',
+    description: 'Suplementos seleccionados, según publicación.',
+    image: '/img/categoria-vitaminas.jpg',
   },
 ]
 
