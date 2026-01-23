@@ -31,7 +31,7 @@ export default function PublicacionesPreview() {
             Explora nuestros productos
           </h2>
           <p className="mt-4 md:mt-6 text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Descubre las publicaciones disponibles con productos importados desde Estados Unidos. Tenis, ropa y accesorios seleccionados.
+            Descubre las publicaciones disponibles con productos importados desde Estados Unidos. Tenis, ropa, vitaminas y accesorios seleccionados.
           </p>
         </div>
 

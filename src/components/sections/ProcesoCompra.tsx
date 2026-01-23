@@ -188,25 +188,6 @@ export default function ProcesoCompra() {
           </div>
         </div>
 
-        {/* Nota importante */}
-        <div className="mt-12 md:mt-16 bg-white border border-gray-200 rounded-xl p-6 md:p-8 max-w-3xl mx-auto">
-          <div className="flex items-start gap-4">
-            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-              <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <div>
-              <h4 className="text-base font-semibold text-gray-900 mb-2">
-                Importante
-              </h4>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                Solo gestionamos pedidos de productos que estén publicados como activos. Si no ves un producto disponible, espera la próxima publicación o escríbenos para conocer novedades.
-              </p>
-            </div>
-          </div>
-        </div>
-
         {/* CTAs de cierre */}
         <div className="mt-10 md:mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
           <button
