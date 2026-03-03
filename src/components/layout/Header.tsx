@@ -20,7 +20,6 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Cerrar menú móvil con Escape
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === 'Escape' && mobileMenuOpen) {
@@ -31,16 +30,13 @@ export default function Header() {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [mobileMenuOpen]);
 
-  // Bloquear scroll del body cuando el menú está abierto
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
     }
-    return () => {
-      document.body.style.overflow = '';
-    };
+    return () => { document.body.style.overflow = ''; };
   }, [mobileMenuOpen]);
 
   const closeMobileMenu = useCallback(() => setMobileMenuOpen(false), []);
@@ -62,26 +58,23 @@ export default function Header() {
         )}
       >
         <nav
-          className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8"
+          className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2.5 sm:px-6 lg:px-8"
           aria-label="Navegación principal"
         >
-          {/* Logo */}
+          {/* Logo oficial — ya incluye "CHIC IMPORT USA" en la imagen */}
           <Link
             href="/"
-            className="flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429] focus-visible:ring-offset-2 rounded-md"
+            className="flex-shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429] focus-visible:ring-offset-2 rounded-md"
             onClick={closeMobileMenu}
           >
             <Image
-              src="/img/logo.png"
-              alt=""
-              width={36}
-              height={36}
-              className="rounded-full"
+              src="/img/logo-header.png"
+              alt="ChicImportUSA — Inicio"
+              width={119}
+              height={40}
+              className="h-8 w-auto sm:h-10"
               priority
             />
-            <span className="text-lg font-bold text-gray-900 tracking-tight">
-              ChicImportUSA
-            </span>
           </Link>
 
           {/* Nav links — Desktop */}
@@ -123,10 +116,9 @@ export default function Header() {
               </a>
             </div>
 
-            {/* Separador visual — Desktop */}
             <div className="hidden sm:block h-5 w-px bg-gray-200" aria-hidden="true" />
 
-            {/* Botón WhatsApp — SIEMPRE visible, fuera del hamburguesa */}
+            {/* Botón WhatsApp — SIEMPRE visible */}
             <a
               href={WHATSAPP_URL}
               target="_blank"
@@ -166,22 +158,24 @@ export default function Header() {
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-40 md:hidden" role="dialog" aria-modal="true">
-          {/* Backdrop */}
           <div
             className="fixed inset-0 bg-black/20 backdrop-blur-sm"
             onClick={closeMobileMenu}
             aria-hidden="true"
           />
-
-          {/* Panel */}
           <div
             id="mobile-menu"
             className="fixed inset-y-0 right-0 w-full max-w-xs bg-white shadow-xl"
             style={{ overscrollBehavior: 'contain' }}
           >
-            {/* Close */}
             <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-              <span className="text-sm font-semibold text-gray-900">Menú</span>
+              <Image
+                src="/img/logo-header.png"
+                alt=""
+                width={95}
+                height={32}
+                className="h-7 w-auto"
+              />
               <button
                 type="button"
                 aria-label="Cerrar menú"
@@ -192,7 +186,6 @@ export default function Header() {
               </button>
             </div>
 
-            {/* Links */}
             <div className="px-4 py-4 space-y-1">
               {NAV_LINKS.map((link) => (
                 <Link
@@ -206,10 +199,8 @@ export default function Header() {
               ))}
             </div>
 
-            {/* Divider */}
             <div className="mx-4 h-px bg-gray-100" aria-hidden="true" />
 
-            {/* Social */}
             <div className="px-4 py-4">
               <p className="mb-3 text-xs font-medium uppercase tracking-wider text-gray-400">
                 Síguenos

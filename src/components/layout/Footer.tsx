@@ -14,18 +14,16 @@ export default function Footer() {
           <div className="sm:col-span-2 lg:col-span-1">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 rounded-md"
+              className="inline-block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 rounded-md"
             >
+              {/* Logo oficial sobre fondo oscuro — los colores dorados y plateados resaltan naturalmente */}
               <Image
-                src="/img/logo.png"
-                alt=""
-                width={32}
-                height={32}
-                className="rounded-full"
+                src="/img/logo-footer.png"
+                alt="ChicImportUSA — Inicio"
+                width={143}
+                height={48}
+                className="h-10 w-auto"
               />
-              <span className="text-base font-bold text-white tracking-tight">
-                ChicImportUSA
-              </span>
             </Link>
             <p className="mt-3 text-sm leading-relaxed">
               Productos importados desde Estados Unidos. Tenis, perfumes,
