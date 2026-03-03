@@ -1,97 +1,247 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import Link from 'next/link'
-import { Button } from '@/components/ui'
-import { WHATSAPP_LINK } from '@/types'
-
-const navLinks = [
-  { href: '/', label: 'Inicio' },
-  { href: '/como-funciona', label: 'Cómo funciona' },
-  { href: '/publicaciones', label: 'Publicaciones' },
-  { href: '/noticias', label: 'Noticias' },
-]
+import { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { NAV_LINKS, WHATSAPP_URL, SOCIAL_LINKS } from '@/lib/constants';
+import { EVENTS } from '@/lib/analytics';
+import { cn } from '@/lib/utils';
+import { IconInstagram, IconTikTok, IconWhatsApp, IconMenu, IconX } from '@/components/ui/Icons';
 
 export default function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    function handleScroll() {
+      setScrolled(window.scrollY > 10);
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Cerrar menú móvil con Escape
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape' && mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [mobileMenuOpen]);
+
+  // Bloquear scroll del body cuando el menú está abierto
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
+
+  const closeMobileMenu = useCallback(() => setMobileMenuOpen(false), []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-white/90 backdrop-blur">
-      <nav className="max-w-6xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="font-semibold text-xl text-text">
-          ChicImportUSA
-        </Link>
+    <>
+      <a
+        href="#contenido-principal"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[60] focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-gray-900 focus:rounded-lg focus:shadow-lg focus-visible:ring-2 focus-visible:ring-[#D90429]"
+      >
+        Saltar al contenido principal
+      </a>
 
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-muted hover:text-text transition font-medium"
-            >
-              {link.label}
-            </Link>
-          ))}
-          <Button isWhatsApp size="default">
-            Unirme al WhatsApp
-          </Button>
-        </div>
-
-        {/* Mobile Menu Button */}
-        <button
-          className="md:hidden p-2 text-text"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label="Menú"
+      <header
+        className={cn(
+          'sticky top-0 z-50 w-full transition-shadow duration-200',
+          'bg-white/95 backdrop-blur-sm',
+          scrolled && 'shadow-sm border-b border-gray-100'
+        )}
+      >
+        <nav
+          className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8"
+          aria-label="Navegación principal"
         >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+          {/* Logo */}
+          <Link
+            href="/"
+            className="flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429] focus-visible:ring-offset-2 rounded-md"
+            onClick={closeMobileMenu}
           >
-            {mobileMenuOpen ? (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            ) : (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            )}
-          </svg>
-        </button>
-      </nav>
+            <Image
+              src="/img/logo.png"
+              alt=""
+              width={36}
+              height={36}
+              className="rounded-full"
+              priority
+            />
+            <span className="text-lg font-bold text-gray-900 tracking-tight">
+              ChicImportUSA
+            </span>
+          </Link>
 
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden border-t border-border bg-white">
-          <div className="max-w-6xl mx-auto px-4 py-4 space-y-3">
-            {navLinks.map((link) => (
+          {/* Nav links — Desktop */}
+          <div className="hidden md:flex items-center gap-6">
+            {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="block py-2 text-muted hover:text-text transition font-medium"
-                onClick={() => setMobileMenuOpen(false)}
+                className="text-sm font-medium text-gray-600 transition-colors duration-150 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429] focus-visible:ring-offset-2 rounded-sm"
               >
                 {link.label}
               </Link>
             ))}
-            <div className="pt-2">
-              <Button isWhatsApp className="w-full">
-                Unirme al WhatsApp
-              </Button>
+          </div>
+
+          {/* Right section: Social + WhatsApp + Hamburger */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Redes sociales — Desktop */}
+            <div className="hidden sm:flex items-center gap-1">
+              <a
+                href={SOCIAL_LINKS.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram de ChicImportUSA"
+                className="p-2 text-gray-500 transition-colors duration-150 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429] rounded-md"
+                onClick={() => EVENTS.socialClick('instagram')}
+              >
+                <IconInstagram size={18} />
+              </a>
+              <a
+                href={SOCIAL_LINKS.tiktok}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="TikTok de ChicImportUSA"
+                className="p-2 text-gray-500 transition-colors duration-150 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429] rounded-md"
+                onClick={() => EVENTS.socialClick('tiktok')}
+              >
+                <IconTikTok size={18} />
+              </a>
+            </div>
+
+            {/* Separador visual — Desktop */}
+            <div className="hidden sm:block h-5 w-px bg-gray-200" aria-hidden="true" />
+
+            {/* Botón WhatsApp — SIEMPRE visible, fuera del hamburguesa */}
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(
+                'inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold',
+                'bg-[#D90429] text-white',
+                'transition-all duration-150',
+                'hover:bg-[#B80323] active:scale-[0.98]',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429] focus-visible:ring-offset-2'
+              )}
+              onClick={() => EVENTS.whatsappClick('header')}
+            >
+              <IconWhatsApp size={16} className="text-white" />
+              <span className="hidden sm:inline">WhatsApp</span>
+            </a>
+
+            {/* Hamburger — Mobile */}
+            <button
+              type="button"
+              aria-label={mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-menu"
+              className={cn(
+                'md:hidden p-2 -mr-2 text-gray-600',
+                'transition-colors duration-150 hover:text-gray-900',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429] rounded-md'
+              )}
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <IconX /> : <IconMenu />}
+            </button>
+          </div>
+        </nav>
+      </header>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-40 md:hidden" role="dialog" aria-modal="true">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm"
+            onClick={closeMobileMenu}
+            aria-hidden="true"
+          />
+
+          {/* Panel */}
+          <div
+            id="mobile-menu"
+            className="fixed inset-y-0 right-0 w-full max-w-xs bg-white shadow-xl"
+            style={{ overscrollBehavior: 'contain' }}
+          >
+            {/* Close */}
+            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+              <span className="text-sm font-semibold text-gray-900">Menú</span>
+              <button
+                type="button"
+                aria-label="Cerrar menú"
+                className="p-2 -mr-2 text-gray-500 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429] rounded-md"
+                onClick={closeMobileMenu}
+              >
+                <IconX size={20} />
+              </button>
+            </div>
+
+            {/* Links */}
+            <div className="px-4 py-4 space-y-1">
+              {NAV_LINKS.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="flex items-center gap-3 rounded-lg px-3 py-3 text-base font-medium text-gray-700 transition-colors duration-150 hover:bg-gray-50 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429]"
+                  onClick={closeMobileMenu}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+
+            {/* Divider */}
+            <div className="mx-4 h-px bg-gray-100" aria-hidden="true" />
+
+            {/* Social */}
+            <div className="px-4 py-4">
+              <p className="mb-3 text-xs font-medium uppercase tracking-wider text-gray-400">
+                Síguenos
+              </p>
+              <div className="flex items-center gap-2">
+                <a
+                  href={SOCIAL_LINKS.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram de ChicImportUSA"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-600 transition-colors duration-150 hover:bg-gray-50 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429]"
+                  onClick={() => EVENTS.socialClick('instagram')}
+                >
+                  <IconInstagram size={18} />
+                  <span>Instagram</span>
+                </a>
+                <a
+                  href={SOCIAL_LINKS.tiktok}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="TikTok de ChicImportUSA"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-600 transition-colors duration-150 hover:bg-gray-50 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429]"
+                  onClick={() => EVENTS.socialClick('tiktok')}
+                >
+                  <IconTikTok size={18} />
+                  <span>TikTok</span>
+                </a>
+              </div>
             </div>
           </div>
         </div>
       )}
-    </header>
-  )
+    </>
+  );
 }

@@ -1,28 +1,28 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Cómo funciona',
+  title: 'Catálogo',
   description:
-    'Conoce el proceso de compra de productos importados desde Estados Unidos con ChicImportUSA.',
+    'Explora los productos importados disponibles desde Estados Unidos. Tenis, perfumes, ropa y más.',
 };
 
 /**
- * Cómo funciona placeholder — se implementa en Etapa 4
+ * Catálogo placeholder — se implementa en Etapa 2
  */
-export default function ComoFuncionaPage() {
+export default function CatalogoPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
       <div className="text-center">
         <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-          Cómo funciona
+          Catálogo
         </h1>
         <p className="mt-3 text-gray-500">
-          Esta página se rediseña en la&nbsp;Etapa&nbsp;4.
+          Esta página se conectará a la API del catálogo en la&nbsp;Etapa&nbsp;2.
         </p>
         <div className="mt-8 rounded-xl border border-dashed border-gray-300 bg-gray-50 p-12">
           <p className="text-sm text-gray-400">
-            Aquí irá la explicación simplificada del proceso de compra, FAQ en
-            accordion, y CTA de WhatsApp.
+            Aquí irán los productos con filtros por categoría, búsqueda, y botón de
+            WhatsApp por producto.
           </p>
         </div>
       </div>

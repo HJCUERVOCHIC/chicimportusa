@@ -1,103 +1,109 @@
-import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
+import type { Metadata, Viewport } from 'next';
+import { Inter } from 'next/font/google';
+import { SITE_CONFIG } from '@/lib/constants';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
+import WhatsAppFloat from '@/components/layout/WhatsAppFloat';
+import './globals.css';
 
-const inter = Inter({ 
+// ============================================================
+// Fuente — Inter optimizada con Next.js font
+// Variable CSS: --font-inter
+// ============================================================
+const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-inter',
   display: 'swap',
-})
+  variable: '--font-inter',
+});
 
-export const viewport: Viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  themeColor: '#D90429',
-}
-
+// ============================================================
+// Metadata global del sitio
+// ============================================================
 export const metadata: Metadata = {
-  metadataBase: new URL('https://chicimportusa.com'),
+  metadataBase: new URL(SITE_CONFIG.url),
   title: {
-    default: 'Productos importados desde Estados Unidos | Chic Import USA',
-    template: '%s | Chic Import USA',
+    default: `${SITE_CONFIG.name} — Productos importados desde Estados Unidos`,
+    template: `%s | ${SITE_CONFIG.name}`,
   },
-  description: 'Descubre productos importados desde Estados Unidos: tenis, ropa, accesorios y vitaminas publicados por tiempo limitado. Compra confirmada por WhatsApp.',
+  description: SITE_CONFIG.description,
   keywords: [
     'productos importados',
-    'importaciones USA',
-    'tenis importados',
-    'ropa importada',
-    'accesorios importados',
-    'vitaminas importadas',
-    'importaciones Colombia',
-    'Chic Import USA',
+    'tenis originales USA',
+    'perfumes importados',
+    'Nike Colombia',
+    'Adidas Colombia',
+    'Victoria Secret Colombia',
+    'comprar desde Estados Unidos',
+    'importaciones USA Colombia',
   ],
-  authors: [{ name: 'Chic Import USA' }],
-  creator: 'Chic Import USA',
-  publisher: 'Chic Import USA',
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  alternates: {
-    canonical: 'https://chicimportusa.com',
-  },
   openGraph: {
     type: 'website',
-    locale: 'es_CO',
-    url: 'https://chicimportusa.com',
-    siteName: 'Chic Import USA',
-    title: 'Productos importados desde Estados Unidos | Chic Import USA',
-    description: 'Tenis, ropa, accesorios y vitaminas publicados por tiempo limitado. Compra confirmada por WhatsApp.',
-    images: [
-      {
-        url: 'https://chicimportusa.com/img/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Chic Import USA - Productos importados desde Estados Unidos',
-        type: 'image/jpeg',
-      },
-    ],
+    locale: SITE_CONFIG.locale,
+    url: SITE_CONFIG.url,
+    siteName: SITE_CONFIG.name,
+    title: `${SITE_CONFIG.name} — Productos importados desde Estados Unidos`,
+    description: SITE_CONFIG.description,
+    // TODO: agregar imagen OG cuando esté disponible
+    // images: [{ url: '/img/og-image.jpg', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Productos importados desde Estados Unidos | Chic Import USA',
-    description: 'Tenis, ropa, accesorios y vitaminas publicados por tiempo limitado. Compra confirmada por WhatsApp.',
-    images: ['https://chicimportusa.com/img/og-image.jpg'],
-    creator: '@chicimportusa',
+    title: SITE_CONFIG.name,
+    description: SITE_CONFIG.description,
   },
-  icons: {
-    icon: [
-      { url: '/favicon.ico', sizes: 'any' },
-      { url: '/icon.svg', type: 'image/svg+xml' },
-    ],
-    apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
-    ],
+  robots: {
+    index: true,
+    follow: true,
   },
-  manifest: '/manifest.json',
-}
+};
 
+export const viewport: Viewport = {
+  themeColor: SITE_CONFIG.themeColor,
+  width: 'device-width',
+  initialScale: 1,
+  // No usamos maximum-scale=1 ni user-scalable=no (anti-patrón de accesibilidad)
+};
+
+// ============================================================
+// Layout raíz
+// ============================================================
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
-    <html lang="es" className={inter.variable}>
-      <body className="font-sans antialiased bg-bg text-text">
+    <html lang="es-CO" className={inter.variable}>
+      <head>
+        {/* Preconnect a Supabase Storage para imágenes del catálogo */}
+        <link
+          rel="preconnect"
+          href="https://kwprtjcfoawvpjvtefwx.supabase.co"
+          crossOrigin="anonymous"
+        />
+        {/* Preconnect a Sanity CDN si se sigue usando para algo */}
+        <link
+          rel="preconnect"
+          href="https://cdn.sanity.io"
+          crossOrigin="anonymous"
+        />
+      </head>
+      <body className="min-h-screen bg-white font-sans antialiased text-gray-900">
         <Header />
-        <main>{children}</main>
+
+        <main id="contenido-principal" className="flex-1">
+          {children}
+        </main>
+
         <Footer />
+
+        <WhatsAppFloat />
+
+        {/* 
+          GA4 y Clarity se agregan en Etapa 5.
+          Los scripts irán aquí usando next/script con strategy="afterInteractive".
+        */}
       </body>
     </html>
-  )
+  );
 }
