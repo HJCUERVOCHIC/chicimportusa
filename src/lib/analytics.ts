@@ -1,8 +1,8 @@
 // ============================================================
-// ChicImportUSA — Analytics & Tracking
-// Funciones para rastrear eventos en GA4.
-// Se implementa completo en Etapa 5, pero el skeleton va aquí
-// para que los componentes puedan llamar trackEvent desde ya.
+// ChicImportUSA — Analytics & Tracking (GA4)
+// UNIFICADO: Etapa 1 (layout) + Etapa 2 (catálogo)
+// Se implementa completo en Etapa 5; por ahora es el skeleton
+// para que los componentes puedan llamar eventos desde ya.
 // ============================================================
 
 import { GA_MEASUREMENT_ID } from './constants';
@@ -18,10 +18,6 @@ declare global {
 /**
  * Dispara un evento personalizado en GA4.
  * Si GA4 no está cargado aún, el evento se ignora silenciosamente.
- *
- * @example
- * trackEvent('whatsapp_click', { ubicacion: 'header' });
- * trackEvent('catalogo_filtro', { tipo: 'categoria', valor: 'calzado' });
  */
 export function trackEvent(
   eventName: string,
@@ -36,8 +32,13 @@ export function trackEvent(
 
 /**
  * Eventos predefinidos para mantener consistencia en los nombres.
+ * Usados por Header, Footer, WhatsAppFloat, CatalogClient, ProductCard.
  */
 export const EVENTS = {
+  // -----------------------------------------------------------
+  // Etapa 1 — Layout (Header, Footer, WhatsAppFloat)
+  // -----------------------------------------------------------
+
   /** Click en botón de WhatsApp — registrar desde dónde */
   whatsappClick: (ubicacion: string, producto?: string, precio?: number) =>
     trackEvent('whatsapp_click', {
@@ -54,14 +55,31 @@ export const EVENTS = {
   categoriaClick: (categoria: string) =>
     trackEvent('categoria_click', { categoria_nombre: categoria }),
 
-  /** Aplicar filtro en el catálogo */
-  catalogoFiltro: (tipo: string, valor: string) =>
-    trackEvent('catalogo_filtro', { tipo_filtro: tipo, valor }),
-
   /** Click en producto destacado del homepage */
   productoDestacadoClick: (nombre: string, precio: number) =>
     trackEvent('producto_destacado_click', {
       producto_nombre: nombre,
       producto_precio: precio,
+    }),
+
+  // -----------------------------------------------------------
+  // Etapa 2 — Catálogo
+  // -----------------------------------------------------------
+
+  /** Aplicar filtro en el catálogo */
+  catalogoFiltro: (tipo: string, valor: string) =>
+    trackEvent('catalogo_filtro', { tipo_filtro: tipo, valor }),
+
+  /** Búsqueda en el catálogo */
+  catalogoBusqueda: (termino: string) =>
+    trackEvent('catalogo_busqueda', { search_term: termino }),
+
+  /** Vista de producto (futuro: modal/detalle) */
+  productoVista: (id: string, nombre: string, precio: number) =>
+    trackEvent('view_item', {
+      item_id: id,
+      producto_nombre: nombre,
+      producto_precio: precio,
+      currency: 'COP',
     }),
 } as const;

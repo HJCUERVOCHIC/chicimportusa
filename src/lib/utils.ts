@@ -1,8 +1,19 @@
 // ============================================================
 // ChicImportUSA — Utilidades
+// UNIFICADO: Etapa 1 (layout) + Etapa 2 (catálogo)
 // ============================================================
 
+import { type ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 import { WHATSAPP_URL } from './constants';
+
+/**
+ * Combina clases de Tailwind de forma segura (merge + conditional).
+ * @example cn('base', isActive && 'active', className)
+ */
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 /**
  * Genera la URL de WhatsApp con un mensaje pre-llenado.
@@ -31,9 +42,12 @@ export function formatPrice(precio: number): string {
 }
 
 /**
- * Combina clases CSS condicionalmente (mini clsx).
- * @example cn('base', isActive && 'active', className)
+ * Formatea un precio en COP (alias corto).
+ * Solo como fallback — la API ya devuelve `precio_formateado`.
  */
-export function cn(...classes: (string | boolean | undefined | null)[]): string {
-  return classes.filter(Boolean).join(' ');
+export function formatCOP(precio: number): string {
+  return `$ ${new Intl.NumberFormat('es-CO', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(precio)}`;
 }
