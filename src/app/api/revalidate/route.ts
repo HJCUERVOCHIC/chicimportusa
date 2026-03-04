@@ -45,23 +45,23 @@ export async function POST(request: NextRequest) {
     const revalidatedTags: string[] = []
     const revalidatedPaths: string[] = []
 
-    // Revalidar tags (Next.js 16: async)
+    // Revalidar tags (Next.js 16: requiere segundo argumento 'max')
     for (const tag of config.tags) {
-      await revalidateTag(tag)
+      revalidateTag(tag, 'max')
       revalidatedTags.push(tag)
     }
 
-    // Revalidar rutas (Next.js 16: async)
+    // Revalidar rutas
     for (const path of config.paths) {
-      await revalidatePath(path)
+      revalidatePath(path)
       revalidatedPaths.push(path)
     }
 
     // Si es un post, también revalidar la página específica y su tag
     if (documentType === 'post' && body.slug?.current) {
       const slug = body.slug.current
-      await revalidateTag(`post-${slug}`)
-      await revalidatePath(`/noticias/${slug}`)
+      revalidateTag(`post-${slug}`, 'max')
+      revalidatePath(`/noticias/${slug}`)
       revalidatedTags.push(`post-${slug}`)
       revalidatedPaths.push(`/noticias/${slug}`)
     }
@@ -99,17 +99,17 @@ export async function GET(request: NextRequest) {
     const result: { path?: string; tag?: string } = {}
 
     if (tag) {
-      await revalidateTag(tag)
+      revalidateTag(tag, 'max')
       result.tag = tag
     }
 
     if (path) {
-      await revalidatePath(path)
+      revalidatePath(path)
       result.path = path
     }
 
     if (!tag && !path) {
-      await revalidatePath('/')
+      revalidatePath('/')
       result.path = '/'
     }
 
