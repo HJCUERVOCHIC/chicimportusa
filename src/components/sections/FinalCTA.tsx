@@ -1,50 +1,54 @@
-import Link from 'next/link'
-import { Button } from '@/components/ui'
+'use client';
+
+import Link from 'next/link';
+import { WHATSAPP_URL } from '@/lib/constants';
+import { EVENTS } from '@/lib/analytics';
+import { IconWhatsApp } from '@/components/ui/Icons';
 
 export default function FinalCTA() {
   return (
-    <section className="py-16 md:py-24 bg-text">
-      <div className="max-w-4xl mx-auto px-4 md:px-6 text-center">
-        {/* Título */}
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white tracking-tight">
-          ¿Listo para recibir las próximas publicaciones?
+    <section className="bg-[#D90429] py-16 sm:py-20 px-5 sm:px-6 text-center">
+      <div className="max-w-[500px] mx-auto">
+        <h2 className="font-display text-[clamp(36px,6vw,56px)] text-white leading-none mb-4">
+          ¿LISTO PARA
+          <br />
+          TU PRÓXIMO PEDIDO?
         </h2>
 
-        {/* Subtítulo */}
-        <p className="mt-4 md:mt-5 text-base md:text-lg text-white/80 max-w-2xl mx-auto leading-relaxed">
-          Únete a nuestro canal de WhatsApp y recibe notificaciones cuando publiquemos nuevos tenis, ropa y accesorios disponibles.
+        <p className="text-sm text-white/80 mb-8 font-body leading-relaxed">
+          Únete al grupo para recibir publicaciones con productos nuevos
+          cada semana.
         </p>
 
-        {/* CTA */}
-        <div className="mt-8">
-          <Button isWhatsApp size="large">
-            Unirme al WhatsApp
-          </Button>
-          
-          {/* Aviso legal */}
-          <p className="mt-3 text-xs text-white/50 max-w-md mx-auto">
-            Al continuar a WhatsApp, aceptas nuestros{' '}
-            <Link 
-              href="/terminos-y-condiciones" 
-              className="underline hover:text-white/70 transition-colors"
-            >
-              Términos y Condiciones
-            </Link>
-            {' '}y{' '}
-            <Link 
-              href="/politica-de-privacidad" 
-              className="underline hover:text-white/70 transition-colors"
-            >
-              Política de Privacidad
-            </Link>.
-          </p>
-        </div>
+        <a
+          href={WHATSAPP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2.5 bg-white text-[#111] px-9 py-4 rounded-lg text-sm font-bold font-body tracking-[0.03em] hover:bg-white/90 active:scale-[0.98] transition-colors duration-200 shadow-[0_4px_24px_rgba(0,0,0,0.15)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#D90429]"
+          onClick={() => EVENTS.whatsappClick('cta_final', 'homepage')}
+        >
+          <IconWhatsApp size={18} />
+          UNIRME AL WHATSAPP
+        </a>
 
-        {/* Microtexto */}
-        <p className="mt-6 text-sm text-white/60">
-          Solo publicaciones y actualizaciones importantes. Cero spam.
+        <p className="text-[11px] text-white/40 mt-5 font-body">
+          Al continuar, aceptas nuestros{' '}
+          <Link
+            href="/terminos-y-condiciones"
+            className="underline underline-offset-2 hover:text-white/60"
+          >
+            Términos y Condiciones
+          </Link>{' '}
+          y{' '}
+          <Link
+            href="/politica-de-privacidad"
+            className="underline underline-offset-2 hover:text-white/60"
+          >
+            Política de Privacidad
+          </Link>
+          .
         </p>
       </div>
     </section>
-  )
+  );
 }

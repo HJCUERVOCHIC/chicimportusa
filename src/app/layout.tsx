@@ -1,107 +1,128 @@
-import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
-import { SITE_CONFIG } from '@/lib/constants';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
-import WhatsAppFloat from '@/components/layout/WhatsAppFloat';
-import './globals.css';
+import type { Metadata, Viewport } from 'next'
+import { Bebas_Neue, Space_Grotesk } from 'next/font/google'
+import './globals.css'
+import Header from '@/components/layout/Header'
+import Footer from '@/components/layout/Footer'
 
-const inter = Inter({
+// -----------------------------------------------------------
+// Fuentes — Etapa 3: Streetwear/Urban
+// -----------------------------------------------------------
+
+/** Display: Bebas Neue — títulos impactantes */
+const bebasNeue = Bebas_Neue({
   subsets: ['latin'],
+  weight: '400',
+  variable: '--font-display',
   display: 'swap',
-  variable: '--font-inter',
-});
+  preload: true,
+})
+
+/** Body: Space Grotesk — cuerpo moderno y legible */
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-body',
+  display: 'swap',
+  preload: true,
+})
+
+const BASE_URL = 'https://chicimportusa.com'
+
+export const viewport: Viewport = {
+  themeColor: '#D90429',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+}
 
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_CONFIG.url),
+  metadataBase: new URL(BASE_URL),
   title: {
-    default: `${SITE_CONFIG.name} — Productos importados desde Estados Unidos`,
-    template: `%s | ${SITE_CONFIG.name}`,
+    default: 'ChicImportUSA | Moda original desde USA',
+    template: '%s | ChicImportUSA',
   },
-  description: SITE_CONFIG.description,
+  description: 'Publicaciones periódicas de tenis, ropa y accesorios importados desde Estados Unidos. Productos seleccionados de marcas reconocidas. Envíos a toda Colombia.',
   keywords: [
-    'productos importados',
-    'tenis originales USA',
-    'perfumes importados',
-    'Nike Colombia',
-    'Adidas Colombia',
-    'Victoria Secret Colombia',
-    'comprar desde Estados Unidos',
-    'importaciones USA Colombia',
+    'tenis importados',
+    'ropa importada USA',
+    'accesorios USA',
+    'sneakers Colombia',
+    'ropa deportiva',
+    'ropa casual importada',
+    'Nike',
+    'Jordan',
+    'New Balance',
+    'moda streetwear',
+    'importación Colombia',
   ],
-  icons: {
-    icon: [
-      { url: '/img/favicon-32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/img/favicon-192.png', sizes: '192x192', type: 'image/png' },
-    ],
-    apple: [
-      { url: '/img/apple-touch-icon.png', sizes: '180x180' },
-    ],
+  authors: [{ name: 'ChicImportUSA' }],
+  creator: 'ChicImportUSA',
+  publisher: 'ChicImportUSA',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
   },
   openGraph: {
+    title: 'ChicImportUSA | Tenis, ropa y accesorios desde USA',
+    description: 'Publicaciones periódicas de tenis, ropa casual, deportiva y accesorios importados desde Estados Unidos. Gestión directa por WhatsApp.',
+    url: BASE_URL,
+    siteName: 'ChicImportUSA',
+    locale: 'es_CO',
     type: 'website',
-    locale: SITE_CONFIG.locale,
-    url: SITE_CONFIG.url,
-    siteName: SITE_CONFIG.name,
-    title: `${SITE_CONFIG.name} — Productos importados desde Estados Unidos`,
-    description: SITE_CONFIG.description,
     images: [
       {
-        url: '/img/og-image.jpg',
+        url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'ChicImportUSA — Productos importados desde Estados Unidos',
+        alt: 'ChicImportUSA - Tenis, ropa y accesorios desde USA',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: SITE_CONFIG.name,
-    description: SITE_CONFIG.description,
-    images: ['/img/og-image.jpg'],
+    title: 'ChicImportUSA | Moda original desde USA',
+    description: 'Publicaciones periódicas de tenis, ropa y accesorios importados desde Estados Unidos.',
+    images: ['/og-image.jpg'],
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
-};
-
-export const viewport: Viewport = {
-  themeColor: SITE_CONFIG.themeColor,
-  width: 'device-width',
-  initialScale: 1,
-};
+  alternates: {
+    canonical: BASE_URL,
+  },
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
+  manifest: '/manifest.json',
+}
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
-    <html lang="es-CO" className={inter.variable}>
-      <head>
-        <link
-          rel="preconnect"
-          href="https://kwprtjcfoawvpjvtefwx.supabase.co"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preconnect"
-          href="https://cdn.sanity.io"
-          crossOrigin="anonymous"
-        />
-      </head>
-      <body className="min-h-screen bg-white font-sans antialiased text-gray-900">
+    <html lang="es" className={`${bebasNeue.variable} ${spaceGrotesk.variable}`}>
+      <body className="font-body antialiased bg-bg text-text">
         <Header />
-
-        <main id="contenido-principal" className="flex-1">
-          {children}
-        </main>
-
+        <main>{children}</main>
         <Footer />
-
-        <WhatsAppFloat />
       </body>
     </html>
-  );
+  )
 }

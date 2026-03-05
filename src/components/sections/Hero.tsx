@@ -1,66 +1,117 @@
-import Image from 'next/image'
-import Link from 'next/link'
-import { Button } from '@/components/ui'
+'use client';
 
-export default function Hero() {
+import Image from 'next/image';
+import Link from 'next/link';
+import { WHATSAPP_URL } from '@/lib/constants';
+import { EVENTS } from '@/lib/analytics';
+import { IconWhatsApp } from '@/components/ui/Icons';
+
+interface HeroProps {
+  totalProductos: number;
+  publicacionActiva: boolean;
+}
+
+export default function Hero({ totalProductos, publicacionActiva }: HeroProps) {
   return (
-    <section className="relative min-h-[85vh] md:min-h-[90vh] flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-[#0a0a0a]">
       {/* Imagen de fondo */}
       <Image
-        src="/img/hero-productos.jpg"
-        alt="Productos importados desde Estados Unidos - Tenis, ropa, accesorios y vitaminas"
+        src="/img/hero-tenis.jpg"
+        alt="Productos importados desde USA"
         fill
         priority
-        className="object-cover object-center"
         sizes="100vw"
-        quality={85}
+        className="object-cover object-center opacity-40"
       />
 
-      {/* Overlay para legibilidad del texto */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-black/30" />
+      {/* Grid pattern overlay */}
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage:
+            'linear-gradient(rgba(255,255,255,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px)',
+          backgroundSize: '60px 60px',
+        }}
+      />
 
-      {/* Contenido */}
-      <div className="relative z-10 max-w-4xl mx-auto px-4 md:px-6 text-center">
-        {/* H1 Principal */}
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-tight">
-          Productos importados desde Estados Unidos
+      {/* Red glow */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-[#D90429]/10 blur-[80px]" />
+
+      {/* Gradient from bottom */}
+      <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-[#0a0a0a] to-transparent" />
+
+      {/* Content */}
+      <div className="relative z-10 w-full max-w-[1200px] mx-auto px-5 sm:px-6 py-16 text-center">
+        {/* Badge publicación activa */}
+        {publicacionActiva && (
+          <div className="inline-flex items-center gap-2 border border-[#D90429]/30 rounded px-4 py-1.5 mb-8">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#25D366] opacity-75 motion-reduce:animate-none" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#25D366]" />
+            </span>
+            <span className="text-[11px] font-bold text-[#D90429] tracking-[0.2em] font-body">
+              PUBLICACIÓN ACTIVA — {totalProductos} PRODUCTOS
+            </span>
+          </div>
+        )}
+
+        {/* Título */}
+        <h1 className="font-display text-[clamp(48px,10vw,110px)] leading-[0.95] tracking-[0.02em] mb-6">
+          <span className="text-white block">PRODUCTOS</span>
+          <span
+            className="block"
+            style={{
+              WebkitTextStroke: '2px white',
+              color: 'transparent',
+            }}
+          >
+            ORIGINALES
+          </span>
+          <span className="text-[#D90429] block">DESDE USA</span>
         </h1>
 
         {/* Subtítulo */}
-        <p className="mt-4 md:mt-6 text-base sm:text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed">
-          Tenis, ropa, accesorios y vitaminas publicados por tiempo limitado.
+        <p className="text-[15px] sm:text-base text-white/50 max-w-[420px] mx-auto leading-relaxed mb-9 font-body">
+          Tenis, ropa y accesorios importados. Publicaciones semanales
+          gestionadas por WhatsApp.
         </p>
 
-        {/* CTA */}
-        <div className="mt-8 md:mt-10">
-          <Button isWhatsApp size="large">
-            Unirme al WhatsApp
-          </Button>
-          
-          {/* Microcopy informativo */}
-          <p className="mt-3 text-sm text-white/70">
-            Publicaciones activas. Sin stock permanente.
-          </p>
-          
-          {/* Aviso legal */}
-          <p className="mt-2 text-xs text-white/60 max-w-md mx-auto">
-            Al continuar a WhatsApp, aceptas nuestros{' '}
-            <Link 
-              href="/terminos-y-condiciones" 
-              className="underline hover:text-white/80 transition-colors"
+        {/* CTAs */}
+        <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2.5 bg-[#25D366] hover:bg-[#1DA851] text-white px-8 py-4 rounded-lg text-sm font-bold tracking-[0.05em] font-body transition-colors duration-200 active:scale-[0.98] shadow-[0_4px_20px_rgba(37,211,102,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+            onClick={() => EVENTS.whatsappClick('hero', 'homepage')}
+          >
+            <IconWhatsApp size={18} />
+            UNIRME AL WHATSAPP
+          </a>
+          <Link
+            href="/catalogo"
+            className="inline-flex items-center gap-2 text-white border border-white/20 px-7 py-4 rounded-lg text-sm font-semibold font-body hover:bg-white/5 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+          >
+            VER CATÁLOGO
+            <svg
+              aria-hidden="true"
+              width={14}
+              height={14}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2.5}
             >
-              Términos y Condiciones
-            </Link>
-            {' '}y{' '}
-            <Link 
-              href="/politica-de-privacidad" 
-              className="underline hover:text-white/80 transition-colors"
-            >
-              Política de Privacidad
-            </Link>.
-          </p>
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+          </Link>
         </div>
+
+        {/* Microtexto */}
+        <p className="text-[11px] text-white/30 mt-6 font-body tracking-wider">
+          Productos seleccionados · Sin stock permanente · Proceso claro
+        </p>
       </div>
     </section>
-  )
+  );
 }

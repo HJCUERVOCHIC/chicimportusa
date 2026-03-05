@@ -1,90 +1,75 @@
-import Image from 'next/image'
+'use client';
 
-const categories = [
-  {
-    title: 'Tenis Deportivos',
-    description: 'Running, basketball, training y más de las mejores marcas.',
-    image: '/img/categoria-deportivos.jpg',
-  },
-  {
-    title: 'Tenis Casuales',
-    description: 'Sneakers y estilos urbanos para el día a día.',
-    image: '/img/categoria-casuales.jpg',
-  },
-  {
-    title: 'Ediciones Especiales',
-    description: 'Lanzamientos exclusivos y colaboraciones limitadas.',
-    image: '/img/categoria-ediciones.jpg',
-  },
-  {
-    title: 'Ropa',
-    description: 'Deportiva y casual, según publicación.',
-    image: '/img/categoria-ropa.jpg',
-  },
-  {
-    title: 'Accesorios',
-    description: 'Gorras, bolsos, medias y complementos de marca.',
-    image: '/img/categoria-accesorios.jpg',
-  },
-  {
-    title: 'Vitaminas',
-    description: 'Suplementos seleccionados, según publicación.',
-    image: '/img/categoria-vitaminas.jpg',
-  },
-]
+import { useState } from 'react';
+import Link from 'next/link';
+import { cn } from '@/lib/utils';
+import type { CategoriaResumen } from '@/types/catalogo';
 
-export default function Categories() {
+// Fallback de categorías si la API no las devuelve
+const FALLBACK_CATEGORIES = [
+  { id: 'calzado', nombre: 'Calzado', emoji: '👟', cantidad: 0 },
+  { id: 'bolso', nombre: 'Bolsos', emoji: '👜', cantidad: 0 },
+  { id: 'perfume', nombre: 'Perfumes', emoji: '🌸', cantidad: 0 },
+  { id: 'victorias-secret', nombre: "Victoria's Secret", emoji: '💕', cantidad: 0 },
+  { id: 'vitamina', nombre: 'Vitaminas', emoji: '💊', cantidad: 0 },
+  { id: 'accesorio', nombre: 'Accesorios', emoji: '⌚', cantidad: 0 },
+];
+
+interface CategoriesProps {
+  categorias?: CategoriaResumen[];
+}
+
+export default function Categories({ categorias }: CategoriesProps) {
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+
+  // Usar categorías de la API o fallback
+  const items =
+    categorias && categorias.length > 0 ? categorias : FALLBACK_CATEGORIES;
+
   return (
-    <section className="py-16 md:py-24">
-      <div className="max-w-6xl mx-auto px-4 md:px-6">
-        {/* Título */}
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-text tracking-tight text-center">
-          Lo que publicamos
+    <section className="bg-[#0f0f0f] py-16 sm:py-20 px-5 sm:px-6">
+      <div className="max-w-[1200px] mx-auto">
+        {/* Header */}
+        <h2 className="font-display text-[clamp(32px,5vw,48px)] text-white tracking-[0.02em] leading-none text-center mb-10 sm:mb-12">
+          LO QUE <span className="text-[#D90429]">IMPORTAMOS</span>
         </h2>
 
-        {/* Subtítulo */}
-        <p className="mt-4 md:mt-5 text-base md:text-lg text-muted text-center max-w-2xl mx-auto leading-relaxed">
-          Tenis, ropa y accesorios importados desde Estados Unidos. Cada publicación incluye productos disponibles de estas categorías.
-        </p>
-
-        {/* Grid de categorías */}
-        <div className="mt-10 md:mt-14 grid gap-5 md:gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {categories.map((category) => (
-            <div
-              key={category.title}
-              className="group relative aspect-[4/3] rounded-2xl overflow-hidden"
+        {/* Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          {items.map((cat, idx) => (
+            <Link
+              key={cat.id}
+              href={`/catalogo?categoria=${cat.id}`}
+              onMouseEnter={() => setHoveredIdx(idx)}
+              onMouseLeave={() => setHoveredIdx(null)}
+              className={cn(
+                'rounded-xl p-6 text-center transition-[transform,background-color,border-color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]',
+                hoveredIdx === idx
+                  ? 'bg-[#1a1a1a] border-[#D90429]/30 -translate-y-1'
+                  : 'bg-[#141414] border-white/[0.06]',
+                'border'
+              )}
             >
-              {/* Imagen de fondo */}
-              <Image
-                src={category.image}
-                alt={category.title}
-                fill
-                loading="eager"
-                className="object-cover transition-transform duration-300 group-hover:scale-105"
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              />
-
-              {/* Overlay gradiente */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-
-              {/* Contenido */}
-              <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
-                <h3 className="text-lg md:text-xl font-semibold text-white">
-                  {category.title}
-                </h3>
-                <p className="mt-1 text-sm text-white/80 leading-relaxed">
-                  {category.description}
-                </p>
-              </div>
-            </div>
+              <span
+                className={cn(
+                  'text-[32px] block mb-3 transition-transform duration-200',
+                  hoveredIdx === idx ? 'scale-[1.2]' : 'scale-100'
+                )}
+              >
+                {cat.emoji}
+              </span>
+              <h3 className="text-[13px] font-bold text-white font-body tracking-[0.03em]">
+                {cat.nombre}
+              </h3>
+              {cat.cantidad > 0 && (
+                <span className="text-[11px] text-white/35 font-body mt-1 block">
+                  {cat.cantidad} productos
+                </span>
+              )}
+            </Link>
           ))}
         </div>
-
-        {/* Nota */}
-        <p className="mt-10 md:mt-12 text-sm text-muted-2 text-center">
-          Las referencias varían en cada publicación según disponibilidad.
-        </p>
       </div>
     </section>
-  )
+  );
 }

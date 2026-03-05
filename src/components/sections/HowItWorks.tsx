@@ -1,72 +1,65 @@
-const steps = [
+import { WHATSAPP_PHONE } from '@/lib/constants';
+
+const STEPS = [
   {
-    number: '01',
-    title: 'Publicamos productos disponibles',
-    description:
-      'Compartimos por WhatsApp las referencias de tenis, ropa y accesorios disponibles con precios y fecha de cierre.',
+    num: '01',
+    title: 'Elige tu producto',
+    desc: 'Selecciona del catálogo o publicaciones activas.',
   },
   {
-    number: '02',
-    title: 'Seleccionas dentro de la publicación',
-    description: 'Eliges los productos que te interesan entre las opciones publicadas.',
+    num: '02',
+    title: 'Escríbenos',
+    desc: 'Envía la referencia con talla, color y detalles por WhatsApp.',
   },
   {
-    number: '03',
-    title: 'Nos escribes por WhatsApp',
-    description: 'Confirmamos contigo la información necesaria y resolvemos tus dudas.',
+    num: '03',
+    title: 'Confirmamos',
+    desc: 'Precio final, disponibilidad y tiempos de entrega.',
   },
   {
-    number: '04',
-    title: 'Te acompañamos hasta la entrega',
-    description: 'Seguimos el proceso contigo hasta que recibas tu pedido en Colombia.',
+    num: '04',
+    title: 'Pago y despacho',
+    desc: '50% para separar, 50% al llegar a Colombia.',
   },
-]
+];
 
 export default function HowItWorks() {
   return (
-    <section className="py-16 md:py-24 bg-[#FAFAFA]">
-      <div className="max-w-6xl mx-auto px-4 md:px-6">
-        {/* Título */}
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-text tracking-tight text-center">
-          ¿Cómo funciona ChicImportUSA?
+    <section className="bg-[#0a0a0a] border-t border-white/[0.06] py-16 sm:py-20 px-5 sm:px-6">
+      <div className="max-w-[1000px] mx-auto text-center">
+        {/* Header */}
+        <h2 className="font-display text-[clamp(32px,5vw,48px)] text-white tracking-[0.02em] leading-none mb-12 sm:mb-14">
+          ¿CÓMO <span className="text-[#D90429]">FUNCIONA</span>?
         </h2>
 
-        {/* Texto introductorio */}
-        <p className="mt-5 md:mt-6 text-base md:text-lg text-muted text-center max-w-2xl mx-auto leading-relaxed">
-          ChicImportUSA funciona a través de publicaciones periódicas de tenis, ropa casual, deportiva y accesorios disponibles. 
-          Cada publicación incluye referencias específicas que pueden solicitarse durante un tiempo determinado.
-        </p>
-
-        {/* Grid de pasos */}
-        <div className="mt-12 md:mt-16 grid gap-5 md:gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {steps.map((step) => (
-            <div
-              key={step.number}
-              className="group relative p-6 md:p-7 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-gray-200 transition-all duration-200"
-            >
+        {/* Steps grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
+          {STEPS.map((step) => (
+            <div key={step.num} className="text-center">
               {/* Número grande */}
-              <span className="block text-4xl md:text-5xl font-bold text-gray-200 mb-4">
-                {step.number}
+              <span className="font-display text-[56px] text-[#D90429] opacity-30 leading-none block">
+                {step.num}
               </span>
 
-              {/* Título del paso */}
-              <h3 className="text-lg font-semibold text-text leading-snug">
+              {/* Título */}
+              <h3 className="text-[15px] font-bold text-white mt-2 mb-1.5 font-body">
                 {step.title}
               </h3>
 
               {/* Descripción */}
-              <p className="mt-2 text-sm text-muted leading-relaxed">
-                {step.description}
+              <p className="text-[13px] text-white/45 leading-relaxed font-body">
+                {step.desc}
               </p>
             </div>
           ))}
         </div>
 
-        {/* Microtexto final */}
-        <p className="mt-10 md:mt-12 text-sm text-muted-2 text-center">
-          Todo el proceso es claro desde el inicio y se gestiona directamente por WhatsApp.
+        {/* Nota */}
+        <p className="text-xs text-white/25 mt-12 font-body">
+          Los datos de pago se confirman directamente por WhatsApp.
+          Solo gestionamos productos publicados como activos.
         </p>
       </div>
     </section>
-  )
+  );
 }
