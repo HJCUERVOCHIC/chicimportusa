@@ -2,7 +2,7 @@
 
 // ============================================================
 // ChicImportUSA — CatalogClient · Nieve Activa
-// Carrusel destacados (fondo #111) → Toolbar sticky → Grid
+// Barra de categorías top (2 filas) → Destacados → Sidebar + Grid
 // ============================================================
 
 import React, { useState, useCallback, useEffect } from 'react';
@@ -10,7 +10,7 @@ import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { EVENTS } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
-import { IconWhatsApp, IconSearch, IconX, IconChevronDown } from '@/components/ui/Icons';
+import { IconWhatsApp, IconSearch, IconX } from '@/components/ui/Icons';
 import { WHATSAPP_URL, WHATSAPP_PHONE, SITE_CONFIG } from '@/lib/constants';
 import ProductGrid from './ProductGrid';
 import { ProductGridSkeleton } from '@/components/ui/Skeleton';
@@ -21,13 +21,13 @@ import type {
 const CLIENT_API = '/api/catalogo';
 
 const GENERO_OPTIONS = [
-  { value: '',       label: 'Todos'  },
+  { value: '',       label: 'Todo'   },
   { value: 'hombre', label: 'Hombre' },
   { value: 'mujer',  label: 'Mujer'  },
 ] as const;
 
 const ORDEN_OPTIONS = [
-  { value: 'reciente',    label: 'Mas recientes' },
+  { value: 'reciente',    label: 'Más recientes' },
   { value: 'precio_asc',  label: 'Menor precio'  },
   { value: 'precio_desc', label: 'Mayor precio'  },
 ] as const;
@@ -54,7 +54,7 @@ async function fetchMarcas(categoria?: string, genero?: string): Promise<MarcaIt
   try {
     const params = new URLSearchParams();
     if (categoria) params.set('categoria', categoria);
-    if (genero) params.set('genero', genero);
+    if (genero)    params.set('genero', genero);
     const res = await fetch(`${CLIENT_API}/marcas?${params.toString()}`);
     if (!res.ok) return [];
     const data: MarcasResponse = await res.json();
@@ -62,7 +62,7 @@ async function fetchMarcas(categoria?: string, genero?: string): Promise<MarcaIt
   } catch { return []; }
 }
 
-// ── Card editorial del carrusel ──────────────────────────────
+// ── Card del carrusel de destacados ─────────────────────────
 function DestacadoCard({ producto }: { producto: Producto }) {
   const [hovered, setHovered] = useState(false);
   const productoUrl     = `/producto/${producto.id}`;
@@ -78,101 +78,145 @@ function DestacadoCard({ producto }: { producto: Producto }) {
     >
       <Link
         href={productoUrl}
-        className="block rounded-xl overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429]"
+        className="block relative overflow-hidden bg-gray-50"
+        style={{ width: '200px', height: '260px' }}
+        tabIndex={-1}
+        aria-hidden="true"
       >
-        {/* Imagen */}
-        <div className="relative bg-gray-100" style={{ width: '200px', height: '260px', overflow: 'hidden' }}>
-          {producto.imagen
-            ? <img src={producto.imagen} alt={producto.nombre} width={200} height={260}
-                style={{ width: '200px', height: '260px', objectFit: 'cover', display: 'block',
-                  transform: hovered ? 'scale(1.08)' : 'scale(1)', transition: 'transform 0.5s' }} />
-            : <div style={{ width: '200px', height: '260px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ccc' }}>
-                <svg width={40} height={40} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
-                  <rect width={18} height={18} x={3} y={3} rx={2}/><circle cx={9} cy={9} r={2}/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
-                </svg>
-              </div>
-          }
-          {/* Degradado */}
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%)' }} />
-          {/* Badge */}
-          <span style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', borderRadius: 20, padding: '2px 8px', fontSize: 9, fontWeight: 700, color: 'white', letterSpacing: '0.1em' }}>
-            {producto.categoria.emoji} {producto.categoria.nombre}
-          </span>
-        </div>
+        <img
+          src={producto.imagen || '/img/placeholder-product.jpg'}
+          alt={producto.nombre}
+          loading="eager"
+          className="w-full h-full object-cover transition-transform duration-500"
+          style={{ transform: hovered ? 'scale(1.04)' : 'scale(1)' }}
+        />
 
-        {/* Info debajo de la imagen */}
-        <div className={cn(
-          'bg-white px-3 py-3 border-x border-b rounded-b-xl transition-colors duration-200',
-          hovered ? 'border-[#D90429]/30' : 'border-gray-100'
-        )}>
-          {producto.marca && (
-            <span className="text-[9px] font-bold tracking-[0.15em] text-gray-400 font-body block">
-              {producto.marca.toUpperCase()}
-            </span>
-          )}
-          <h3 className={cn('text-xs font-semibold font-body line-clamp-2 leading-snug mt-0.5 transition-colors', hovered ? 'text-[#D90429]' : 'text-gray-900')}>
+      </Link>
+      <div className="pt-2.5">
+        <Link href={productoUrl} className="block group">
+          <p className="text-[10px] font-bold text-[#D90429] tracking-[0.15em] uppercase font-body truncate">
+            {producto.categoria?.nombre ?? ''}
+          </p>
+          <p className="text-[13px] font-semibold text-gray-900 font-body leading-snug mt-0.5 truncate group-hover:text-[#D90429] transition-colors">
             {producto.nombre}
-          </h3>
-          <p className="text-sm font-bold text-gray-900 mt-1 font-body" style={{ fontVariantNumeric: 'tabular-nums' }}>
-            {producto.precio_formateado}
+          </p>
+        </Link>
+        <div className="flex items-center justify-between mt-2 gap-2">
+          <p className="text-sm font-bold text-gray-900 font-body">
+            {producto.precio_formateado ?? `$${producto.precio?.toLocaleString('es-CO')}`}
           </p>
           <a
             href={whatsappHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-2 flex items-center justify-center gap-1.5 bg-[#25D366] hover:bg-[#1DA851] text-white py-1.5 rounded-lg text-[10px] font-bold font-body transition-colors"
-            onClick={(e) => { e.stopPropagation(); EVENTS.whatsappClick('destacado', producto.nombre, producto.precio); }}
+            aria-label={`Consultar ${producto.nombre} por WhatsApp`}
+            onClick={() => EVENTS.whatsappClick('destacado', producto.nombre)}
+            className="flex items-center gap-1 text-[10px] font-bold text-white bg-[#25D366] hover:bg-[#1DA851] px-2 py-1 rounded transition-colors flex-shrink-0"
           >
             <IconWhatsApp size={11} />
-            PEDIR
+            <span className="hidden sm:inline">Pedir</span>
           </a>
         </div>
-      </Link>
+      </div>
     </article>
   );
 }
 
-// ── Marquee automático ──────────────────────────────────────
 function DestacadosCarousel({ productos }: { productos: Producto[] }) {
-  const [paused, setPaused] = useState(false);
-  // Duplicamos las cards para loop infinito sin saltos
-  const items = [...productos, ...productos];
-  const cardW  = 216; // 200px card + 16px gap
-  const totalW = productos.length * cardW;
-
+  const doubled  = [...productos, ...productos];
+  const duration = `${productos.length * 3}s`;
   return (
-    <div
-      className="overflow-hidden w-full"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      aria-label="Productos destacados"
-      role="region"
-    >
-      {/* Keyframe inyectado inline — no requiere globals.css */}
+    <div className="relative overflow-hidden" style={{ maskImage: 'linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%)' }}>
       <style>{`
-        @keyframes marquee-scroll {
-          0%   { transform: translateX(0); }
-          100% { transform: translateX(-${totalW}px); }
-        }
-        .marquee-track {
-          animation: marquee-scroll ${productos.length * 3}s linear infinite;
-        }
-        .marquee-track.paused {
-          animation-play-state: paused;
-        }
+        @keyframes marquee-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        .marquee-track { animation: marquee-scroll ${duration} linear infinite; }
+        .marquee-track:hover { animation-play-state: paused; }
       `}</style>
-
-      <div
-        className={`marquee-track flex gap-4${paused ? ' paused' : ''}`}
-        style={{ width: (items.length * cardW) + 'px' }}
-      >
-        {items.map((p, i) => (
-          <div key={`${p.id}-${i}`} role="listitem" aria-hidden={i >= productos.length}>
-            <DestacadoCard producto={p} />
-          </div>
-        ))}
+      <div className="marquee-track flex gap-5">
+        {doubled.map((p, i) => <DestacadoCard key={`${p.id}-${i}`} producto={p} />)}
       </div>
     </div>
+  );
+}
+
+// ── Barra de navegación de categorías (2 filas, sticky) ─────
+function CategoryNav({
+  categorias, genero, categoria, onGenero, onCategoria,
+}: {
+  categorias: CategoriaResumen[];
+  genero: string;
+  categoria: string;
+  onGenero: (v: string) => void;
+  onCategoria: (v: string) => void;
+}) {
+  return (
+    <nav
+      className="sticky top-[57px] z-20 bg-white border-b border-gray-100 shadow-[0_1px_0_0_#f3f4f6]"
+      aria-label="Filtrar por categoría"
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+
+        {/* Fila 1 — Género */}
+        <div className="flex items-center justify-center gap-0.5 pt-2.5 pb-1">
+          {GENERO_OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => onGenero(opt.value)}
+              className={cn(
+                'px-5 py-1.5 text-[11px] font-bold font-body tracking-[0.15em] uppercase transition-all rounded-full',
+                genero === opt.value
+                  ? 'text-white bg-[#111]'
+                  : 'text-gray-400 hover:text-gray-900'
+              )}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Fila 2 — Categorías dinámicas */}
+        {categorias.length > 0 && (
+          <div className="flex items-center justify-center gap-0.5 pb-2.5 flex-wrap">
+            <button
+              type="button"
+              onClick={() => onCategoria('')}
+              className={cn(
+                'px-4 py-1.5 text-[11px] font-bold font-body tracking-[0.12em] uppercase transition-all rounded-full',
+                categoria === ''
+                  ? 'text-[#D90429] bg-[#D90429]/8'
+                  : 'text-gray-400 hover:text-gray-900'
+              )}
+            >
+              Todos
+            </button>
+            {categorias.map((cat) => (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => onCategoria(cat.id)}
+                className={cn(
+                  'inline-flex items-center gap-1.5 px-4 py-1.5 text-[11px] font-bold font-body tracking-[0.12em] uppercase transition-all rounded-full',
+                  categoria === cat.id
+                    ? 'text-[#D90429] bg-[#D90429]/8'
+                    : 'text-gray-400 hover:text-gray-900'
+                )}
+              >
+                <span aria-hidden="true">{cat.emoji}</span>
+                {cat.nombre}
+                <span className={cn(
+                  'text-[10px] font-normal normal-case tracking-normal',
+                  categoria === cat.id ? 'text-[#D90429]/60' : 'text-gray-300'
+                )}>
+                  {cat.cantidad}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
+
+      </div>
+    </nav>
   );
 }
 
@@ -241,13 +285,13 @@ export default function CatalogClient({
   const handleGenero    = (v: string) => { setGenero(v); setCategoria(''); setMarca(''); EVENTS.catalogoFiltro('genero', v || 'todos'); };
   const handleCategoria = (v: string) => { setCategoria(v === categoria ? '' : v); setMarca(''); EVENTS.catalogoFiltro('categoria', v || 'todas'); };
   const handleMarca     = (v: string) => { setMarca(v); EVENTS.catalogoFiltro('marca', v || 'todas'); };
-  const handleOrden = (v: string) => { setOrden(v); EVENTS.catalogoFiltro('orden', v); };
+  const handleOrden     = (v: string) => { setOrden(v); EVENTS.catalogoFiltro('orden', v); };
   const handleLimpiar   = () => { setGenero(''); setCategoria(''); setMarca(''); setBusqueda(''); setOrden('reciente'); };
 
   return (
     <div className="min-h-screen bg-white">
 
-      {/* ── Barra publicacion activa ───────────────────────────── */}
+      {/* ── Barra publicación activa ───────────────────────────── */}
       {publicacionActiva && (
         <div className="bg-green-50 border-b border-green-100 px-4 py-2.5 text-center">
           <span className="inline-flex items-center gap-2 text-[11px] font-bold text-green-700 tracking-[0.15em] uppercase font-body">
@@ -255,18 +299,27 @@ export default function CatalogClient({
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75 motion-reduce:animate-none" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
             </span>
-            Publicacion activa — {total} productos disponibles
+            Publicación activa — {total} productos disponibles
           </span>
         </div>
       )}
 
+      {/* ── Nav de categorías (sticky bajo el header) ─────────── */}
+      <CategoryNav
+        categorias={categorias}
+        genero={genero}
+        categoria={categoria}
+        onGenero={handleGenero}
+        onCategoria={handleCategoria}
+      />
+
       {/* ── DESTACADOS ────────────────────────────────────────── */}
       {mostrarDestacados && (
-        <section className="bg-white border-t-4 border-[#D90429] pt-7 pb-8">
+        <section className="bg-white border-b border-gray-100 pt-7 pb-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-end justify-between mb-5">
             <div>
               <p className="text-[10px] font-bold tracking-[0.3em] uppercase text-[#D90429] font-body mb-1">
-                Lo mas pedido
+                Lo más pedido
               </p>
               <h2 className="font-display text-[clamp(32px,4.5vw,48px)] text-[#111] tracking-[0.02em] leading-none">
                 DESTACADOS <span className="text-[#D90429]">🔥</span>
@@ -284,10 +337,12 @@ export default function CatalogClient({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
         <div className="flex gap-8 items-start">
 
-          {/* ── SIDEBAR ─────────────────────────────────────────── */}
-          <aside className="hidden md:flex flex-col gap-5 w-52 flex-shrink-0 sticky top-[57px] self-start max-h-[calc(100vh-64px)] overflow-y-auto pb-6" style={{ scrollbarWidth: 'none' }}>
-
-            {/* Busqueda */}
+          {/* ── SIDEBAR (búsqueda, marcas, orden) ───────────────── */}
+          <aside
+            className="hidden md:flex flex-col gap-5 w-48 flex-shrink-0 sticky top-[107px] self-start max-h-[calc(100vh-114px)] overflow-y-auto pb-6"
+            style={{ scrollbarWidth: 'none' }}
+          >
+            {/* Búsqueda */}
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
                 <IconSearch size={14} />
@@ -303,56 +358,12 @@ export default function CatalogClient({
                 className="w-full bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 text-sm pl-8 pr-8 py-2 rounded-lg outline-none focus:border-[#D90429] focus:ring-2 focus:ring-[#D90429]/10 transition-colors"
               />
               {busqueda && (
-                <button type="button" onClick={() => setBusqueda('')} aria-label="Limpiar"
+                <button type="button" onClick={() => setBusqueda('')} aria-label="Limpiar búsqueda"
                   className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
                   <IconX size={13} />
                 </button>
               )}
             </div>
-
-            {/* Genero */}
-            <div>
-              <p className="text-[10px] font-bold tracking-[0.15em] uppercase text-gray-400 mb-2 font-body">Genero</p>
-              <div className="flex flex-col gap-1">
-                {GENERO_OPTIONS.map((opt) => (
-                  <button key={opt.value} type="button" onClick={() => handleGenero(opt.value)}
-                    className={cn(
-                      'text-left px-3 py-2 rounded-lg text-sm font-body transition-all duration-150',
-                      genero === opt.value
-                        ? 'bg-[#111] text-white font-semibold'
-                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                    )}>
-                    {opt.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Categorias */}
-            {categorias.length > 0 && (
-              <div>
-                <p className="text-[10px] font-bold tracking-[0.15em] uppercase text-gray-400 mb-2 font-body">Categoria</p>
-                <div className="flex flex-col gap-1">
-                  {categorias.map((cat) => (
-                    <button key={cat.id} type="button" onClick={() => handleCategoria(cat.id)}
-                      className={cn(
-                        'flex items-center justify-between px-3 py-2 rounded-lg text-sm font-body transition-all duration-150',
-                        categoria === cat.id
-                          ? 'bg-[#D90429] text-white font-semibold'
-                          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                      )}>
-                      <span className="flex items-center gap-2">
-                        <span aria-hidden="true">{cat.emoji}</span>
-                        {cat.nombre}
-                      </span>
-                      <span className={cn('text-[11px]', categoria === cat.id ? 'text-white/70' : 'text-gray-400')}>
-                        {cat.cantidad}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* Marcas */}
             {marcas.length > 0 && (
@@ -407,29 +418,32 @@ export default function CatalogClient({
           {/* ── GRID ───────────────────────────────────────────── */}
           <div className="flex-1 min-w-0">
 
-            {/* Barra superior mobile + conteo */}
+            {/* Barra superior: búsqueda mobile + conteo */}
             <div className="flex items-center justify-between mb-4 gap-3">
-              {/* Filtros mobile — chips horizontales */}
-              <div className="flex md:hidden items-center gap-2 overflow-x-auto flex-1" style={{ scrollbarWidth: 'none' }}>
-                {GENERO_OPTIONS.filter(o => o.value).map((opt) => (
-                  <button key={opt.value} type="button" onClick={() => handleGenero(genero === opt.value ? '' : opt.value)}
-                    className={cn('flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold font-body border transition-all',
-                      genero === opt.value ? 'bg-[#111] border-[#111] text-white' : 'bg-white border-gray-200 text-gray-600')}>
-                    {opt.label}
-                  </button>
-                ))}
-                {categorias.map((cat) => (
-                  <button key={cat.id} type="button" onClick={() => handleCategoria(cat.id)}
-                    className={cn('flex-shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold font-body border transition-all',
-                      categoria === cat.id ? 'bg-[#D90429] border-[#D90429] text-white' : 'bg-white border-gray-200 text-gray-600')}>
-                    <span>{cat.emoji}</span><span>{cat.nombre}</span>
-                  </button>
-                ))}
+              {/* Búsqueda mobile */}
+              <div className="flex md:hidden relative flex-1 max-w-xs">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                  <IconSearch size={14} />
+                </span>
+                <input
+                  type="search"
+                  autoComplete="off"
+                  placeholder="Buscar..."
+                  value={busqueda}
+                  onChange={(e) => setBusqueda(e.target.value)}
+                  className="w-full bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 text-sm pl-8 pr-3 py-2 rounded-lg outline-none focus:border-[#D90429] transition-colors"
+                />
               </div>
 
               {/* Conteo */}
-              <p className="text-xs font-body text-gray-400 flex-shrink-0 ml-auto" style={{ fontVariantNumeric: 'tabular-nums' }} aria-live="polite">
-                {loading ? <span className="text-gray-300">Cargando...</span> : (
+              <p
+                className="text-xs font-body text-gray-400 flex-shrink-0 ml-auto"
+                style={{ fontVariantNumeric: 'tabular-nums' }}
+                aria-live="polite"
+              >
+                {loading ? (
+                  <span className="text-gray-300">Cargando...</span>
+                ) : (
                   <><span className="font-semibold text-gray-700">{total}</span>{' '}{total === 1 ? 'producto' : 'productos'}</>
                 )}
               </p>
@@ -444,13 +458,17 @@ export default function CatalogClient({
 
             {!loading && productos.length > 0 && (
               <div className="mt-10 rounded-2xl bg-gray-50 border border-gray-100 p-6 sm:p-8 text-center">
-                <p className="text-base font-bold text-gray-900 font-body">Te interesa un producto?</p>
+                <p className="text-base font-bold text-gray-900 font-body">¿Te interesa un producto?</p>
                 <p className="mt-1 text-sm text-gray-500 font-body">
-                  Escribenos por WhatsApp para confirmar disponibilidad, tallas y precio final.
+                  Escríbenos por WhatsApp para confirmar disponibilidad, tallas y precio final.
                 </p>
-                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer"
+                <a
+                  href={WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="mt-5 inline-flex items-center gap-2 px-7 py-3 bg-[#25D366] hover:bg-[#1DA851] text-white text-sm font-bold font-body tracking-wide rounded-lg transition-all active:scale-[0.98] shadow-[0_4px_16px_rgba(37,211,102,0.3)]"
-                  onClick={() => EVENTS.whatsappClick('catalogo_cta_final')}>
+                  onClick={() => EVENTS.whatsappClick('catalogo_cta_final')}
+                >
                   <IconWhatsApp size={16} />
                   Escribir por WhatsApp
                 </a>
