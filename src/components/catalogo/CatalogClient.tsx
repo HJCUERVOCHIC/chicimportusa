@@ -241,7 +241,7 @@ export default function CatalogClient({
   const handleGenero    = (v: string) => { setGenero(v); setCategoria(''); setMarca(''); EVENTS.catalogoFiltro('genero', v || 'todos'); };
   const handleCategoria = (v: string) => { setCategoria(v === categoria ? '' : v); setMarca(''); EVENTS.catalogoFiltro('categoria', v || 'todas'); };
   const handleMarca     = (v: string) => { setMarca(v); EVENTS.catalogoFiltro('marca', v || 'todas'); };
-  const handleOrden     = (v: string) => { setOrden(v); setSortOpen(false); EVENTS.catalogoFiltro('orden', v); };
+  const handleOrden = (v: string) => { setOrden(v); EVENTS.catalogoFiltro('orden', v); };
   const handleLimpiar   = () => { setGenero(''); setCategoria(''); setMarca(''); setBusqueda(''); setOrden('reciente'); };
 
   return (
