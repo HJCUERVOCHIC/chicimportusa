@@ -3,49 +3,53 @@
 @tailwind utilities;
 
 /* ============================================================
-   ChicImportUSA — Estilos globales
+   ChicImportUSA — Estilos globales · Nieve Activa
    ============================================================ */
 
 @layer base {
-  /* Tipografía base */
   body {
-    font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+    font-family: var(--font-body), system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: #ffffff;
+    color: #111111;
   }
 
-  /* Precios y números tabulares — Vercel Guidelines */
   .tabular-nums {
     font-variant-numeric: tabular-nums;
   }
 
-  /* Scroll suave, pero respeta prefers-reduced-motion */
   @media (prefers-reduced-motion: no-preference) {
     html {
       scroll-behavior: smooth;
     }
   }
 
-  /* Scroll margin para anchors (evita que el sticky header tape el contenido) */
   [id] {
     scroll-margin-top: 5rem;
   }
 
-  /* Focus visible global — Vercel Guidelines */
   :focus-visible {
     outline: 2px solid #D90429;
     outline-offset: 2px;
     border-radius: 4px;
   }
 
-  /* Quitar outline por defecto en focus (solo visible con teclado) */
   :focus:not(:focus-visible) {
     outline: none;
+  }
+
+  /* Ocultar scrollbar horizontal en chips */
+  .hide-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 }
 
 @layer utilities {
-  /* Text wrap balance para títulos — Vercel Guidelines */
   .text-balance {
     text-wrap: balance;
   }

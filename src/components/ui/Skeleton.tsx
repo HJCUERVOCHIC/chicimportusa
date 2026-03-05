@@ -1,14 +1,11 @@
 // ============================================================
-// ChicImportUSA — Skeleton Loading · Etapa 3 Dark Theme
+// ChicImportUSA — Skeleton Loading · Nieve Activa
 // ============================================================
 
 import { cn } from '@/lib/utils';
 
-interface SkeletonProps {
-  className?: string;
-}
+interface SkeletonProps { className?: string; }
 
-// Shimmer keyframe — inyectado una sola vez en el DOM
 export function SkeletonStyles() {
   return (
     <style>{`
@@ -20,18 +17,13 @@ export function SkeletonStyles() {
   );
 }
 
-// Bloque base con shimmer oscuro
 export function Skeleton({ className }: SkeletonProps) {
   return (
-    <div
-      aria-hidden="true"
-      className={cn('relative overflow-hidden bg-[#1a1a1a]', className)}
-    >
+    <div aria-hidden="true" className={cn('relative overflow-hidden bg-gray-100', className)}>
       <div
         className="absolute inset-0"
         style={{
-          background:
-            'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.04) 50%, transparent 100%)',
+          background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.8) 50%, transparent 100%)',
           animation: 'skeleton-sweep 1.6s ease-in-out infinite',
         }}
       />
@@ -39,32 +31,23 @@ export function Skeleton({ className }: SkeletonProps) {
   );
 }
 
-// Skeleton de tarjeta de producto
 export function ProductCardSkeleton() {
   return (
-    <div className="flex flex-col bg-[#141414] border-b-2 border-transparent overflow-hidden">
+    <div className="rounded-xl overflow-hidden bg-white border border-gray-100 shadow-sm">
       <Skeleton className="aspect-square w-full" />
-      <div className="p-4 space-y-3">
-        <Skeleton className="h-3 w-20 rounded-sm" />
-        <Skeleton className="h-5 w-full rounded-sm" />
-        <Skeleton className="h-5 w-3/4 rounded-sm" />
-        <Skeleton className="h-6 w-24 rounded-sm" />
-        <Skeleton className="h-10 w-full rounded-sm mt-1" />
+      <div className="p-3 sm:p-4 space-y-2.5">
+        <Skeleton className="h-3 w-16 rounded-full" />
+        <Skeleton className="h-4 w-3/4 rounded" />
+        <Skeleton className="h-4 w-1/2 rounded" />
+        <Skeleton className="h-5 w-24 rounded mt-1" />
       </div>
     </div>
   );
 }
 
-// Grid de skeletons
 export function ProductGridSkeleton({ count = 8 }: { count?: number }) {
   return (
-    <div
-      className="grid gap-px"
-      style={{
-        gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-        backgroundColor: 'rgba(255,255,255,0.06)',
-      }}
-    >
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
       {Array.from({ length: count }).map((_, i) => (
         <ProductCardSkeleton key={i} />
       ))}
@@ -72,21 +55,19 @@ export function ProductGridSkeleton({ count = 8 }: { count?: number }) {
   );
 }
 
-// Skeleton barra de filtros
 export function FilterBarSkeleton() {
   return (
     <div className="space-y-4" aria-hidden="true">
-      <Skeleton className="h-10 w-full rounded-sm" />
+      <Skeleton className="h-10 w-full rounded-lg" />
       <div className="flex gap-2">
-        <Skeleton className="h-8 w-16 rounded-sm flex-shrink-0" />
-        <Skeleton className="h-8 w-20 rounded-sm flex-shrink-0" />
-        <Skeleton className="h-8 w-16 rounded-sm flex-shrink-0" />
+        <Skeleton className="h-8 w-16 rounded-full flex-shrink-0" />
+        <Skeleton className="h-8 w-20 rounded-full flex-shrink-0" />
+        <Skeleton className="h-8 w-16 rounded-full flex-shrink-0" />
       </div>
       <div className="flex gap-2 overflow-hidden">
-        <Skeleton className="h-7 w-24 rounded-sm flex-shrink-0" />
-        <Skeleton className="h-7 w-28 rounded-sm flex-shrink-0" />
-        <Skeleton className="h-7 w-20 rounded-sm flex-shrink-0" />
-        <Skeleton className="h-7 w-32 rounded-sm flex-shrink-0" />
+        <Skeleton className="h-7 w-24 rounded-full flex-shrink-0" />
+        <Skeleton className="h-7 w-28 rounded-full flex-shrink-0" />
+        <Skeleton className="h-7 w-20 rounded-full flex-shrink-0" />
       </div>
     </div>
   );

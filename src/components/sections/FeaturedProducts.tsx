@@ -1,5 +1,9 @@
 'use client';
 
+// ============================================================
+// ChicImportUSA — FeaturedProducts · Nieve Activa
+// ============================================================
+
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -16,23 +20,22 @@ interface FeaturedProductsProps {
 export default function FeaturedProducts({ productos }: FeaturedProductsProps) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
-  // Si no hay productos, no mostrar la sección
   if (!productos || productos.length === 0) return null;
 
-  // Limitar a 8 productos para el homepage
   const items = productos.slice(0, 8);
 
   return (
-    <section className="bg-[#0a0a0a] py-16 sm:py-20 px-5 sm:px-6">
+    <section className="bg-white py-12 sm:py-16 px-5 sm:px-6">
       <div className="max-w-[1200px] mx-auto">
+
         {/* Header */}
-        <div className="flex justify-between items-end mb-10 flex-wrap gap-4">
-          <h2 className="font-display text-[clamp(32px,5vw,48px)] text-white tracking-[0.02em] leading-none">
+        <div className="flex justify-between items-end mb-8 flex-wrap gap-4">
+          <h2 className="font-display text-[clamp(28px,4vw,42px)] text-[#111] tracking-[0.02em] leading-none">
             DESTACADOS <span className="text-[#D90429]">🔥</span>
           </h2>
           <Link
             href="/catalogo"
-            className="text-xs font-bold text-white tracking-[0.1em] px-5 py-2.5 border border-white/20 rounded-md font-body hover:bg-white/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+            className="text-xs font-bold text-[#111] tracking-[0.1em] px-5 py-2.5 border-2 border-[#111] rounded-md font-body hover:bg-[#111] hover:text-white transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111] focus-visible:ring-offset-2"
           >
             VER TODO →
           </Link>
@@ -52,14 +55,17 @@ export default function FeaturedProducts({ productos }: FeaturedProductsProps) {
                 onMouseEnter={() => setHoveredId(producto.id)}
                 onMouseLeave={() => setHoveredId(null)}
                 className={cn(
-                  'rounded-xl overflow-hidden bg-[#141414] cursor-pointer transition-[transform,border-color,box-shadow] duration-300',
+                  'rounded-xl overflow-hidden bg-white cursor-pointer transition-[transform,border-color,box-shadow] duration-300',
                   isHovered
-                    ? 'border border-[#D90429]/40 -translate-y-1'
-                    : 'border border-white/[0.06]'
+                    ? 'border border-[#D90429]/40 -translate-y-1 shadow-lg'
+                    : 'border border-gray-100 shadow-sm'
                 )}
               >
                 {/* Imagen */}
-                <Link href={productoUrl} className="block relative aspect-square overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429] focus-visible:ring-inset">
+                <Link
+                  href={productoUrl}
+                  className="block relative aspect-square overflow-hidden bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429] focus-visible:ring-inset"
+                >
                   {producto.imagen ? (
                     <Image
                       src={producto.imagen}
@@ -67,22 +73,14 @@ export default function FeaturedProducts({ productos }: FeaturedProductsProps) {
                       fill
                       sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                       className={cn(
-                        'object-cover brightness-90 transition-transform duration-500',
+                        'object-cover transition-transform duration-500',
                         isHovered ? 'scale-110' : 'scale-100'
                       )}
                       loading="lazy"
                     />
                   ) : (
-                    <div className="flex h-full items-center justify-center bg-[#1a1a1a] text-white/20">
-                      <svg
-                        aria-hidden="true"
-                        width={48}
-                        height={48}
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth={1.5}
-                      >
+                    <div className="flex h-full items-center justify-center text-gray-200">
+                      <svg aria-hidden="true" width={48} height={48} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
                         <rect width={18} height={18} x={3} y={3} rx={2} />
                         <circle cx={9} cy={9} r={2} />
                         <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
@@ -91,11 +89,11 @@ export default function FeaturedProducts({ productos }: FeaturedProductsProps) {
                   )}
 
                   {/* Badge categoría */}
-                  <span className="absolute top-2.5 left-2.5 bg-black/70 backdrop-blur-sm rounded px-2.5 py-1 text-[10px] font-bold text-white tracking-[0.08em] font-body">
+                  <span className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-sm rounded px-2.5 py-1 text-[10px] font-bold text-white tracking-[0.08em] font-body">
                     {producto.categoria.emoji} {producto.categoria.nombre}
                   </span>
 
-                  {/* Destacado badge */}
+                  {/* Badge destacado */}
                   {producto.destacado && (
                     <span className="absolute top-2.5 right-2.5 bg-[#D90429] rounded px-2.5 py-1 text-[9px] font-bold text-white tracking-[0.1em] uppercase font-body">
                       Destacado
@@ -103,17 +101,15 @@ export default function FeaturedProducts({ productos }: FeaturedProductsProps) {
                   )}
 
                   {/* WhatsApp hover overlay */}
-                  <div
-                    className={cn(
-                      'absolute bottom-0 left-0 right-0 p-2.5 transition-transform duration-300',
-                      isHovered ? 'translate-y-0' : 'translate-y-full'
-                    )}
-                  >
+                  <div className={cn(
+                    'absolute bottom-0 left-0 right-0 p-2.5 transition-transform duration-300',
+                    isHovered ? 'translate-y-0' : 'translate-y-full'
+                  )}>
                     <a
                       href={whatsappHref}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 bg-[#25D366] text-white py-3 rounded-lg text-xs font-bold tracking-[0.05em] font-body shadow-[0_4px_16px_rgba(37,211,102,0.4)] hover:bg-[#1DA851] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 focus-visible:ring-offset-[#141414]"
+                      className="flex items-center justify-center gap-2 bg-[#25D366] text-white py-3 rounded-lg text-xs font-bold tracking-[0.05em] font-body shadow-[0_4px_16px_rgba(37,211,102,0.4)] hover:bg-[#1DA851] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2"
                       onClick={(e) => {
                         e.stopPropagation();
                         EVENTS.whatsappClick('producto_destacado', producto.nombre, producto.precio);
@@ -126,17 +122,20 @@ export default function FeaturedProducts({ productos }: FeaturedProductsProps) {
                 </Link>
 
                 {/* Info */}
-                <Link href={productoUrl} className="block p-3 sm:p-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429] focus-visible:ring-inset rounded-b-xl">
+                <Link
+                  href={productoUrl}
+                  className="block p-3 sm:p-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429] focus-visible:ring-inset rounded-b-xl"
+                >
                   {producto.marca && (
-                    <span className="text-[9px] font-bold tracking-[0.15em] text-white/35 font-body">
+                    <span className="text-[9px] font-bold tracking-[0.15em] text-gray-400 font-body">
                       {producto.marca.toUpperCase()}
                     </span>
                   )}
-                  <h3 className="text-sm font-semibold text-white mt-1 font-body line-clamp-2 hover:text-[#D90429] transition-colors">
+                  <h3 className="text-sm font-semibold text-gray-900 mt-1 font-body line-clamp-2 hover:text-[#D90429] transition-colors">
                     {producto.nombre}
                   </h3>
                   <p
-                    className="text-lg font-bold text-white mt-2.5 font-body"
+                    className="text-lg font-bold text-gray-900 mt-2.5 font-body"
                     style={{ fontVariantNumeric: 'tabular-nums' }}
                   >
                     {producto.precio_formateado}

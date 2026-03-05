@@ -1,5 +1,9 @@
 'use client';
 
+// ============================================================
+// ChicImportUSA — FinalCTA · Nieve Activa
+// ============================================================
+
 import Link from 'next/link';
 import { WHATSAPP_URL } from '@/lib/constants';
 import { EVENTS } from '@/lib/analytics';
@@ -33,20 +37,13 @@ export default function FinalCTA() {
 
         <p className="text-[11px] text-white/40 mt-5 font-body">
           Al continuar, aceptas nuestros{' '}
-          <Link
-            href="/terminos-y-condiciones"
-            className="underline underline-offset-2 hover:text-white/60"
-          >
+          <Link href="/terminos-y-condiciones" className="underline underline-offset-2 hover:text-white/60">
             Términos y Condiciones
           </Link>{' '}
           y{' '}
-          <Link
-            href="/politica-de-privacidad"
-            className="underline underline-offset-2 hover:text-white/60"
-          >
+          <Link href="/politica-de-privacidad" className="underline underline-offset-2 hover:text-white/60">
             Política de Privacidad
-          </Link>
-          .
+          </Link>.
         </p>
       </div>
     </section>

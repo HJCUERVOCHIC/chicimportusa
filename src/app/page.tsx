@@ -1,79 +1,83 @@
 // ============================================================
-// ChicImportUSA — Homepage (Etapa 3 · Streetwear/Urban)
-// Server Component con ISR para productos destacados
+// ChicImportUSA — Homepage = Catalogo completo
+// La home es directamente el catalogo con todos sus filtros.
 // ============================================================
 
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
-import { getProductos } from '@/lib/api-catalogo';
+import { getProductos, getCategorias, getMarcas } from '@/lib/api-catalogo';
 import { SITE_CONFIG } from '@/lib/constants';
-import Hero from '@/components/sections/Hero';
-import FeaturedProducts from '@/components/sections/FeaturedProducts';
-import Categories from '@/components/sections/Categories';
-import HowItWorks from '@/components/sections/HowItWorks';
-import Testimonials from '@/components/sections/Testimonials';
-import FinalCTA from '@/components/sections/FinalCTA';
-
-// -----------------------------------------------------------
-// Metadata SEO
-// -----------------------------------------------------------
+import CatalogClient from '@/components/catalogo/CatalogClient';
+import { FilterBarSkeleton, ProductGridSkeleton } from '@/components/ui/Skeleton';
 
 export const metadata: Metadata = {
   title: 'ChicImportUSA — Productos importados desde Estados Unidos',
   description:
-    'Tenis, ropa y accesorios originales importados desde USA. Publicaciones periódicas gestionadas por WhatsApp. Envío a toda Colombia.',
+    'Tenis, ropa, perfumes y accesorios originales importados desde USA. Publicaciones periodicas gestionadas por WhatsApp. Envio a toda Colombia.',
   openGraph: {
     title: 'ChicImportUSA — Productos importados desde USA',
-    description:
-      'Tenis, ropa y accesorios originales. Publicaciones periódicas con productos seleccionados.',
+    description: 'Tenis, ropa y accesorios originales. Publicaciones periodicas con productos seleccionados.',
     url: SITE_CONFIG.url,
     siteName: SITE_CONFIG.name,
     locale: 'es_CO',
     type: 'website',
-    images: [
-      {
-        url: `${SITE_CONFIG.url}/img/og-image.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'ChicImportUSA - Productos importados desde USA',
-      },
-    ],
+    images: [{ url: `${SITE_CONFIG.url}/img/og-image.jpg`, width: 1200, height: 630, alt: 'ChicImportUSA' }],
   },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'ChicImportUSA — Productos importados desde USA',
-    description:
-      'Tenis, ropa y accesorios originales importados. Publicaciones gestionadas por WhatsApp.',
-  },
-  alternates: {
-    canonical: SITE_CONFIG.url,
-  },
+  alternates: { canonical: SITE_CONFIG.url },
 };
-
-// -----------------------------------------------------------
-// ISR — revalidar cada 5 minutos
-// -----------------------------------------------------------
 
 export const revalidate = 300;
 
-// -----------------------------------------------------------
-// Page
-// -----------------------------------------------------------
+interface HomePageProps {
+  searchParams: Promise<{
+    categoria?: string;
+    marca?: string;
+    genero?: string;
+    buscar?: string;
+    orden?: string;
+  }>;
+}
 
-export default async function HomePage() {
-  // Obtener productos destacados desde la API
-  const productosData = await getProductos({ destacados: true, limite: 8 });
+export default async function HomePage({ searchParams }: HomePageProps) {
+  const params = await searchParams;
+
+  const categoriaActiva = params?.categoria || undefined;
+  const marcaActiva     = params?.marca     || undefined;
+  const generoActivo    = params?.genero    || undefined;
+  const busquedaActiva  = params?.buscar    || undefined;
+  const ordenActivo     = (params?.orden as 'reciente' | 'precio_asc' | 'precio_desc') || undefined;
+
+  const [dataProductos, dataCategorias, dataMarcas] = await Promise.all([
+    getProductos({
+      categoria: categoriaActiva,
+      marca:     marcaActiva,
+      genero:    generoActivo as 'hombre' | 'mujer' | 'unisex' | undefined,
+      buscar:    busquedaActiva,
+      orden:     ordenActivo,
+    }),
+    getCategorias(generoActivo),
+    getMarcas(categoriaActiva, generoActivo),
+  ]);
 
   return (
-    <>
-      <Hero
-        totalProductos={productosData.total}
-        publicacionActiva={productosData.publicacion_activa}
-      />
-      <FeaturedProducts productos={productosData.productos} />
-      <Categories categorias={productosData.categorias} />
-      <HowItWorks />
-      <Testimonials />
-      <FinalCTA />
-    </>
+    <main id="contenido-principal">
+      <Suspense
+        fallback={
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+            <FilterBarSkeleton />
+            <ProductGridSkeleton count={12} />
+          </div>
+        }
+      >
+        <CatalogClient
+          initialProductos={dataProductos.productos}
+          initialTotal={dataProductos.total}
+          initialPublicacionActiva={dataProductos.publicacion_activa}
+          initialCategorias={dataCategorias.categorias}
+          initialMarcas={dataMarcas.marcas}
+          totalProductos={dataCategorias.total_productos}
+        />
+      </Suspense>
+    </main>
   );
 }
