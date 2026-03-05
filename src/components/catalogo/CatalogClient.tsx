@@ -197,7 +197,6 @@ export default function CatalogClient({
   const [categorias,        setCategorias]        = useState<CategoriaResumen[]>(initialCategorias);
   const [marcas,            setMarcas]            = useState<MarcaItem[]>(initialMarcas);
   const [loading,           setLoading]           = useState(false);
-  const [sortOpen,          setSortOpen]          = useState(false);
   const [busquedaDebounced, setBusquedaDebounced] = useState(busqueda);
 
   const hayFiltrosActivos = genero || categoria || marca || busqueda;
@@ -261,10 +260,9 @@ export default function CatalogClient({
         </div>
       )}
 
-      {/* ── DESTACADOS — fondo oscuro + carrusel ──────────────── */}
+      {/* ── DESTACADOS ────────────────────────────────────────── */}
       {mostrarDestacados && (
         <section className="bg-white border-t-4 border-[#D90429] pt-7 pb-8">
-          {/* Header con padding */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-end justify-between mb-5">
             <div>
               <p className="text-[10px] font-bold tracking-[0.3em] uppercase text-[#D90429] font-body mb-1">
@@ -274,153 +272,192 @@ export default function CatalogClient({
                 DESTACADOS <span className="text-[#D90429]">🔥</span>
               </h2>
             </div>
-            <span className="text-[11px] text-gray-400 font-body hidden sm:block">
-              Desliza →
-            </span>
+            <span className="text-[11px] text-gray-400 font-body hidden sm:block">Desliza →</span>
           </div>
-
-          {/* Carrusel */}
           <div className="px-4 sm:px-6 min-w-0 overflow-hidden">
             <DestacadosCarousel productos={destacados} />
           </div>
         </section>
       )}
 
-      {/* ── Toolbar sticky ────────────────────────────────────── */}
-      <div className="sticky top-[57px] z-20 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 flex flex-col gap-3">
+      {/* ── Layout: Sidebar + Grid ─────────────────────────────── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+        <div className="flex gap-8 items-start">
 
-          {/* Busqueda + Orden */}
-          <div className="flex items-center gap-3">
-            <div className="relative flex-1">
+          {/* ── SIDEBAR ─────────────────────────────────────────── */}
+          <aside className="hidden md:flex flex-col gap-5 w-52 flex-shrink-0 sticky top-[57px] self-start max-h-[calc(100vh-64px)] overflow-y-auto pb-6" style={{ scrollbarWidth: 'none' }}>
+
+            {/* Busqueda */}
+            <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-                <IconSearch size={16} />
+                <IconSearch size={14} />
               </span>
-              <label htmlFor="busqueda-catalogo" className="sr-only">Buscar productos</label>
+              <label htmlFor="busqueda-sidebar" className="sr-only">Buscar productos</label>
               <input
-                id="busqueda-catalogo"
+                id="busqueda-sidebar"
                 type="search"
-                name="buscar"
                 autoComplete="off"
-                placeholder="Buscar por nombre o marca..."
+                placeholder="Buscar..."
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
-                className="w-full bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 text-sm pl-9 pr-9 py-2.5 rounded-lg outline-none focus:border-[#D90429] focus:ring-2 focus:ring-[#D90429]/10 transition-colors duration-200"
+                className="w-full bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 text-sm pl-8 pr-8 py-2 rounded-lg outline-none focus:border-[#D90429] focus:ring-2 focus:ring-[#D90429]/10 transition-colors"
               />
               {busqueda && (
-                <button type="button" aria-label="Limpiar busqueda" onClick={() => setBusqueda('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
-                  <IconX size={14} />
+                <button type="button" onClick={() => setBusqueda('')} aria-label="Limpiar"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                  <IconX size={13} />
                 </button>
               )}
             </div>
 
-            <div className="relative flex-shrink-0">
-              <button onClick={() => setSortOpen((v) => !v)}
-                className="flex items-center gap-1.5 px-3 py-2.5 bg-gray-50 border border-gray-200 text-gray-600 hover:text-gray-900 text-sm rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429]"
-                aria-expanded={sortOpen}>
-                <IconChevronDown size={14} />
-                <span className="hidden sm:inline font-body">{ORDEN_OPTIONS.find((o) => o.value === orden)?.label}</span>
-              </button>
-              {sortOpen && (
-                <>
-                  <div className="fixed inset-0 z-10" onClick={() => setSortOpen(false)} aria-hidden="true" />
-                  <div className="absolute right-0 top-full mt-1 z-20 bg-white border border-gray-100 rounded-xl min-w-[160px] shadow-lg">
-                    {ORDEN_OPTIONS.map((opt) => (
-                      <button key={opt.value} onClick={() => handleOrden(opt.value)}
-                        className={cn('w-full text-left px-4 py-2.5 text-sm font-body transition-colors first:rounded-t-xl last:rounded-b-xl',
-                          orden === opt.value ? 'text-[#D90429] bg-[#D90429]/5 font-semibold' : 'text-gray-600 hover:bg-gray-50')}>
-                        {opt.label}
-                      </button>
-                    ))}
-                  </div>
-                </>
-              )}
+            {/* Genero */}
+            <div>
+              <p className="text-[10px] font-bold tracking-[0.15em] uppercase text-gray-400 mb-2 font-body">Genero</p>
+              <div className="flex flex-col gap-1">
+                {GENERO_OPTIONS.map((opt) => (
+                  <button key={opt.value} type="button" onClick={() => handleGenero(opt.value)}
+                    className={cn(
+                      'text-left px-3 py-2 rounded-lg text-sm font-body transition-all duration-150',
+                      genero === opt.value
+                        ? 'bg-[#111] text-white font-semibold'
+                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    )}>
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Tabs genero */}
-          <div className="flex items-center gap-2" role="tablist">
-            {GENERO_OPTIONS.map((opt) => (
-              <button key={opt.value} type="button" role="tab" aria-selected={genero === opt.value}
-                onClick={() => handleGenero(opt.value)}
-                className={cn('px-4 py-1.5 rounded-full text-xs font-semibold font-body tracking-wide border transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429] focus-visible:ring-offset-2',
-                  genero === opt.value ? 'bg-[#111] border-[#111] text-white' : 'bg-white border-gray-200 text-gray-600 hover:border-gray-400')}>
-                {opt.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Chips categorias */}
-          {categorias.length > 0 && (
-            <div className="flex items-center gap-2 overflow-x-auto pb-0.5" style={{ scrollbarWidth: 'none' }} role="tablist">
-              {categorias.map((cat) => (
-                <button key={cat.id} type="button" role="tab" aria-selected={categoria === cat.id}
-                  onClick={() => handleCategoria(cat.id)}
-                  className={cn('flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold font-body tracking-wide border transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429] focus-visible:ring-offset-2',
-                    categoria === cat.id ? 'bg-[#D90429] border-[#D90429] text-white' : 'bg-white border-gray-200 text-gray-600 hover:border-[#D90429]/50 hover:text-[#D90429]')}>
-                  <span aria-hidden="true">{cat.emoji}</span>
-                  <span>{cat.nombre}</span>
-                  <span className={cn('text-[10px]', categoria === cat.id ? 'text-white/70' : 'text-gray-400')}>{cat.cantidad}</span>
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* Marca + conteo + limpiar */}
-          <div className="flex flex-wrap items-center gap-3">
-            {marcas.length > 0 && (
-              <div className="relative">
-                <label htmlFor="filtro-marca" className="sr-only">Filtrar por marca</label>
-                <select id="filtro-marca" value={marca} onChange={(e) => handleMarca(e.target.value)}
-                  className={cn('appearance-none bg-gray-50 border text-sm py-2 pl-3 pr-7 rounded-lg font-body text-gray-700 outline-none transition-colors hover:border-gray-300 focus:border-[#D90429]',
-                    marca ? 'border-[#D90429] text-[#D90429] font-semibold' : 'border-gray-200')}>
-                  <option value="">Todas las marcas</option>
-                  {marcas.map((m) => <option key={m.id} value={m.id}>{m.nombre} ({m.cantidad})</option>)}
-                </select>
-                <IconChevronDown size={12} className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-gray-400" />
+            {/* Categorias */}
+            {categorias.length > 0 && (
+              <div>
+                <p className="text-[10px] font-bold tracking-[0.15em] uppercase text-gray-400 mb-2 font-body">Categoria</p>
+                <div className="flex flex-col gap-1">
+                  {categorias.map((cat) => (
+                    <button key={cat.id} type="button" onClick={() => handleCategoria(cat.id)}
+                      className={cn(
+                        'flex items-center justify-between px-3 py-2 rounded-lg text-sm font-body transition-all duration-150',
+                        categoria === cat.id
+                          ? 'bg-[#D90429] text-white font-semibold'
+                          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      )}>
+                      <span className="flex items-center gap-2">
+                        <span aria-hidden="true">{cat.emoji}</span>
+                        {cat.nombre}
+                      </span>
+                      <span className={cn('text-[11px]', categoria === cat.id ? 'text-white/70' : 'text-gray-400')}>
+                        {cat.cantidad}
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
 
-            {hayFiltrosActivos && (
-              <button type="button" onClick={handleLimpiar}
-                className="text-xs font-semibold font-body text-[#D90429] hover:text-[#b8031f] transition-colors">
-                Limpiar filtros
-              </button>
+            {/* Marcas */}
+            {marcas.length > 0 && (
+              <div>
+                <p className="text-[10px] font-bold tracking-[0.15em] uppercase text-gray-400 mb-2 font-body">Marca</p>
+                <div className="flex flex-col gap-1 max-h-52 overflow-y-auto pr-1" style={{ scrollbarWidth: 'thin' }}>
+                  {marcas.map((m) => (
+                    <button key={m.id} type="button" onClick={() => handleMarca(marca === m.id ? '' : m.id)}
+                      className={cn(
+                        'flex items-center justify-between px-3 py-2 rounded-lg text-sm font-body transition-all duration-150',
+                        marca === m.id
+                          ? 'bg-[#D90429] text-white font-semibold'
+                          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      )}>
+                      <span className="truncate">{m.nombre}</span>
+                      <span className={cn('text-[11px] ml-2 flex-shrink-0', marca === m.id ? 'text-white/70' : 'text-gray-400')}>
+                        {m.cantidad}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
             )}
 
-            <p className="ml-auto text-xs font-body text-gray-400" style={{ fontVariantNumeric: 'tabular-nums' }} aria-live="polite">
-              {loading ? <span className="text-gray-300">Cargando...</span> : (
-                <><span className="font-semibold text-gray-700">{total}</span>{' '}{total === 1 ? 'producto' : 'productos'}</>
-              )}
-            </p>
+            {/* Orden */}
+            <div>
+              <p className="text-[10px] font-bold tracking-[0.15em] uppercase text-gray-400 mb-2 font-body">Ordenar</p>
+              <div className="flex flex-col gap-1">
+                {ORDEN_OPTIONS.map((opt) => (
+                  <button key={opt.value} type="button" onClick={() => handleOrden(opt.value)}
+                    className={cn(
+                      'text-left px-3 py-2 rounded-lg text-sm font-body transition-all duration-150',
+                      orden === opt.value
+                        ? 'text-[#D90429] font-semibold bg-[#D90429]/5'
+                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    )}>
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Limpiar */}
+            {hayFiltrosActivos && (
+              <button type="button" onClick={handleLimpiar}
+                className="text-xs font-bold font-body text-[#D90429] hover:text-[#b8031f] transition-colors text-left px-3">
+                ✕ Limpiar filtros
+              </button>
+            )}
+          </aside>
+
+          {/* ── GRID ───────────────────────────────────────────── */}
+          <div className="flex-1 min-w-0">
+
+            {/* Barra superior mobile + conteo */}
+            <div className="flex items-center justify-between mb-4 gap-3">
+              {/* Filtros mobile — chips horizontales */}
+              <div className="flex md:hidden items-center gap-2 overflow-x-auto flex-1" style={{ scrollbarWidth: 'none' }}>
+                {GENERO_OPTIONS.filter(o => o.value).map((opt) => (
+                  <button key={opt.value} type="button" onClick={() => handleGenero(genero === opt.value ? '' : opt.value)}
+                    className={cn('flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold font-body border transition-all',
+                      genero === opt.value ? 'bg-[#111] border-[#111] text-white' : 'bg-white border-gray-200 text-gray-600')}>
+                    {opt.label}
+                  </button>
+                ))}
+                {categorias.map((cat) => (
+                  <button key={cat.id} type="button" onClick={() => handleCategoria(cat.id)}
+                    className={cn('flex-shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold font-body border transition-all',
+                      categoria === cat.id ? 'bg-[#D90429] border-[#D90429] text-white' : 'bg-white border-gray-200 text-gray-600')}>
+                    <span>{cat.emoji}</span><span>{cat.nombre}</span>
+                  </button>
+                ))}
+              </div>
+
+              {/* Conteo */}
+              <p className="text-xs font-body text-gray-400 flex-shrink-0 ml-auto" style={{ fontVariantNumeric: 'tabular-nums' }} aria-live="polite">
+                {loading ? <span className="text-gray-300">Cargando...</span> : (
+                  <><span className="font-semibold text-gray-700">{total}</span>{' '}{total === 1 ? 'producto' : 'productos'}</>
+                )}
+              </p>
+            </div>
+
+            {loading ? <ProductGridSkeleton count={12} /> : (
+              <ProductGrid
+                productos={productos}
+                sinPublicaciones={!publicacionActiva && total === 0 && !hayFiltrosActivos}
+              />
+            )}
+
+            {!loading && productos.length > 0 && (
+              <div className="mt-10 rounded-2xl bg-gray-50 border border-gray-100 p-6 sm:p-8 text-center">
+                <p className="text-base font-bold text-gray-900 font-body">Te interesa un producto?</p>
+                <p className="mt-1 text-sm text-gray-500 font-body">
+                  Escribenos por WhatsApp para confirmar disponibilidad, tallas y precio final.
+                </p>
+                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer"
+                  className="mt-5 inline-flex items-center gap-2 px-7 py-3 bg-[#25D366] hover:bg-[#1DA851] text-white text-sm font-bold font-body tracking-wide rounded-lg transition-all active:scale-[0.98] shadow-[0_4px_16px_rgba(37,211,102,0.3)]"
+                  onClick={() => EVENTS.whatsappClick('catalogo_cta_final')}>
+                  <IconWhatsApp size={16} />
+                  Escribir por WhatsApp
+                </a>
+              </div>
+            )}
           </div>
         </div>
-      </div>
-
-      {/* ── Grid catalogo ─────────────────────────────────────── */}
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-6">
-        {loading ? <ProductGridSkeleton count={12} /> : (
-          <ProductGrid
-            productos={productos}
-            sinPublicaciones={!publicacionActiva && total === 0 && !hayFiltrosActivos}
-          />
-        )}
-
-        {!loading && productos.length > 0 && (
-          <div className="mt-10 rounded-2xl bg-gray-50 border border-gray-100 p-6 sm:p-8 text-center">
-            <p className="text-base font-bold text-gray-900 font-body">Te interesa un producto?</p>
-            <p className="mt-1 text-sm text-gray-500 font-body">
-              Escribenos por WhatsApp para confirmar disponibilidad, tallas y precio final.
-            </p>
-            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer"
-              className="mt-5 inline-flex items-center gap-2 px-7 py-3 bg-[#25D366] hover:bg-[#1DA851] text-white text-sm font-bold font-body tracking-wide rounded-lg transition-all active:scale-[0.98] shadow-[0_4px_16px_rgba(37,211,102,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2"
-              onClick={() => EVENTS.whatsappClick('catalogo_cta_final')}>
-              <IconWhatsApp size={16} />
-              Escribir por WhatsApp
-            </a>
-          </div>
-        )}
       </div>
     </div>
   );
