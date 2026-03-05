@@ -124,7 +124,7 @@ function DestacadoCard({ producto }: { producto: Producto }) {
 
 function DestacadosCarousel({ productos }: { productos: Producto[] }) {
   const doubled  = [...productos, ...productos];
-  const duration = `${productos.length * 3}s`;
+  const duration = `${productos.length * 1.5}s`;
   return (
     <div className="relative overflow-hidden" style={{ maskImage: 'linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%)' }}>
       <style>{`
