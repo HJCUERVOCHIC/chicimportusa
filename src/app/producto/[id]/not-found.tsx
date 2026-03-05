@@ -1,33 +1,27 @@
 // ============================================================
-// ChicImportUSA — /producto/[id] → 404
+// ChicImportUSA — /producto/[id] → 404 · Etapa 3 Dark Theme
 // ============================================================
 
 import Link from 'next/link';
 
 export default function ProductoNotFound() {
   return (
-    <main className="mx-auto flex max-w-md flex-col items-center px-4 py-24 text-center">
-      <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
-        <svg
-          aria-hidden="true"
-          width={32}
-          height={32}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={1.5}
-          className="text-gray-400"
-        >
-          <circle cx={11} cy={11} r={8} />
-          <path d="m21 21-4.3-4.3" />
-          <path d="M8 11h6" />
-        </svg>
-      </div>
-      <h1 className="text-xl font-bold text-gray-900">
+    <main className="min-h-[70vh] bg-[#0a0a0a] flex flex-col items-center justify-center px-4 py-24 text-center">
+      <span
+        className="text-[120px] leading-none text-white/5 select-none mb-4"
+        style={{ fontFamily: 'var(--font-bebas-neue, cursive)' }}
+        aria-hidden="true"
+      >
+        404
+      </span>
+      <h1
+        className="text-4xl text-white/60"
+        style={{ fontFamily: 'var(--font-bebas-neue, cursive)', letterSpacing: '0.05em' }}
+      >
         Producto no encontrado
       </h1>
       <p
-        className="mt-2 text-sm text-gray-500 leading-relaxed"
+        className="mt-3 max-w-sm text-sm text-white/30 leading-relaxed"
         style={{ textWrap: 'pretty' } as React.CSSProperties}
       >
         Este producto ya no está disponible o el enlace es incorrecto.
@@ -35,7 +29,7 @@ export default function ProductoNotFound() {
       </p>
       <Link
         href="/catalogo"
-        className="mt-6 inline-flex items-center gap-2 rounded-lg bg-gray-900 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2"
+        className="mt-8 inline-flex items-center gap-2 px-6 py-3 bg-[#D90429] hover:bg-[#b8031f] text-white text-sm font-bold tracking-widest uppercase transition-all duration-200 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
       >
         Ver catálogo
       </Link>

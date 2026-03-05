@@ -1,18 +1,16 @@
 // ============================================================
-// ChicImportUSA — /catalogo
-// Server Component: carga datos en paralelo y pasa a CatalogClient
-// ISR: revalidate cada 5 minutos (300s)
+// ChicImportUSA — /catalogo · Etapa 3 Dark Theme
+// Server Component: carga datos en paralelo → pasa a CatalogClient
+// ISR: revalidate 5 minutos
 // ============================================================
 
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { getProductos, getCategorias, getMarcas } from '@/lib/api-catalogo';
 import CatalogClient from '@/components/catalogo/CatalogClient';
-import { FilterBarSkeleton, ProductGridSkeleton } from '@/components/ui/Skeleton';
+import { FilterBarSkeleton, ProductGridSkeleton, SkeletonStyles } from '@/components/ui/Skeleton';
 
-// -----------------------------------------------------------
-// SEO Metadata
-// -----------------------------------------------------------
+// ── SEO ───────────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
   title: 'Catálogo — Chic Import USA',
@@ -20,19 +18,14 @@ export const metadata: Metadata = {
     'Explora nuestro catálogo de productos importados de USA: calzado Nike y Adidas, perfumería, ropa, vitaminas y accesorios. Precios en pesos colombianos con envío a toda Colombia.',
   openGraph: {
     title: 'Catálogo — Chic Import USA',
-    description:
-      'Productos importados de USA: calzado, perfumería, ropa y más. Precios en COP.',
+    description: 'Productos importados de USA: calzado, perfumería, ropa y más. Precios en COP.',
     type: 'website',
     url: 'https://chicimportusa.com/catalogo',
   },
-  alternates: {
-    canonical: 'https://chicimportusa.com/catalogo',
-  },
+  alternates: { canonical: 'https://chicimportusa.com/catalogo' },
 };
 
-// -----------------------------------------------------------
-// Page props (Next.js 15 — searchParams is a Promise)
-// -----------------------------------------------------------
+// ── Page props ────────────────────────────────────────────────────────────────
 
 interface CatalogoPageProps {
   searchParams: Promise<{
@@ -44,23 +37,16 @@ interface CatalogoPageProps {
   }>;
 }
 
-// -----------------------------------------------------------
-// Server Component
-// -----------------------------------------------------------
+// ── Server Component ──────────────────────────────────────────────────────────
 
 export default async function CatalogoPage({ searchParams }: CatalogoPageProps) {
   const params = await searchParams;
 
   const categoriaActiva = params?.categoria || undefined;
-  const marcaActiva = params?.marca || undefined;
-  const generoActivo = params?.genero || undefined;
-  const busquedaActiva = params?.buscar || undefined;
-  const ordenActivo = (params?.orden as 'reciente' | 'precio_asc' | 'precio_desc') || undefined;
-
-  // -------------------------------------------------------
-  // Carga paralela de datos (per spec recommendation)
-  // Promise.all para minimizar tiempo de carga
-  // -------------------------------------------------------
+  const marcaActiva     = params?.marca     || undefined;
+  const generoActivo    = params?.genero    || undefined;
+  const busquedaActiva  = params?.buscar    || undefined;
+  const ordenActivo     = (params?.orden as 'reciente' | 'precio_asc' | 'precio_desc') || undefined;
 
   const [dataProductos, dataCategorias, dataMarcas] = await Promise.all([
     getProductos({
@@ -75,23 +61,11 @@ export default async function CatalogoPage({ searchParams }: CatalogoPageProps) 
   ]);
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      {/* Encabezado de la página */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
-          Catálogo
-        </h1>
-        <p className="mt-2 text-sm text-gray-500 sm:text-base"
-           style={{ textWrap: 'pretty' } as React.CSSProperties}>
-          Productos importados de Estados Unidos. Escríbenos por WhatsApp
-          para confirmar disponibilidad y&nbsp;precio&nbsp;final.
-        </p>
-      </div>
-
-      {/* Catálogo con filtros interactivos */}
+    <>
+      <SkeletonStyles />
       <Suspense
         fallback={
-          <div className="space-y-6">
+          <div className="min-h-screen bg-[#0a0a0a] px-4 md:px-8 pt-10 pb-6 max-w-7xl mx-auto space-y-6">
             <FilterBarSkeleton />
             <ProductGridSkeleton count={8} />
           </div>
@@ -106,6 +80,6 @@ export default async function CatalogoPage({ searchParams }: CatalogoPageProps) 
           totalProductos={dataCategorias.total_productos}
         />
       </Suspense>
-    </main>
+    </>
   );
 }

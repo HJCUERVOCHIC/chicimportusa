@@ -8,6 +8,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        display: ["var(--font-bebas-neue)", "cursive"],
+        body:    ["var(--font-space-grotesk)", "sans-serif"],
+      },
       colors: {
         // Paleta base
         bg: '#FFFFFF',

@@ -1,5 +1,11 @@
 'use client';
 
+// ============================================================
+// ChicImportUSA — ProductCard · Catálogo
+// Estilo idéntico a FeaturedProducts del Home
+// ============================================================
+
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { WHATSAPP_PHONE, SITE_CONFIG } from '@/lib/constants';
@@ -10,41 +16,51 @@ import type { Producto } from '@/types/catalogo';
 
 interface ProductCardProps {
   producto: Producto;
+  priority?: boolean;
 }
 
-/**
- * Tarjeta de producto para el catálogo.
- *
- * - Click en la imagen/nombre → /producto/[id] (detalle)
- * - Click en WhatsApp → chat directo con link del producto
- *   (WhatsApp genera preview con imagen gracias a OG tags)
- */
-export default function ProductCard({ producto }: ProductCardProps) {
-  const { id, nombre, marca, categoria, precio, precio_formateado, imagen } =
+export default function ProductCard({ producto, priority = false }: ProductCardProps) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const { id, nombre, marca, categoria, precio, precio_formateado, imagen, destacado } =
     producto;
 
-  // URL de la página de detalle
-  const productoUrl = `/producto/${id}`;
-
-  // WhatsApp con link del producto (genera preview con imagen)
+  const productoUrl     = `/producto/${id}`;
   const whatsappMessage = `Hola! Me interesa este producto:\n${SITE_CONFIG.url}/producto/${id}`;
-  const whatsappHref = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(whatsappMessage)}`;
+  const whatsappHref    = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(whatsappMessage)}`;
 
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-xl border border-gray-100 bg-white transition-shadow duration-200 hover:shadow-md hover:border-gray-200">
-      {/* Imagen del producto — click lleva al detalle */}
-      <Link href={productoUrl} className="relative aspect-square overflow-hidden bg-gray-50">
+    <article
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className={cn(
+        'rounded-xl overflow-hidden bg-[#141414] cursor-pointer transition-[transform,border-color,box-shadow] duration-300',
+        isHovered
+          ? 'border border-[#D90429]/40 -translate-y-1'
+          : 'border border-white/[0.06]'
+      )}
+    >
+      {/* Imagen */}
+      <Link
+        href={productoUrl}
+        className="block relative aspect-square overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429] focus-visible:ring-inset"
+        aria-label={`Ver ${nombre}`}
+      >
         {imagen ? (
           <Image
             src={imagen}
             alt={nombre}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none"
-            loading="lazy"
+            className={cn(
+              'object-cover brightness-90 transition-transform duration-500',
+              isHovered ? 'scale-110' : 'scale-100'
+            )}
+            priority={priority}
+            loading={priority ? 'eager' : 'lazy'}
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-gray-300">
+          <div className="flex h-full items-center justify-center bg-[#1a1a1a] text-white/20">
             <svg
               aria-hidden="true"
               width={48}
@@ -61,69 +77,62 @@ export default function ProductCard({ producto }: ProductCardProps) {
           </div>
         )}
 
-        {/* Badge de categoría */}
-        <span className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-full bg-white/90 backdrop-blur-sm px-2 py-0.5 text-[11px] font-medium text-gray-700 shadow-sm">
-          <span aria-hidden="true">{categoria.emoji}</span>
-          <span className="hidden sm:inline">{categoria.nombre}</span>
+        {/* Badge categoría */}
+        <span className="absolute top-2.5 left-2.5 bg-black/70 backdrop-blur-sm rounded px-2.5 py-1 text-[10px] font-bold text-white tracking-[0.08em] font-body">
+          {categoria.emoji} {categoria.nombre}
         </span>
 
         {/* Badge destacado */}
-        {producto.destacado && (
-          <span className="absolute right-2 top-2 inline-flex items-center rounded-full bg-[#D90429] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm">
+        {destacado && (
+          <span className="absolute top-2.5 right-2.5 bg-[#D90429] rounded px-2.5 py-1 text-[9px] font-bold text-white tracking-[0.1em] uppercase font-body">
             Destacado
           </span>
         )}
+
+        {/* Botón WhatsApp — se desliza desde abajo al hover */}
+        <div
+          className={cn(
+            'absolute bottom-0 left-0 right-0 p-2.5 transition-transform duration-300',
+            isHovered ? 'translate-y-0' : 'translate-y-full'
+          )}
+        >
+          <a
+            href={whatsappHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 bg-[#25D366] text-white py-3 rounded-lg text-xs font-bold tracking-[0.05em] font-body shadow-[0_4px_16px_rgba(37,211,102,0.4)] hover:bg-[#1DA851] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 focus-visible:ring-offset-[#141414]"
+            onClick={(e) => {
+              e.stopPropagation();
+              EVENTS.whatsappClick('producto', nombre, precio);
+            }}
+            aria-label={`Pedir ${nombre} por WhatsApp`}
+          >
+            <IconWhatsApp size={14} />
+            PEDIR POR WHATSAPP
+          </a>
+        </div>
       </Link>
 
-      {/* Info del producto */}
-      <div className="flex flex-1 flex-col p-3 sm:p-4">
-        {/* Marca */}
+      {/* Info */}
+      <Link
+        href={productoUrl}
+        className="block p-3 sm:p-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429] focus-visible:ring-inset rounded-b-xl"
+      >
         {marca && (
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-            {marca}
+          <span className="text-[9px] font-bold tracking-[0.15em] text-white/35 font-body">
+            {marca.toUpperCase()}
           </span>
         )}
-
-        {/* Nombre — click lleva al detalle */}
-        <Link href={productoUrl}>
-          <h3 className="mt-0.5 text-sm font-medium leading-snug text-gray-900 line-clamp-2 hover:text-[#D90429] transition-colors">
-            {nombre}
-          </h3>
-        </Link>
-
-        {/* Género (si aplica) */}
-        {producto.genero && (
-          <span className="mt-1 text-[11px] text-gray-400 capitalize">
-            {producto.genero}
-          </span>
-        )}
-
-        {/* Precio */}
+        <h3 className="text-sm font-semibold text-white mt-1 font-body line-clamp-2 hover:text-[#D90429] transition-colors">
+          {nombre}
+        </h3>
         <p
-          className="mt-auto pt-2 text-lg font-bold text-gray-900"
+          className="text-lg font-bold text-white mt-2.5 font-body"
           style={{ fontVariantNumeric: 'tabular-nums' }}
         >
           {precio_formateado}
         </p>
-
-        {/* CTA WhatsApp — chat directo con link del producto */}
-        <a
-          href={whatsappHref}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={cn(
-            'mt-2 flex items-center justify-center gap-2 rounded-lg px-3 py-2.5',
-            'bg-[#25D366] text-white text-sm font-semibold',
-            'transition-all duration-150',
-            'hover:bg-[#1DA851] active:scale-[0.98]',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2'
-          )}
-          onClick={() => EVENTS.whatsappClick('producto', nombre, precio)}
-        >
-          <IconWhatsApp size={16} />
-          <span>Pedir por WhatsApp</span>
-        </a>
-      </div>
+      </Link>
     </article>
   );
 }
