@@ -11,6 +11,7 @@ function ArrowLeftIcon() {
     </svg>
   );
 }
+
 function WhatsAppIcon({ size = 20 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -18,6 +19,7 @@ function WhatsAppIcon({ size = 20 }: { size?: number }) {
     </svg>
   );
 }
+
 function ShareIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
@@ -26,57 +28,25 @@ function ShareIcon() {
   );
 }
 
-function formatPrice(v: number) {
-  return new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(v);
-}
 function buildWhatsAppHref(product: Product): string {
   const url = `https://chicimportusa.com/producto/${product.id}`;
-  const msg = encodeURIComponent(`Hola! Estoy interesado en: *${product.nombre}*\n${url}`);
+  const msg = encodeURIComponent(`Hola! Estoy interesado en: *${product.name}*\n${url}`);
   return `${WHATSAPP_LINK}?text=${msg}`;
-}
-
-function ImageGallery({ product }: { product: Product }) {
-  const images = product.imagenes?.length ? product.imagenes : product.imagen_url ? [product.imagen_url] : ["/img/placeholder-product.jpg"];
-  const [active, setActive]     = useState(0);
-  const [imgError, setImgError] = useState(false);
-  const src = imgError ? "/img/placeholder-product.jpg" : images[active];
-
-  return (
-    <div className="flex flex-col gap-3">
-      <div className="relative aspect-square bg-[#1a1a1a] overflow-hidden">
-        <Image src={src} alt={product.nombre} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" priority onError={() => setImgError(true)} />
-        {product.disponible === false && (
-          <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-            <span className="text-white/60 text-sm tracking-[0.3em] uppercase border border-white/20 px-6 py-2">Agotado</span>
-          </div>
-        )}
-      </div>
-      {images.length > 1 && (
-        <div className="flex gap-2">
-          {images.map((img, i) => (
-            <button key={i} onClick={() => { setActive(i); setImgError(false); }}
-              className={`relative w-16 h-16 flex-shrink-0 overflow-hidden transition-all duration-200 ${active === i ? "ring-2 ring-[#D90429] ring-offset-2 ring-offset-[#0a0a0a]" : "opacity-40 hover:opacity-70"}`}
-              aria-label={`Imagen ${i + 1}`} aria-pressed={active === i}>
-              <Image src={img} alt={`${product.nombre} vista ${i + 1}`} fill sizes="64px" className="object-cover" />
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
 }
 
 function ShareButton({ product }: { product: Product }) {
   const [copied, setCopied] = useState(false);
   async function handleShare() {
     const url = `https://chicimportusa.com/producto/${product.id}`;
-    if (navigator.share) { try { await navigator.share({ title: product.nombre, url }); return; } catch {} }
+    if (navigator.share) {
+      try { await navigator.share({ title: product.name, url }); return; } catch {}
+    }
     await navigator.clipboard.writeText(url);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
   return (
-    <button onClick={handleShare} className="flex items-center gap-1.5 text-white/30 hover:text-white/70 text-xs tracking-wide transition-colors duration-200">
+    <button onClick={handleShare} className="flex items-center gap-1.5 text-gray-400 hover:text-gray-700 text-xs tracking-wide transition-colors duration-200">
       <ShareIcon />
       {copied ? "¡Enlace copiado!" : "Compartir"}
     </button>
@@ -84,56 +54,69 @@ function ShareButton({ product }: { product: Product }) {
 }
 
 export default function ProductDetail({ product }: { product: Product }) {
-  const hasDiscount = product.precio_original != null && product.precio_original > product.precio;
-  const discount    = hasDiscount ? Math.round(((product.precio_original! - product.precio) / product.precio_original!) * 100) : 0;
+  const [imgError, setImgError] = useState(false);
+  const isAvailable = product.status === 'available';
+  const src = imgError ? "/img/placeholder-product.jpg" : product.image;
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
+    <div className="min-h-screen bg-white">
       <nav className="max-w-6xl mx-auto px-4 md:px-8 pt-6 pb-4">
-        <Link href="/catalogo" className="inline-flex items-center gap-2 text-sm text-white/30 hover:text-white transition-colors duration-200 group">
+        <Link href="/" className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-gray-900 transition-colors duration-200 group">
           <span className="group-hover:-translate-x-1 transition-transform duration-200"><ArrowLeftIcon /></span>
           Volver al catálogo
         </Link>
       </nav>
+
       <div className="max-w-6xl mx-auto px-4 md:px-8 pb-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16">
-          <ImageGallery product={product} />
+
+          {/* Imagen */}
+          <div className="relative aspect-square bg-gray-50 overflow-hidden rounded-2xl border border-gray-100">
+            <Image src={src} alt={product.name} fill sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover" priority onError={() => setImgError(true)} />
+            {!isAvailable && (
+              <div className="absolute inset-0 bg-white/80 flex items-center justify-center">
+                <span className="text-gray-400 text-sm tracking-[0.3em] uppercase border border-gray-200 px-6 py-2 rounded-lg">Agotado</span>
+              </div>
+            )}
+          </div>
+
+          {/* Info */}
           <div className="flex flex-col gap-5 md:pt-2">
             <div className="flex items-center gap-3">
-              {product.categoria && <span className="text-[10px] tracking-[0.25em] uppercase text-white/30">{product.categoria}</span>}
-              {product.categoria && product.marca && <span className="text-white/15 text-xs">·</span>}
-              {product.marca && <span className="text-[10px] tracking-[0.25em] uppercase text-[#D90429]/70">{product.marca}</span>}
+              {product.category && <span className="text-[10px] tracking-[0.25em] uppercase text-gray-400">{product.category}</span>}
+              {product.category && product.brand && <span className="text-gray-300 text-xs">·</span>}
+              {product.brand && <span className="text-[10px] tracking-[0.25em] uppercase text-[#D90429]">{product.brand}</span>}
             </div>
-            <h1 className="text-4xl md:text-5xl text-white leading-none" style={{ fontFamily: "var(--font-bebas-neue, cursive)", letterSpacing: "0.02em" }}>
-              {product.nombre}
+
+            <h1 className="text-4xl md:text-5xl text-gray-900 leading-none"
+              style={{ fontFamily: "var(--font-bebas-neue, cursive)", letterSpacing: "0.02em" }}>
+              {product.name}
             </h1>
-            <div className="flex items-end gap-4 border-t border-b border-white/5 py-4">
-              <span className="text-3xl font-semibold text-white">{formatPrice(product.precio)}</span>
-              {hasDiscount && (
-                <div className="flex flex-col items-start gap-0.5">
-                  <span className="text-sm text-white/30 line-through leading-none">{formatPrice(product.precio_original!)}</span>
-                  <span className="text-xs bg-[#D90429] text-white px-1.5 py-0.5 font-bold tracking-wide">-{discount}% OFF</span>
-                </div>
-              )}
+
+            <div className="border-t border-b border-gray-100 py-4">
+              <span className="text-3xl font-semibold text-gray-900">{product.price_ref}</span>
             </div>
-            {product.descripcion && <p className="text-white/50 text-sm leading-relaxed">{product.descripcion}</p>}
-            {product.disponible !== false ? (
+
+            {isAvailable ? (
               <a href={buildWhatsAppHref(product)} target="_blank" rel="noopener noreferrer"
-                className="flex items-center justify-center gap-3 w-full py-4 bg-[#D90429] hover:bg-[#b8031f] text-white font-bold text-base tracking-widest uppercase transition-all duration-200 active:scale-[0.98] mt-2">
+                className="flex items-center justify-center gap-3 w-full py-4 bg-[#D90429] hover:bg-[#b8031f] text-white font-bold text-base tracking-widest uppercase transition-all duration-200 active:scale-[0.98] mt-2 rounded-xl shadow-[0_4px_16px_rgba(217,4,41,0.25)]">
                 <WhatsAppIcon size={20} />
                 Consultar por WhatsApp
               </a>
             ) : (
-              <div className="flex items-center justify-center w-full py-4 bg-white/5 text-white/30 font-semibold text-sm tracking-widest uppercase border border-white/8 mt-2">
+              <div className="flex items-center justify-center w-full py-4 bg-gray-50 text-gray-400 font-semibold text-sm tracking-widest uppercase border border-gray-100 mt-2 rounded-xl">
                 Producto agotado
               </div>
             )}
+
             <div className="flex items-center justify-end pt-1">
               <ShareButton product={product} />
             </div>
-            <div className="flex flex-col gap-2 border-t border-white/5 pt-4 mt-auto">
+
+            <div className="flex flex-col gap-2 border-t border-gray-100 pt-4 mt-auto">
               {["✦  Productos originales importados de USA", "✦  Pedidos via WhatsApp — rápido y seguro", "✦  Envíos a todo Colombia"].map((line) => (
-                <p key={line} className="text-[11px] text-white/25 tracking-wide">{line}</p>
+                <p key={line} className="text-[11px] text-gray-400 tracking-wide">{line}</p>
               ))}
             </div>
           </div>
