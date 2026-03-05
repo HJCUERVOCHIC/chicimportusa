@@ -29,7 +29,7 @@ export default function ProductDetail({ producto }: ProductDetailProps) {
     } else {
       await navigator.clipboard.writeText(shareUrl);
     }
-    EVENTS.productoShare(producto.id, producto.nombre);
+    EVENTS.whatsappClick('producto_share', producto.nombre);
   };
 
   return (
