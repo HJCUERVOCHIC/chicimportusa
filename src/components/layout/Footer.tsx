@@ -8,37 +8,12 @@ import Image from 'next/image';
 import { FOOTER_LINKS, SOCIAL_LINKS, WHATSAPP_URL, ADMIN_URL, SITE_CONFIG } from '@/lib/constants';
 import { IconInstagram, IconTikTok, IconWhatsApp } from '@/components/ui/Icons';
 
-const COMO_FUNCIONA = [
-  { num: '01', title: 'Elige',       desc: 'Selecciona un producto del catálogo.' },
-  { num: '02', title: 'Escríbenos', desc: 'Envía la referencia por WhatsApp con talla y color.' },
-  { num: '03', title: 'Confirmamos', desc: 'Precio final, disponibilidad y tiempo de entrega.' },
-  { num: '04', title: 'Despachamos', desc: '50% para separar, 50% al llegar a Colombia.' },
-];
-
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
     <footer className="bg-[#111] text-gray-400" role="contentinfo">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-
-        {/* Como funciona */}
-        <div className="mb-12 pb-12 border-b border-gray-800">
-          <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-gray-500 mb-8 font-body">
-            Como funciona
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-            {COMO_FUNCIONA.map((step) => (
-              <div key={step.num}>
-                <div className="w-7 h-7 rounded-full bg-[#D90429] flex items-center justify-center mb-3">
-                  <span className="text-[10px] font-bold text-white font-body">{step.num}</span>
-                </div>
-                <h3 className="text-sm font-bold text-white mb-1 font-body">{step.title}</h3>
-                <p className="text-xs text-gray-500 leading-relaxed font-body">{step.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
 
         {/* Grid principal */}
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">

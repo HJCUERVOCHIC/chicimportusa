@@ -1,106 +1,145 @@
-import { Metadata } from 'next'
+import type { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Política de Privacidad | Chic Import USA',
-  description: 'Política de privacidad de Chic Import USA. Información sobre recopilación, uso y protección de datos personales.',
-}
+  title: 'Política de Privacidad | ChicImportUSA',
+  description: 'Política de privacidad de ChicImportUSA. Información sobre recopilación, uso y protección de datos personales.',
+};
+
+const SECCIONES = [
+  {
+    num: '1',
+    title: 'Información recopilada',
+    intro: 'Podemos recopilar información como:',
+    list: [
+      'Nombre',
+      'Número de contacto (WhatsApp)',
+      'Información del pedido (producto, talla, color)',
+      'Comprobantes de pago enviados voluntariamente',
+      'Comunicaciones realizadas por WhatsApp',
+    ],
+    footer: 'No recopilamos información financiera directamente desde el sitio web.',
+  },
+  {
+    num: '2',
+    title: 'Uso de la información',
+    intro: 'La información personal se utiliza únicamente para:',
+    list: [
+      'Gestionar pedidos',
+      'Confirmar pagos y entregas',
+      'Brindar atención al cliente',
+      'Comunicación relacionada con compras',
+    ],
+  },
+  {
+    num: '3',
+    title: 'Protección de la información',
+    content: 'Implementamos medidas razonables para proteger la información personal y limitar su acceso únicamente a fines operativos del negocio.',
+  },
+  {
+    num: '4',
+    title: 'Compartición de datos',
+    content: 'Chic Import USA no vende ni comparte información personal con terceros, salvo cuando sea necesario para cumplir procesos logísticos o requerimientos legales.',
+  },
+  {
+    num: '5',
+    title: 'Derechos del usuario',
+    content: 'El usuario puede solicitar acceso, corrección o eliminación de sus datos personales cuando sea legalmente posible, contactándonos por WhatsApp.',
+  },
+  {
+    num: '6',
+    title: 'Uso de cookies',
+    content: 'El sitio puede utilizar cookies técnicas básicas para mejorar la experiencia de navegación. No se utilizan cookies con fines publicitarios avanzados.',
+  },
+  {
+    num: '7',
+    title: 'Cambios en la política',
+    content: 'Esta política puede ser modificada en cualquier momento. Las actualizaciones entran en vigencia desde su publicación en el sitio web.',
+  },
+  {
+    num: '8',
+    title: 'Contacto',
+    content: 'Para consultas relacionadas con esta Política de Privacidad, puedes comunicarte a través del canal oficial de WhatsApp de Chic Import USA.',
+  },
+];
 
 export default function PoliticaDePrivacidadPage() {
   return (
-    <main className="bg-gray-50 min-h-screen">
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 py-12 md:py-20">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sm:p-10 md:p-12">
-          {/* Encabezado */}
-          <header className="mb-10 pb-8 border-b border-gray-200">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-              Política de Privacidad
-            </h1>
-            <p className="text-lg text-gray-600">Chic Import USA</p>
-            <p className="mt-4 text-sm text-gray-500">
-              Última actualización: 10/01/2026
-            </p>
-          </header>
+    <main className="bg-white min-h-screen">
 
-          {/* Contenido */}
-          <div className="prose prose-gray max-w-none space-y-8">
-            <p className="text-gray-700 leading-relaxed">
-              En Chic Import USA respetamos y protegemos la privacidad de nuestros clientes. Esta política describe cómo recopilamos, usamos y protegemos la información personal.
-            </p>
-
-            <section className="space-y-3">
-              <h2 className="text-lg font-semibold text-gray-900">1. Información recopilada</h2>
-              <p className="text-gray-700 leading-relaxed">
-                Podemos recopilar información como:
-              </p>
-              <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
-                <li>Nombre</li>
-                <li>Número de contacto (WhatsApp)</li>
-                <li>Información del pedido (producto, talla, color)</li>
-                <li>Comprobantes de pago enviados voluntariamente</li>
-                <li>Comunicaciones realizadas por WhatsApp</li>
-              </ul>
-              <p className="text-gray-700 leading-relaxed">
-                No recopilamos información financiera directamente desde el sitio web.
-              </p>
-            </section>
-
-            <section className="space-y-3">
-              <h2 className="text-lg font-semibold text-gray-900">2. Uso de la información</h2>
-              <p className="text-gray-700 leading-relaxed">
-                La información personal se utiliza únicamente para:
-              </p>
-              <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
-                <li>Gestionar pedidos</li>
-                <li>Confirmar pagos y entregas</li>
-                <li>Brindar atención al cliente</li>
-                <li>Comunicación relacionada con compras</li>
-              </ul>
-            </section>
-
-            <section className="space-y-3">
-              <h2 className="text-lg font-semibold text-gray-900">3. Protección de la información</h2>
-              <p className="text-gray-700 leading-relaxed">
-                Implementamos medidas razonables para proteger la información personal y limitar su acceso únicamente a fines operativos del negocio.
-              </p>
-            </section>
-
-            <section className="space-y-3">
-              <h2 className="text-lg font-semibold text-gray-900">4. Compartición de datos</h2>
-              <p className="text-gray-700 leading-relaxed">
-                Chic Import USA no vende ni comparte información personal con terceros, salvo cuando sea necesario para cumplir procesos logísticos o requerimientos legales.
-              </p>
-            </section>
-
-            <section className="space-y-3">
-              <h2 className="text-lg font-semibold text-gray-900">5. Derechos del usuario</h2>
-              <p className="text-gray-700 leading-relaxed">
-                El usuario puede solicitar acceso, corrección o eliminación de sus datos personales cuando sea legalmente posible, contactándonos por WhatsApp.
-              </p>
-            </section>
-
-            <section className="space-y-3">
-              <h2 className="text-lg font-semibold text-gray-900">6. Uso de cookies</h2>
-              <p className="text-gray-700 leading-relaxed">
-                El sitio puede utilizar cookies técnicas básicas para mejorar la experiencia de navegación. No se utilizan cookies con fines publicitarios avanzados.
-              </p>
-            </section>
-
-            <section className="space-y-3">
-              <h2 className="text-lg font-semibold text-gray-900">7. Cambios en la política</h2>
-              <p className="text-gray-700 leading-relaxed">
-                Esta política puede ser modificada en cualquier momento. Las actualizaciones entran en vigencia desde su publicación en el sitio web.
-              </p>
-            </section>
-
-            <section className="space-y-3">
-              <h2 className="text-lg font-semibold text-gray-900">8. Contacto</h2>
-              <p className="text-gray-700 leading-relaxed">
-                Para consultas relacionadas con esta Política de Privacidad, puedes comunicarte a través del canal oficial de WhatsApp de Chic Import USA.
-              </p>
-            </section>
+      {/* ── Encabezado ────────────────────────────────────── */}
+      <section className="border-b border-gray-100 px-4 py-12 sm:px-6">
+        <div className="mx-auto max-w-3xl">
+          <p className="text-[10px] font-bold tracking-[0.3em] uppercase text-[#D90429] font-body mb-3">
+            Legal
+          </p>
+          <h1
+            className="font-display uppercase text-[clamp(36px,6vw,56px)] text-gray-900 leading-none tracking-wide"
+          >
+            Política de Privacidad
+          </h1>
+          <div className="mt-4 flex items-center gap-3">
+            <span className="text-sm text-gray-500 font-body">ChicImportUSA</span>
+            <span className="text-gray-200">·</span>
+            <span className="text-sm text-gray-400 font-body">Última actualización: 10/01/2026</span>
           </div>
         </div>
-      </article>
+      </section>
+
+      {/* ── Contenido ─────────────────────────────────────── */}
+      <section className="px-4 py-12 sm:px-6">
+        <div className="mx-auto max-w-3xl">
+          <p className="text-sm text-gray-600 font-body leading-relaxed mb-10 pb-10 border-b border-gray-100">
+            En Chic Import USA respetamos y protegemos la privacidad de nuestros clientes. Esta política describe cómo recopilamos, usamos y protegemos la información personal.
+          </p>
+
+          <div className="flex flex-col divide-y divide-gray-100">
+            {SECCIONES.map((sec) => (
+              <div key={sec.num} className="py-7">
+                <h2 className="text-sm font-bold text-gray-900 font-body mb-3">
+                  <span className="text-[#D90429] mr-2">{sec.num}.</span>
+                  {sec.title}
+                </h2>
+                {'intro' in sec && sec.intro && (
+                  <p className="text-sm text-gray-500 font-body leading-relaxed mb-2">{sec.intro}</p>
+                )}
+                {'list' in sec && sec.list && (
+                  <ul className="space-y-1.5 mb-2">
+                    {sec.list.map((item) => (
+                      <li key={item} className="flex gap-2 text-sm text-gray-500 font-body leading-relaxed">
+                        <span className="text-[#D90429] flex-shrink-0 mt-0.5">—</span>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {'content' in sec && sec.content && (
+                  <p className="text-sm text-gray-500 font-body leading-relaxed">{sec.content}</p>
+                )}
+                {'footer' in sec && sec.footer && (
+                  <p className="text-sm text-gray-500 font-body leading-relaxed mt-2">{sec.footer}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Footer legal ──────────────────────────────────── */}
+      <section className="border-t border-gray-100 bg-gray-50 px-4 py-8 sm:px-6">
+        <div className="mx-auto max-w-3xl flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-gray-400 font-body">
+            © {new Date().getFullYear()} ChicImportUSA. Todos los derechos reservados.
+          </p>
+          <Link
+            href="/terminos-y-condiciones"
+            className="text-xs text-gray-400 hover:text-gray-700 font-body transition-colors"
+          >
+            Términos y Condiciones →
+          </Link>
+        </div>
+      </section>
+
     </main>
-  )
+  );
 }
