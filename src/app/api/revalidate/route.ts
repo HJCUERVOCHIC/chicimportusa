@@ -22,7 +22,6 @@ const revalidationConfig: Record<DocumentType, { tags: string[], paths: string[]
 
 export async function POST(request: NextRequest) {
   try {
-    // Verificar el secret
     const secret = request.nextUrl.searchParams.get('secret')
     
     if (secret !== process.env.REVALIDATE_SECRET) {
@@ -32,10 +31,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Obtener el body del webhook de Sanity
     const body = await request.json()
-    
-    // Sanity envía el tipo de documento en _type
     const documentType = body._type as DocumentType
     
     if (!documentType || !revalidationConfig[documentType]) {
@@ -49,9 +45,9 @@ export async function POST(request: NextRequest) {
     const revalidatedTags: string[] = []
     const revalidatedPaths: string[] = []
 
-    // Revalidar tags (más eficiente)
+    // Revalidar tags (Next.js 16: requiere segundo argumento 'max')
     for (const tag of config.tags) {
-      revalidateTag(tag)
+      revalidateTag(tag, 'max')
       revalidatedTags.push(tag)
     }
 
@@ -64,7 +60,7 @@ export async function POST(request: NextRequest) {
     // Si es un post, también revalidar la página específica y su tag
     if (documentType === 'post' && body.slug?.current) {
       const slug = body.slug.current
-      revalidateTag(`post-${slug}`)
+      revalidateTag(`post-${slug}`, 'max')
       revalidatePath(`/noticias/${slug}`)
       revalidatedTags.push(`post-${slug}`)
       revalidatedPaths.push(`/noticias/${slug}`)
@@ -103,7 +99,7 @@ export async function GET(request: NextRequest) {
     const result: { path?: string; tag?: string } = {}
 
     if (tag) {
-      revalidateTag(tag)
+      revalidateTag(tag, 'max')
       result.tag = tag
     }
 
@@ -112,7 +108,6 @@ export async function GET(request: NextRequest) {
       result.path = path
     }
 
-    // Si no se especifica nada, revalidar home
     if (!tag && !path) {
       revalidatePath('/')
       result.path = '/'

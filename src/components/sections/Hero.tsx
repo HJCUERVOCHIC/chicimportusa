@@ -1,66 +1,123 @@
-import Image from 'next/image'
-import Link from 'next/link'
-import { Button } from '@/components/ui'
+'use client';
 
-export default function Hero() {
+// ============================================================
+// ChicImportUSA — Hero · Nieve Activa
+// Compacto ~40vh · Fondo blanco · Split layout
+// ============================================================
+
+import Image from 'next/image';
+import Link from 'next/link';
+import { WHATSAPP_URL } from '@/lib/constants';
+import { EVENTS } from '@/lib/analytics';
+import { IconWhatsApp } from '@/components/ui/Icons';
+
+interface HeroProps {
+  totalProductos: number;
+  publicacionActiva: boolean;
+}
+
+export default function Hero({ totalProductos, publicacionActiva }: HeroProps) {
   return (
-    <section className="relative min-h-[85vh] md:min-h-[90vh] flex items-center justify-center overflow-hidden">
-      {/* Imagen de fondo */}
-      <Image
-        src="/img/hero-productos.jpg"
-        alt="Productos importados desde Estados Unidos - Tenis, ropa, accesorios y vitaminas"
-        fill
-        priority
-        className="object-cover object-center"
-        sizes="100vw"
-        quality={85}
-      />
+    <section className="relative bg-white overflow-hidden" style={{ minHeight: '42vh' }}>
 
-      {/* Overlay para legibilidad del texto */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-black/30" />
+      {/* Layout split */}
+      <div className="max-w-[1200px] mx-auto px-5 sm:px-6 flex items-center gap-8 lg:gap-16" style={{ minHeight: '42vh' }}>
 
-      {/* Contenido */}
-      <div className="relative z-10 max-w-4xl mx-auto px-4 md:px-6 text-center">
-        {/* H1 Principal */}
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-tight">
-          Productos importados desde Estados Unidos
-        </h1>
+        {/* Columna izquierda — texto */}
+        <div className="relative z-10 flex-1 py-10 lg:py-12">
 
-        {/* Subtítulo */}
-        <p className="mt-4 md:mt-6 text-base sm:text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed">
-          Tenis, ropa, accesorios y vitaminas publicados por tiempo limitado.
-        </p>
+          {/* Badge publicación activa */}
+          {publicacionActiva ? (
+            <div className="inline-flex items-center gap-2 bg-green-50 border border-green-200 rounded-full px-3 py-1.5 mb-5">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75 motion-reduce:animate-none" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+              </span>
+              <span className="text-[11px] font-bold text-green-700 tracking-[0.15em] font-body uppercase">
+                Publicación activa — {totalProductos} productos
+              </span>
+            </div>
+          ) : (
+            <div className="inline-flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-full px-3 py-1.5 mb-5">
+              <span className="text-[11px] font-semibold text-gray-500 tracking-[0.12em] font-body uppercase">
+                ChicImportUSA · Importados USA
+              </span>
+            </div>
+          )}
 
-        {/* CTA */}
-        <div className="mt-8 md:mt-10">
-          <Button isWhatsApp size="large">
-            Unirme al WhatsApp
-          </Button>
-          
-          {/* Microcopy informativo */}
-          <p className="mt-3 text-sm text-white/70">
-            Publicaciones activas. Sin stock permanente.
+          {/* Headline */}
+          <h1 className="font-display leading-[0.95] tracking-[0.02em] mb-4"
+              style={{ fontSize: 'clamp(44px, 7vw, 88px)' }}>
+            <span className="text-[#111] block">PRODUCTOS</span>
+            <span className="text-[#111]/20 block" style={{ WebkitTextStroke: '2px #111' }}>
+              ORIGINALES
+            </span>
+            <span className="text-[#D90429] block">DESDE USA</span>
+          </h1>
+
+          {/* Subtítulo */}
+          <p className="text-sm text-gray-500 max-w-[340px] leading-relaxed mb-7 font-body">
+            Tenis, ropa y accesorios importados. Publicaciones semanales
+            gestionadas por WhatsApp.
           </p>
-          
-          {/* Aviso legal */}
-          <p className="mt-2 text-xs text-white/60 max-w-md mx-auto">
-            Al continuar a WhatsApp, aceptas nuestros{' '}
-            <Link 
-              href="/terminos-y-condiciones" 
-              className="underline hover:text-white/80 transition-colors"
+
+          {/* CTAs */}
+          <div className="flex flex-wrap gap-3">
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2.5 bg-[#25D366] hover:bg-[#1DA851] text-white px-6 py-3.5 rounded-lg text-sm font-bold tracking-[0.04em] font-body transition-colors duration-200 active:scale-[0.98] shadow-[0_4px_16px_rgba(37,211,102,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2"
+              onClick={() => EVENTS.whatsappClick('hero', 'homepage')}
             >
-              Términos y Condiciones
+              <IconWhatsApp size={17} />
+              UNIRME AL WHATSAPP
+            </a>
+            <Link
+              href="/catalogo"
+              className="inline-flex items-center gap-2 text-[#111] border-2 border-[#111] px-6 py-3.5 rounded-lg text-sm font-bold font-body hover:bg-[#111] hover:text-white transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111] focus-visible:ring-offset-2"
+            >
+              VER CATÁLOGO
+              <svg aria-hidden="true" width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                <path d="m9 18 6-6-6-6" />
+              </svg>
             </Link>
-            {' '}y{' '}
-            <Link 
-              href="/politica-de-privacidad" 
-              className="underline hover:text-white/80 transition-colors"
-            >
-              Política de Privacidad
-            </Link>.
+          </div>
+
+          {/* Trust signals */}
+          <p className="text-[11px] text-gray-400 mt-5 font-body tracking-wide">
+            Productos originales · Envíos a toda Colombia · Pago seguro
           </p>
         </div>
+
+        {/* Columna derecha — imagen (solo desktop) */}
+        <div className="hidden lg:block flex-shrink-0 relative" style={{ width: '42%', height: '42vh' }}>
+          {/* Fondo decorativo */}
+          <div className="absolute inset-4 rounded-2xl bg-gray-100" />
+          <div className="absolute inset-0 rounded-2xl overflow-hidden">
+            <Image
+              src="/img/hero-tenis.jpg"
+              alt="Productos importados desde USA"
+              fill
+              priority
+              sizes="42vw"
+              className="object-cover object-center rounded-2xl"
+            />
+            {/* Overlay sutil */}
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-l from-transparent to-white/30" />
+          </div>
+
+          {/* Floating badge */}
+          <div className="absolute -left-5 top-1/2 -translate-y-1/2 bg-[#D90429] text-white px-4 py-3 rounded-xl shadow-lg z-10">
+            <p className="text-[10px] font-body font-semibold tracking-wider uppercase opacity-80">Nuevos</p>
+            <p className="font-display text-2xl leading-none tracking-wide">DROPS</p>
+            <p className="text-[10px] font-body font-semibold tracking-wider uppercase opacity-80">Cada semana</p>
+          </div>
+        </div>
       </div>
+
+      {/* Línea inferior */}
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gray-100" />
     </section>
-  )
+  );
 }

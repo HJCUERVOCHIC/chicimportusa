@@ -1,41 +1,90 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
+import { Bebas_Neue, Space_Grotesk } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 
-const inter = Inter({ 
+// -----------------------------------------------------------
+// Fuentes — Etapa 3: Streetwear/Urban
+// -----------------------------------------------------------
+
+/** Display: Bebas Neue — títulos impactantes */
+const bebasNeue = Bebas_Neue({
   subsets: ['latin'],
-  variable: '--font-inter',
+  weight: '400',
+  variable: '--font-display',
   display: 'swap',
+  preload: true,
 })
 
+/** Body: Space Grotesk — cuerpo moderno y legible */
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-body',
+  display: 'swap',
+  preload: true,
+})
+
+const BASE_URL = 'https://chicimportusa.com'
+
 export const viewport: Viewport = {
+  themeColor: '#D90429',
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#D90429',
+  maximumScale: 5,
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://chicimportusa.com'),
+  metadataBase: new URL(BASE_URL),
   title: {
-    default: 'Productos importados desde Estados Unidos | Chic Import USA',
-    template: '%s | Chic Import USA',
+    default: 'ChicImportUSA | Moda original desde USA',
+    template: '%s | ChicImportUSA',
   },
-  description: 'Descubre productos importados desde Estados Unidos: tenis, ropa, accesorios y vitaminas publicados por tiempo limitado. Compra confirmada por WhatsApp.',
+  description: 'Publicaciones periódicas de tenis, ropa y accesorios importados desde Estados Unidos. Productos seleccionados de marcas reconocidas. Envíos a toda Colombia.',
   keywords: [
-    'productos importados',
-    'importaciones USA',
     'tenis importados',
-    'ropa importada',
-    'accesorios importados',
-    'vitaminas importadas',
-    'importaciones Colombia',
-    'Chic Import USA',
+    'ropa importada USA',
+    'accesorios USA',
+    'sneakers Colombia',
+    'ropa deportiva',
+    'ropa casual importada',
+    'Nike',
+    'Jordan',
+    'New Balance',
+    'moda streetwear',
+    'importación Colombia',
   ],
-  authors: [{ name: 'Chic Import USA' }],
-  creator: 'Chic Import USA',
-  publisher: 'Chic Import USA',
+  authors: [{ name: 'ChicImportUSA' }],
+  creator: 'ChicImportUSA',
+  publisher: 'ChicImportUSA',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  openGraph: {
+    title: 'ChicImportUSA | Tenis, ropa y accesorios desde USA',
+    description: 'Publicaciones periódicas de tenis, ropa casual, deportiva y accesorios importados desde Estados Unidos. Gestión directa por WhatsApp.',
+    url: BASE_URL,
+    siteName: 'ChicImportUSA',
+    locale: 'es_CO',
+    type: 'website',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'ChicImportUSA - Tenis, ropa y accesorios desde USA',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'ChicImportUSA | Moda original desde USA',
+    description: 'Publicaciones periódicas de tenis, ropa y accesorios importados desde Estados Unidos.',
+    images: ['/og-image.jpg'],
+  },
   robots: {
     index: true,
     follow: true,
@@ -48,31 +97,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: 'https://chicimportusa.com',
-  },
-  openGraph: {
-    type: 'website',
-    locale: 'es_CO',
-    url: 'https://chicimportusa.com',
-    siteName: 'Chic Import USA',
-    title: 'Productos importados desde Estados Unidos | Chic Import USA',
-    description: 'Tenis, ropa, accesorios y vitaminas publicados por tiempo limitado. Compra confirmada por WhatsApp.',
-    images: [
-      {
-        url: 'https://chicimportusa.com/img/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Chic Import USA - Productos importados desde Estados Unidos',
-        type: 'image/jpeg',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Productos importados desde Estados Unidos | Chic Import USA',
-    description: 'Tenis, ropa, accesorios y vitaminas publicados por tiempo limitado. Compra confirmada por WhatsApp.',
-    images: ['https://chicimportusa.com/img/og-image.jpg'],
-    creator: '@chicimportusa',
+    canonical: BASE_URL,
   },
   icons: {
     icon: [
@@ -92,8 +117,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="es" className={inter.variable}>
-      <body className="font-sans antialiased bg-bg text-text">
+    <html lang="es" className={`${bebasNeue.variable} ${spaceGrotesk.variable}`}>
+      <body className="font-body antialiased bg-bg text-text">
         <Header />
         <main>{children}</main>
         <Footer />

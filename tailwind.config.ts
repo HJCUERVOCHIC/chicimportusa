@@ -8,6 +8,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        display: ["var(--font-bebas-neue)", "cursive"],
+        body:    ["var(--font-space-grotesk)", "sans-serif"],
+      },
       colors: {
         // Paleta base
         bg: '#FFFFFF',
@@ -20,7 +24,8 @@ const config: Config = {
         'accent-hover': '#B80322',
       },
       fontFamily: {
-        sans: ['var(--font-inter)', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+        display: ['var(--font-display)', 'Impact', 'sans-serif'],
+        body: ['var(--font-body)', 'system-ui', 'sans-serif'],
       },
     },
   },

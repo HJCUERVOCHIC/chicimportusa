@@ -1,66 +1,88 @@
-import {
-  Hero,
-  HowItWorks,
-  Rules,
-  Categories,
-  Testimonials,
-  FinalCTA,
-  BannerCarousel,
-  TestimonialsDynamic,
-  LatestNews,
-  PublicacionesPreview,
-  ProcesoCompra,
-} from '@/components/sections'
-import { 
-  getActiveBanners, 
-  getFeaturedTestimonials, 
-  getLatestPosts 
-} from '@/sanity/lib/fetchers'
+// ============================================================
+// ChicImportUSA — Homepage = Catalogo completo
+// Carga destacados en paralelo, solo cuando no hay filtros.
+// ============================================================
 
-// ISR: Revalidar cada 15 minutos
-export const revalidate = 900
+import { Suspense } from 'react';
+import type { Metadata } from 'next';
+import { getProductos, getCategorias, getMarcas } from '@/lib/api-catalogo';
+import { SITE_CONFIG } from '@/lib/constants';
+import CatalogClient from '@/components/catalogo/CatalogClient';
+import { FilterBarSkeleton, ProductGridSkeleton } from '@/components/ui/Skeleton';
 
-export default async function HomePage() {
-  // Fetch data from Sanity (en paralelo)
-  const [banners, testimonials, posts] = await Promise.all([
-    getActiveBanners(),
-    getFeaturedTestimonials(6),
-    getLatestPosts(3),
-  ])
+export const metadata: Metadata = {
+  title: 'ChicImportUSA — Productos importados desde Estados Unidos',
+  description:
+    'Tenis, ropa, perfumes y accesorios originales importados desde USA. Publicaciones periodicas gestionadas por WhatsApp. Envio a toda Colombia.',
+  openGraph: {
+    title: 'ChicImportUSA — Productos importados desde USA',
+    description: 'Tenis, ropa y accesorios originales. Publicaciones periodicas con productos seleccionados.',
+    url: SITE_CONFIG.url,
+    siteName: SITE_CONFIG.name,
+    locale: 'es_CO',
+    type: 'website',
+    images: [{ url: `${SITE_CONFIG.url}/img/og-image.jpg`, width: 1200, height: 630, alt: 'ChicImportUSA' }],
+  },
+  alternates: { canonical: SITE_CONFIG.url },
+};
 
-  const hasBanners = banners && banners.length > 0
-  const hasTestimonials = testimonials && testimonials.length > 0
-  const hasPosts = posts && posts.length > 0
+export const revalidate = 300;
+
+interface HomePageProps {
+  searchParams: Promise<{
+    categoria?: string;
+    marca?: string;
+    genero?: string;
+    buscar?: string;
+    orden?: string;
+  }>;
+}
+
+export default async function HomePage({ searchParams }: HomePageProps) {
+  const params = await searchParams;
+
+  const categoriaActiva = params?.categoria || undefined;
+  const marcaActiva     = params?.marca     || undefined;
+  const generoActivo    = params?.genero    || undefined;
+  const busquedaActiva  = params?.buscar    || undefined;
+  const ordenActivo     = (params?.orden as 'reciente' | 'precio_asc' | 'precio_desc') || undefined;
+
+  // Solo traer destacados cuando no hay filtros activos
+  const hayFiltros = categoriaActiva || marcaActiva || generoActivo || busquedaActiva;
+
+  const [dataProductos, dataCategorias, dataMarcas, dataDestacados] = await Promise.all([
+    getProductos({
+      categoria: categoriaActiva,
+      marca:     marcaActiva,
+      genero:    generoActivo as 'hombre' | 'mujer' | 'unisex' | undefined,
+      buscar:    busquedaActiva,
+      orden:     ordenActivo,
+    }),
+    getCategorias(generoActivo),
+    getMarcas(categoriaActiva, generoActivo),
+    hayFiltros ? Promise.resolve(null) : getProductos({ destacados: true, limite: 8 }),
+  ]);
 
   return (
-    <>
-      {/* Banners dinámicos (si hay) */}
-      {hasBanners && <BannerCarousel banners={banners} />}
-      
-      {/* Hero estático (siempre) */}
-      <Hero />
-      
-      <HowItWorks />
-      <Rules />
-      <Categories />
-      
-      {/* Preview de publicaciones con enlace a página completa */}
-      <PublicacionesPreview />
-      
-      {/* Proceso de compra - 5 pasos */}
-      <ProcesoCompra />
-      
-      {/* Testimonios: usar dinámicos si hay, sino estáticos */}
-      {hasTestimonials ? (
-        <TestimonialsDynamic testimonials={testimonials} />
-      ) : (
-        <Testimonials />
-      )}
-      
-      {/* Últimas noticias (si hay) */}
-      {hasPosts && <LatestNews posts={posts} />}
-      
-      <FinalCTA />
-    </>
-  )
+    <main id="contenido-principal">
+      <Suspense
+        fallback={
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+            <FilterBarSkeleton />
+            <ProductGridSkeleton count={12} />
+          </div>
+        }
+      >
+        <CatalogClient
+          initialProductos={dataProductos.productos}
+          initialTotal={dataProductos.total}
+          initialPublicacionActiva={dataProductos.publicacion_activa}
+          initialCategorias={dataCategorias.categorias}
+          initialMarcas={dataMarcas.marcas}
+          totalProductos={dataCategorias.total_productos}
+          destacados={dataDestacados?.productos ?? []}
+        />
+      </Suspense>
+    </main>
+  );
 }

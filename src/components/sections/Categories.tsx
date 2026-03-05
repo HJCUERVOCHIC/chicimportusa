@@ -1,90 +1,88 @@
-import Image from 'next/image'
+'use client';
 
-const categories = [
-  {
-    title: 'Tenis Deportivos',
-    description: 'Running, basketball, training y más de las mejores marcas.',
-    image: '/img/categoria-deportivos.jpg',
-  },
-  {
-    title: 'Tenis Casuales',
-    description: 'Sneakers y estilos urbanos para el día a día.',
-    image: '/img/categoria-casuales.jpg',
-  },
-  {
-    title: 'Ediciones Especiales',
-    description: 'Lanzamientos exclusivos y colaboraciones limitadas.',
-    image: '/img/categoria-ediciones.jpg',
-  },
-  {
-    title: 'Ropa',
-    description: 'Deportiva y casual, según publicación.',
-    image: '/img/categoria-ropa.jpg',
-  },
-  {
-    title: 'Accesorios',
-    description: 'Gorras, bolsos, medias y complementos de marca.',
-    image: '/img/categoria-accesorios.jpg',
-  },
-  {
-    title: 'Vitaminas',
-    description: 'Suplementos seleccionados, según publicación.',
-    image: '/img/categoria-vitaminas.jpg',
-  },
-]
+// ============================================================
+// ChicImportUSA — Categories · Chips rápidas · Nieve Activa
+// ============================================================
 
-export default function Categories() {
+import { useState } from 'react';
+import Link from 'next/link';
+import { cn } from '@/lib/utils';
+import type { CategoriaResumen } from '@/types/catalogo';
+
+const FALLBACK_CATEGORIES = [
+  { id: 'calzado',           nombre: 'Calzado',            emoji: '👟', cantidad: 0 },
+  { id: 'bolso',             nombre: 'Bolsos',             emoji: '👜', cantidad: 0 },
+  { id: 'perfume',           nombre: 'Perfumes',           emoji: '🌸', cantidad: 0 },
+  { id: 'victorias-secret',  nombre: "Victoria's Secret",  emoji: '💕', cantidad: 0 },
+  { id: 'vitamina',          nombre: 'Vitaminas',          emoji: '💊', cantidad: 0 },
+  { id: 'accesorio',         nombre: 'Accesorios',         emoji: '⌚', cantidad: 0 },
+];
+
+interface CategoriesProps {
+  categorias?: CategoriaResumen[];
+}
+
+export default function Categories({ categorias }: CategoriesProps) {
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const items = categorias && categorias.length > 0 ? categorias : FALLBACK_CATEGORIES;
+
   return (
-    <section className="py-16 md:py-24">
-      <div className="max-w-6xl mx-auto px-4 md:px-6">
-        {/* Título */}
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-text tracking-tight text-center">
-          Lo que publicamos
-        </h2>
+    <section className="bg-gray-50 border-y border-gray-100 py-6 px-5 sm:px-6">
+      <div className="max-w-[1200px] mx-auto">
 
-        {/* Subtítulo */}
-        <p className="mt-4 md:mt-5 text-base md:text-lg text-muted text-center max-w-2xl mx-auto leading-relaxed">
-          Tenis, ropa y accesorios importados desde Estados Unidos. Cada publicación incluye productos disponibles de estas categorías.
-        </p>
+        <div className="flex items-center gap-3">
+          {/* Label */}
+          <span className="flex-shrink-0 text-[11px] font-bold uppercase tracking-[0.18em] text-gray-400 font-body hidden sm:block">
+            Categorías
+          </span>
 
-        {/* Grid de categorías */}
-        <div className="mt-10 md:mt-14 grid gap-5 md:gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {categories.map((category) => (
-            <div
-              key={category.title}
-              className="group relative aspect-[4/3] rounded-2xl overflow-hidden"
+          <div className="hidden sm:block h-4 w-px bg-gray-200" aria-hidden="true" />
+
+          {/* Chips — scroll horizontal en mobile */}
+          <div
+            className="flex items-center gap-2 overflow-x-auto pb-0.5"
+            style={{ scrollbarWidth: 'none' }}
+            role="list"
+            aria-label="Filtrar por categoría"
+          >
+            {/* Ver todo */}
+            <Link
+              href="/catalogo"
+              className="flex-shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold font-body tracking-wide bg-[#111] text-white hover:bg-[#D90429] transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111] focus-visible:ring-offset-2"
+              role="listitem"
             >
-              {/* Imagen de fondo */}
-              <Image
-                src={category.image}
-                alt={category.title}
-                fill
-                loading="eager"
-                className="object-cover transition-transform duration-300 group-hover:scale-105"
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              />
+              Todo →
+            </Link>
 
-              {/* Overlay gradiente */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-
-              {/* Contenido */}
-              <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
-                <h3 className="text-lg md:text-xl font-semibold text-white">
-                  {category.title}
-                </h3>
-                <p className="mt-1 text-sm text-white/80 leading-relaxed">
-                  {category.description}
-                </p>
-              </div>
-            </div>
-          ))}
+            {items.map((cat, idx) => (
+              <Link
+                key={cat.id}
+                href={`/catalogo?categoria=${cat.id}`}
+                role="listitem"
+                onMouseEnter={() => setHoveredIdx(idx)}
+                onMouseLeave={() => setHoveredIdx(null)}
+                className={cn(
+                  'flex-shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold font-body tracking-wide border transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429] focus-visible:ring-offset-2',
+                  hoveredIdx === idx
+                    ? 'bg-[#D90429] border-[#D90429] text-white'
+                    : 'bg-white border-gray-200 text-gray-700 hover:border-[#D90429]/50 hover:text-[#D90429]'
+                )}
+              >
+                <span aria-hidden="true">{cat.emoji}</span>
+                <span>{cat.nombre}</span>
+                {cat.cantidad > 0 && (
+                  <span className={cn(
+                    'text-[10px] font-bold',
+                    hoveredIdx === idx ? 'text-white/70' : 'text-gray-400'
+                  )}>
+                    {cat.cantidad}
+                  </span>
+                )}
+              </Link>
+            ))}
+          </div>
         </div>
-
-        {/* Nota */}
-        <p className="mt-10 md:mt-12 text-sm text-muted-2 text-center">
-          Las referencias varían en cada publicación según disponibilidad.
-        </p>
       </div>
     </section>
-  )
+  );
 }

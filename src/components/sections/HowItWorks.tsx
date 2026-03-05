@@ -1,72 +1,59 @@
-const steps = [
-  {
-    number: '01',
-    title: 'Publicamos productos disponibles',
-    description:
-      'Compartimos por WhatsApp las referencias de tenis, ropa y accesorios disponibles con precios y fecha de cierre.',
-  },
-  {
-    number: '02',
-    title: 'Seleccionas dentro de la publicación',
-    description: 'Eliges los productos que te interesan entre las opciones publicadas.',
-  },
-  {
-    number: '03',
-    title: 'Nos escribes por WhatsApp',
-    description: 'Confirmamos contigo la información necesaria y resolvemos tus dudas.',
-  },
-  {
-    number: '04',
-    title: 'Te acompañamos hasta la entrega',
-    description: 'Seguimos el proceso contigo hasta que recibas tu pedido en Colombia.',
-  },
-]
+// ============================================================
+// ChicImportUSA — HowItWorks · Simplificado · Nieve Activa
+// ============================================================
+
+const STEPS = [
+  { num: '01', title: 'Elige',      desc: 'Selecciona del catálogo o publicaciones activas.' },
+  { num: '02', title: 'Escríbenos', desc: 'Envía la referencia con talla y detalles por WhatsApp.' },
+  { num: '03', title: 'Confirmamos', desc: 'Precio final, disponibilidad y tiempo de entrega.' },
+  { num: '04', title: 'Despachamos', desc: '50% para separar, 50% al llegar a Colombia.' },
+];
 
 export default function HowItWorks() {
   return (
-    <section className="py-16 md:py-24 bg-[#FAFAFA]">
-      <div className="max-w-6xl mx-auto px-4 md:px-6">
-        {/* Título */}
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-text tracking-tight text-center">
-          ¿Cómo funciona ChicImportUSA?
-        </h2>
+    <section className="bg-gray-50 border-t border-gray-100 py-14 sm:py-16 px-5 sm:px-6">
+      <div className="max-w-[1000px] mx-auto">
 
-        {/* Texto introductorio */}
-        <p className="mt-5 md:mt-6 text-base md:text-lg text-muted text-center max-w-2xl mx-auto leading-relaxed">
-          ChicImportUSA funciona a través de publicaciones periódicas de tenis, ropa casual, deportiva y accesorios disponibles. 
-          Cada publicación incluye referencias específicas que pueden solicitarse durante un tiempo determinado.
-        </p>
+        <div className="flex items-center gap-4 mb-10">
+          <h2 className="font-display text-[clamp(24px,3.5vw,36px)] text-[#111] tracking-[0.02em] leading-none">
+            ¿CÓMO <span className="text-[#D90429]">FUNCIONA</span>?
+          </h2>
+          <div className="flex-1 h-px bg-gray-200" aria-hidden="true" />
+        </div>
 
-        {/* Grid de pasos */}
-        <div className="mt-12 md:mt-16 grid gap-5 md:gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {steps.map((step) => (
-            <div
-              key={step.number}
-              className="group relative p-6 md:p-7 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-gray-200 transition-all duration-200"
-            >
-              {/* Número grande */}
-              <span className="block text-4xl md:text-5xl font-bold text-gray-200 mb-4">
-                {step.number}
-              </span>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+          {STEPS.map((step, idx) => (
+            <div key={step.num} className="relative">
+              {/* Conector línea — solo desktop, no en el último */}
+              {idx < STEPS.length - 1 && (
+                <div className="hidden lg:block absolute top-4 left-full w-full h-px bg-gray-200 z-0" style={{ width: 'calc(100% - 2rem)', left: '2.5rem' }} aria-hidden="true" />
+              )}
 
-              {/* Título del paso */}
-              <h3 className="text-lg font-semibold text-text leading-snug">
-                {step.title}
-              </h3>
+              <div className="relative z-10">
+                {/* Número */}
+                <div className="w-9 h-9 rounded-full bg-[#D90429] flex items-center justify-center mb-3">
+                  <span className="text-xs font-bold text-white font-body">{step.num}</span>
+                </div>
 
-              {/* Descripción */}
-              <p className="mt-2 text-sm text-muted leading-relaxed">
-                {step.description}
-              </p>
+                {/* Título */}
+                <h3 className="text-sm font-bold text-gray-900 mb-1.5 font-body">
+                  {step.title}
+                </h3>
+
+                {/* Descripción */}
+                <p className="text-[13px] text-gray-500 leading-relaxed font-body">
+                  {step.desc}
+                </p>
+              </div>
             </div>
           ))}
         </div>
 
-        {/* Microtexto final */}
-        <p className="mt-10 md:mt-12 text-sm text-muted-2 text-center">
-          Todo el proceso es claro desde el inicio y se gestiona directamente por WhatsApp.
+        <p className="text-xs text-gray-400 mt-10 font-body">
+          Los datos de pago se confirman directamente por WhatsApp.
+          Solo gestionamos productos publicados como activos.
         </p>
       </div>
     </section>
-  )
+  );
 }

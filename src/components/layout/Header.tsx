@@ -1,97 +1,143 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import Link from 'next/link'
-import { Button } from '@/components/ui'
-import { WHATSAPP_LINK } from '@/types'
+// ============================================================
+// ChicImportUSA — Header · Minimalista
+// Logo izq · Redes + WhatsApp der
+// ============================================================
 
-const navLinks = [
-  { href: '/', label: 'Inicio' },
-  { href: '/como-funciona', label: 'Cómo funciona' },
-  { href: '/publicaciones', label: 'Publicaciones' },
-  { href: '/noticias', label: 'Noticias' },
-]
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { WHATSAPP_URL, SOCIAL_LINKS } from '@/lib/constants';
+import { EVENTS } from '@/lib/analytics';
+import { cn } from '@/lib/utils';
+import { IconInstagram, IconTikTok, IconWhatsApp, IconMenu, IconX } from '@/components/ui/Icons';
 
 export default function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [scrolled,        setScrolled]        = useState(false);
+  const [mobileMenuOpen,  setMobileMenuOpen]  = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 4);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = mobileMenuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileMenuOpen]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-white/90 backdrop-blur">
-      <nav className="max-w-6xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="font-semibold text-xl text-text">
-          ChicImportUSA
-        </Link>
+    <>
+      <a href="#contenido-principal" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[60] focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:rounded-lg focus:shadow-lg">
+        Saltar al contenido
+      </a>
 
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-muted hover:text-text transition font-medium"
-            >
-              {link.label}
-            </Link>
-          ))}
-          <Button isWhatsApp size="default">
-            Unirme al WhatsApp
-          </Button>
-        </div>
-
-        {/* Mobile Menu Button */}
-        <button
-          className="md:hidden p-2 text-text"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label="Menú"
+      <header className={cn(
+        'sticky top-0 z-50 w-full bg-white transition-shadow duration-200',
+        scrolled && 'shadow-sm border-b border-gray-100'
+      )}>
+        <nav
+          className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3"
+          aria-label="Navegación principal"
         >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            {mobileMenuOpen ? (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            ) : (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            )}
-          </svg>
-        </button>
-      </nav>
+          {/* Logo */}
+          <Link href="/" className="flex-shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429] focus-visible:ring-offset-2 rounded-md">
+            <Image
+              src="/img/logo-header.png"
+              alt="ChicImportUSA"
+              width={119}
+              height={40}
+              className="h-8 w-auto sm:h-9"
+              priority
+            />
+          </Link>
+
+          {/* Derecha — Desktop */}
+          <div className="hidden md:flex items-center gap-1">
+            {/* Redes */}
+            <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram"
+              className="p-2 text-gray-400 hover:text-gray-700 transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429]"
+              onClick={() => EVENTS.socialClick('instagram')}>
+              <IconInstagram size={18} />
+            </a>
+            <a href={SOCIAL_LINKS.tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok"
+              className="p-2 text-gray-400 hover:text-gray-700 transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429]"
+              onClick={() => EVENTS.socialClick('tiktok')}>
+              <IconTikTok size={18} />
+            </a>
+
+            <div className="h-5 w-px bg-gray-200 mx-2" aria-hidden="true" />
+
+            {/* WhatsApp */}
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#1DA851] text-white rounded-lg px-4 py-2 text-sm font-bold font-body transition-colors active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2"
+              onClick={() => EVENTS.whatsappClick('header')}>
+              <IconWhatsApp size={16} />
+              WhatsApp
+            </a>
+          </div>
+
+          {/* Mobile — solo WhatsApp + hamburguesa */}
+          <div className="flex md:hidden items-center gap-2">
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 bg-[#25D366] hover:bg-[#1DA851] text-white rounded-lg px-3 py-2 text-sm font-bold font-body transition-colors"
+              onClick={() => EVENTS.whatsappClick('header')}>
+              <IconWhatsApp size={15} />
+              <span className="text-xs">WhatsApp</span>
+            </a>
+            <button
+              type="button"
+              aria-label={mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+              aria-expanded={mobileMenuOpen}
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 text-gray-500 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429] rounded-md"
+            >
+              {mobileMenuOpen ? <IconX size={20} /> : <IconMenu size={20} />}
+            </button>
+          </div>
+        </nav>
+      </header>
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-border bg-white">
-          <div className="max-w-6xl mx-auto px-4 py-4 space-y-3">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="block py-2 text-muted hover:text-text transition font-medium"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {link.label}
+        <div className="fixed inset-0 z-40 md:hidden" role="dialog" aria-modal="true">
+          <div className="fixed inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} aria-hidden="true" />
+          <div className="fixed inset-y-0 right-0 w-64 bg-white shadow-xl">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+              <Image src="/img/logo-header.png" alt="" width={95} height={32} className="h-7 w-auto" />
+              <button type="button" aria-label="Cerrar menú" onClick={() => setMobileMenuOpen(false)}
+                className="p-2 text-gray-500 hover:text-gray-900 rounded-md">
+                <IconX size={20} />
+              </button>
+            </div>
+
+            <div className="px-4 py-4 space-y-1">
+              <Link href="/como-funciona"
+                className="flex items-center px-3 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg"
+                onClick={() => setMobileMenuOpen(false)}>
+                Cómo funciona
               </Link>
-            ))}
-            <div className="pt-2">
-              <Button isWhatsApp className="w-full">
-                Unirme al WhatsApp
-              </Button>
+            </div>
+
+            <div className="mx-4 h-px bg-gray-100" />
+
+            <div className="px-4 py-4 flex items-center gap-2">
+              <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg"
+                onClick={() => EVENTS.socialClick('instagram')}>
+                <IconInstagram size={18} /><span>Instagram</span>
+              </a>
+              <a href={SOCIAL_LINKS.tiktok} target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg"
+                onClick={() => EVENTS.socialClick('tiktok')}>
+                <IconTikTok size={18} /><span>TikTok</span>
+              </a>
             </div>
           </div>
         </div>
       )}
-    </header>
-  )
+    </>
+  );
 }
