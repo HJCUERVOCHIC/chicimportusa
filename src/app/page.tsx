@@ -1,6 +1,6 @@
 // ============================================================
 // ChicImportUSA — Homepage = Catalogo completo
-// La home es directamente el catalogo con todos sus filtros.
+// Carga destacados en paralelo, solo cuando no hay filtros.
 // ============================================================
 
 import { Suspense } from 'react';
@@ -47,7 +47,10 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const busquedaActiva  = params?.buscar    || undefined;
   const ordenActivo     = (params?.orden as 'reciente' | 'precio_asc' | 'precio_desc') || undefined;
 
-  const [dataProductos, dataCategorias, dataMarcas] = await Promise.all([
+  // Solo traer destacados cuando no hay filtros activos
+  const hayFiltros = categoriaActiva || marcaActiva || generoActivo || busquedaActiva;
+
+  const [dataProductos, dataCategorias, dataMarcas, dataDestacados] = await Promise.all([
     getProductos({
       categoria: categoriaActiva,
       marca:     marcaActiva,
@@ -57,6 +60,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     }),
     getCategorias(generoActivo),
     getMarcas(categoriaActiva, generoActivo),
+    hayFiltros ? Promise.resolve(null) : getProductos({ destacados: true, limite: 8 }),
   ]);
 
   return (
@@ -76,6 +80,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           initialCategorias={dataCategorias.categorias}
           initialMarcas={dataMarcas.marcas}
           totalProductos={dataCategorias.total_productos}
+          destacados={dataDestacados?.productos ?? []}
         />
       </Suspense>
     </main>
