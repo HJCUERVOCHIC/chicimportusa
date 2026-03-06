@@ -80,8 +80,6 @@ function DestacadoCard({ producto }: { producto: Producto }) {
         href={productoUrl}
         className="block relative overflow-hidden bg-gray-50"
         style={{ width: '200px', height: '260px' }}
-        tabIndex={-1}
-        aria-hidden="true"
       >
         <img
           src={producto.imagen || '/img/placeholder-product.jpg'}
@@ -93,14 +91,12 @@ function DestacadoCard({ producto }: { producto: Producto }) {
 
       </Link>
       <div className="pt-2.5">
-        <Link href={productoUrl} className="block group">
-          <p className="text-[10px] font-bold text-[#D90429] tracking-[0.15em] uppercase font-body truncate">
-            {producto.categoria?.nombre ?? ''}
-          </p>
-          <p className="text-[13px] font-semibold text-gray-900 font-body leading-snug mt-0.5 truncate group-hover:text-[#D90429] transition-colors">
-            {producto.nombre}
-          </p>
-        </Link>
+        <p className="text-[10px] font-bold text-[#D90429] tracking-[0.15em] uppercase font-body truncate">
+          {producto.categoria?.nombre ?? ''}
+        </p>
+        <p className="text-[13px] font-semibold text-gray-900 font-body leading-snug mt-0.5 truncate">
+          {producto.nombre}
+        </p>
         <div className="flex items-center justify-between mt-2 gap-2">
           <p className="text-sm font-bold text-gray-900 font-body">
             {producto.precio_formateado ?? `$${producto.precio?.toLocaleString('es-CO')}`}
@@ -122,19 +118,42 @@ function DestacadoCard({ producto }: { producto: Producto }) {
   );
 }
 
+// ── Marquee automático ──────────────────────────────────────
 function DestacadosCarousel({ productos }: { productos: Producto[] }) {
-  const doubled  = [...productos, ...productos];
-  const duration = `${productos.length * 1}s`;
+  const [paused, setPaused] = useState(false);
+  const items = [...productos, ...productos];
+  const cardW  = 216; // 200px card + 16px gap
+  const totalW = productos.length * cardW;
+
   return (
-    <div className="overflow-hidden">
+    <div
+      className="overflow-hidden w-full"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      aria-label="Productos destacados"
+      role="region"
+    >
+      <style>{`
+        @keyframes marquee-scroll {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-${totalW}px); }
+        }
+        .marquee-track {
+          animation: marquee-scroll ${productos.length * 3}s linear infinite;
+        }
+        .marquee-track.paused {
+          animation-play-state: paused;
+        }
+      `}</style>
       <div
-        className="flex gap-5"
-        style={{
-          animation: `marquee-scroll ${duration} linear infinite`,
-          willChange: 'transform',
-        }}
+        className={`marquee-track flex gap-4${paused ? ' paused' : ''}`}
+        style={{ width: (items.length * cardW) + 'px' }}
       >
-        {doubled.map((p, i) => <DestacadoCard key={`${p.id}-${i}`} producto={p} />)}
+        {items.map((p, i) => (
+          <div key={`${p.id}-${i}`} role="listitem" aria-hidden={i >= productos.length}>
+            <DestacadoCard producto={p} />
+          </div>
+        ))}
       </div>
     </div>
   );
