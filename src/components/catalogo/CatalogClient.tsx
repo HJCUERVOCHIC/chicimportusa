@@ -262,6 +262,7 @@ export default function CatalogClient({
   const [marcas,            setMarcas]            = useState<MarcaItem[]>(initialMarcas);
   const [loading,           setLoading]           = useState(false);
   const [busquedaDebounced, setBusquedaDebounced] = useState(busqueda);
+  const [drawerOpen,        setDrawerOpen]        = useState(false);
 
   const hayFiltrosActivos = genero || categoria || marca || busqueda;
   const mostrarDestacados = !hayFiltrosActivos && destacados.length > 0;
@@ -438,10 +439,10 @@ export default function CatalogClient({
           {/* ── GRID ───────────────────────────────────────────── */}
           <div className="flex-1 min-w-0">
 
-            {/* Barra superior: búsqueda mobile + conteo */}
-            <div className="flex items-center justify-between mb-4 gap-3">
+            {/* Barra superior mobile: búsqueda + botón filtros */}
+            <div className="flex items-center gap-2 mb-4">
               {/* Búsqueda mobile */}
-              <div className="flex md:hidden relative flex-1 max-w-xs">
+              <div className="flex md:hidden relative flex-1">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
                   <IconSearch size={14} />
                 </span>
@@ -455,19 +456,50 @@ export default function CatalogClient({
                 />
               </div>
 
-              {/* Conteo */}
+              {/* Botón filtros mobile */}
+              <button
+                type="button"
+                onClick={() => setDrawerOpen(true)}
+                className={cn(
+                  'md:hidden flex items-center gap-1.5 px-3 py-2 rounded-lg border text-xs font-bold font-body transition-all flex-shrink-0',
+                  (marca || orden !== 'reciente')
+                    ? 'bg-[#D90429] border-[#D90429] text-white'
+                    : 'bg-white border-gray-200 text-gray-700'
+                )}
+              >
+                <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
+                  <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/>
+                </svg>
+                Filtros
+                {(marca || orden !== 'reciente') && (
+                  <span className="bg-white/30 text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                    {[marca, orden !== 'reciente'].filter(Boolean).length}
+                  </span>
+                )}
+              </button>
+
+              {/* Conteo desktop */}
               <p
-                className="text-xs font-body text-gray-400 flex-shrink-0 ml-auto"
+                className="hidden md:block text-xs font-body text-gray-400 flex-shrink-0 ml-auto"
                 style={{ fontVariantNumeric: 'tabular-nums' }}
                 aria-live="polite"
               >
-                {loading ? (
-                  <span className="text-gray-300">Cargando...</span>
-                ) : (
+                {loading ? <span className="text-gray-300">Cargando...</span> : (
                   <><span className="font-semibold text-gray-700">{total}</span>{' '}{total === 1 ? 'producto' : 'productos'}</>
                 )}
               </p>
             </div>
+
+            {/* Conteo mobile */}
+            <p
+              className="md:hidden text-xs font-body text-gray-400 mb-3"
+              style={{ fontVariantNumeric: 'tabular-nums' }}
+              aria-live="polite"
+            >
+              {loading ? <span className="text-gray-300">Cargando...</span> : (
+                <><span className="font-semibold text-gray-700">{total}</span>{' '}{total === 1 ? 'producto' : 'productos'}</>
+              )}
+            </p>
 
             {loading ? <ProductGridSkeleton count={12} /> : (
               <ProductGrid
@@ -497,6 +529,64 @@ export default function CatalogClient({
           </div>
         </div>
       </div>
+
+      {/* ── DRAWER DE FILTROS MOBILE ──────────────────────────── */}
+      {drawerOpen && (
+        <div className="md:hidden fixed inset-0 z-50 flex flex-col justify-end">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setDrawerOpen(false)} aria-hidden="true" />
+          <div className="relative bg-white rounded-t-2xl px-5 pt-5 pb-8 shadow-xl max-h-[80vh] overflow-y-auto">
+
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-sm font-bold text-gray-900 font-body">Filtros</h2>
+              <button type="button" onClick={() => setDrawerOpen(false)} aria-label="Cerrar filtros" className="text-gray-400 hover:text-gray-700">
+                <IconX size={18} />
+              </button>
+            </div>
+
+            {marcas.length > 0 && (
+              <div className="mb-6">
+                <p className="text-[10px] font-bold tracking-[0.15em] uppercase text-gray-400 mb-3 font-body">Marca</p>
+                <div className="flex flex-wrap gap-2">
+                  {marcas.map((m) => (
+                    <button key={m.id} type="button" onClick={() => handleMarca(marca === m.id ? '' : m.id)}
+                      className={cn('px-3 py-1.5 rounded-full text-xs font-semibold font-body border transition-all',
+                        marca === m.id ? 'bg-[#D90429] border-[#D90429] text-white' : 'bg-white border-gray-200 text-gray-600')}>
+                      {m.nombre} <span className="opacity-60">{m.cantidad}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="mb-6">
+              <p className="text-[10px] font-bold tracking-[0.15em] uppercase text-gray-400 mb-3 font-body">Ordenar</p>
+              <div className="flex flex-col gap-1">
+                {ORDEN_OPTIONS.map((opt) => (
+                  <button key={opt.value} type="button" onClick={() => handleOrden(opt.value)}
+                    className={cn('text-left px-3 py-2.5 rounded-lg text-sm font-body transition-all',
+                      orden === opt.value ? 'text-[#D90429] font-semibold bg-[#D90429]/5' : 'text-gray-600')}>
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              {hayFiltrosActivos && (
+                <button type="button" onClick={() => { handleLimpiar(); setDrawerOpen(false); }}
+                  className="flex-1 py-3 border-2 border-gray-200 text-gray-700 text-sm font-bold font-body rounded-xl">
+                  Limpiar
+                </button>
+              )}
+              <button type="button" onClick={() => setDrawerOpen(false)}
+                className="flex-1 py-3 bg-[#111] text-white text-sm font-bold font-body rounded-xl">
+                Ver {total} {total === 1 ? 'producto' : 'productos'}
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
     </div>
   );
 }
