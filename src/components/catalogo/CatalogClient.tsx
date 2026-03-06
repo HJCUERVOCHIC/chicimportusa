@@ -127,12 +127,13 @@ function DestacadosCarousel({ productos }: { productos: Producto[] }) {
   const duration = `${productos.length * 1}s`;
   return (
     <div className="overflow-hidden">
-      <style>{`
-        @keyframes marquee-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-        .marquee-track { animation: marquee-scroll ${duration} linear infinite; will-change: transform; }
-        .marquee-track:hover { animation-play-state: paused; }
-      `}</style>
-      <div className="marquee-track flex gap-5">
+      <div
+        className="flex gap-5"
+        style={{
+          animation: `marquee-scroll ${duration} linear infinite`,
+          willChange: 'transform',
+        }}
+      >
         {doubled.map((p, i) => <DestacadoCard key={`${p.id}-${i}`} producto={p} />)}
       </div>
     </div>
