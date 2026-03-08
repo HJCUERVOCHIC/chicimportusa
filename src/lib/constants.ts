@@ -34,7 +34,7 @@ export const CATALOG_API_URL =
 
 /** Redes sociales */
 export const SOCIAL_LINKS = {
-  instagram: process.env.NEXT_PUBLIC_INSTAGRAM_URL || 'https://instagram.com/chicimportusa',
+  instagram: process.env.NEXT_PUBLIC_INSTAGRAM_URL || 'https://www.instagram.com/chic_importusa/',
   tiktok: process.env.NEXT_PUBLIC_TIKTOK_URL || 'https://tiktok.com/@chicimportusa',
 } as const;
 
