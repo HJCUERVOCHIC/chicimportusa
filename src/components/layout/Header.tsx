@@ -35,8 +35,8 @@ export default function Header() {
       </a>
 
       <header className={cn(
-        'sticky top-0 z-50 w-full bg-white transition-shadow duration-200',
-        scrolled && 'shadow-sm border-b border-gray-100'
+        'sticky top-0 z-50 w-full bg-[#111] transition-shadow duration-200',
+        scrolled && 'shadow-sm border-b border-white/10'
       )}>
         <nav
           className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3"
@@ -58,17 +58,17 @@ export default function Header() {
           <div className="hidden md:flex items-center gap-1">
             {/* Redes */}
             <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram"
-              className="p-2 text-gray-400 hover:text-gray-700 transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429]"
+              className="p-2 text-gray-400 hover:text-white transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429]"
               onClick={() => EVENTS.socialClick('instagram')}>
               <IconInstagram size={18} />
             </a>
             <a href={SOCIAL_LINKS.tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok"
-              className="p-2 text-gray-400 hover:text-gray-700 transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429]"
+              className="p-2 text-gray-400 hover:text-white transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429]"
               onClick={() => EVENTS.socialClick('tiktok')}>
               <IconTikTok size={18} />
             </a>
 
-            <div className="h-5 w-px bg-gray-200 mx-2" aria-hidden="true" />
+            <div className="h-5 w-px bg-white/20 mx-2" aria-hidden="true" />
 
             {/* WhatsApp */}
             <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer"

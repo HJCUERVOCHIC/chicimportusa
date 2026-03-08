@@ -312,19 +312,6 @@ export default function CatalogClient({
   return (
     <div className="min-h-screen bg-white">
 
-      {/* ── Barra publicación activa ───────────────────────────── */}
-      {publicacionActiva && (
-        <div className="bg-green-50 border-b border-green-100 px-4 py-2.5 text-center">
-          <span className="inline-flex items-center gap-2 text-[11px] font-bold text-green-700 tracking-[0.15em] uppercase font-body">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75 motion-reduce:animate-none" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
-            </span>
-            Publicación activa — {total} productos disponibles
-          </span>
-        </div>
-      )}
-
       {/* ── Nav de categorías (sticky bajo el header) ─────────── */}
       <CategoryNav
         categorias={categorias}
