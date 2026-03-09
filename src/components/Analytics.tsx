@@ -1,76 +1,73 @@
-'use client'
-
 // ─────────────────────────────────────────────
-//  ChicImportUSA — Analytics Scripts
-//  GA4 + Microsoft Clarity — Etapa 5
-//  Fix: Suspense interno para NavigationTracker
+//  ChicImportUSA — Analytics helpers (GA4)
+//  Etapa 5
 // ─────────────────────────────────────────────
 
-import Script from 'next/script'
-import { usePathname, useSearchParams } from 'next/navigation'
-import { useEffect, Suspense } from 'react'
-import { Analytics } from '@/lib/analytics'
-
-const GA_ID      = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
-const CLARITY_ID = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID
-const isProd     = process.env.NODE_ENV === 'production'
-
-// Separado en su propio componente con Suspense propio
-function NavigationTracker() {
-  const pathname     = usePathname()
-  const searchParams = useSearchParams()
-
-  useEffect(() => {
-    const url = pathname + (searchParams.toString() ? `?${searchParams}` : '')
-    Analytics.pageView(url)
-  }, [pathname, searchParams])
-
-  return null
+declare global {
+  interface Window {
+    gtag: (...args: unknown[]) => void
+    dataLayer: unknown[]
+  }
 }
 
-export default function AnalyticsScripts() {
-  if (!isProd) return null
+const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
 
-  return (
-    <>
-      {/* ── Google Analytics 4 ── */}
-      {GA_ID && (
-        <>
-          <Script
-            src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-            strategy="afterInteractive"
-          />
-          <Script id="ga4-init" strategy="afterInteractive">
-            {`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${GA_ID}', {
-                page_path: window.location.pathname,
-                send_page_view: false
-              });
-            `}
-          </Script>
-        </>
-      )}
+function gtag(...args: unknown[]) {
+  if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+    window.gtag(...args)
+  }
+}
 
-      {/* ── Microsoft Clarity ── */}
-      {CLARITY_ID && (
-        <Script id="clarity-init" strategy="lazyOnload">
-          {`
-            (function(c,l,a,r,i,t,y){
-              c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-              t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-              y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-            })(window, document, "clarity", "script", "${CLARITY_ID}");
-          `}
-        </Script>
-      )}
+// Constantes de nombres de eventos — usadas en CatalogClient, ProductCard, etc.
+export const EVENTS = {
+  WHATSAPP_CLICK:  'whatsapp_click',
+  FILTER_APPLIED:  'filter_applied',
+  PRODUCT_VIEW:    'view_item',
+  HERO_CTA_CLICK:  'hero_cta_click',
+  PAGE_VIEW:       'page_view',
+} as const
 
-      {/* Suspense propio — obligatorio para useSearchParams */}
-      <Suspense fallback={null}>
-        <NavigationTracker />
-      </Suspense>
-    </>
-  )
+// Helpers tipados para disparar eventos desde cualquier componente
+export const Analytics = {
+  // Llamado automáticamente en cada navegación (SPA)
+  pageView: (url: string) => {
+    gtag('config', GA_ID, { page_path: url })
+  },
+
+  // Usuario toca "Ver en WhatsApp" — KPI principal
+  whatsappClick: (productId: string, productName: string) => {
+    gtag('event', EVENTS.WHATSAPP_CLICK, {
+      event_category: 'engagement',
+      product_id: productId,
+      product_name: productName,
+    })
+  },
+
+  // Usuario aplica un filtro en el catálogo
+  filterApplied: (filterType: string, filterValue: string) => {
+    gtag('event', EVENTS.FILTER_APPLIED, {
+      event_category: 'catalog',
+      filter_type: filterType,   // 'genero' | 'categoria' | 'marca'
+      filter_value: filterValue,
+    })
+  },
+
+  // Usuario llega a la página de detalle de un producto
+  productView: (productId: string, productName: string, category: string) => {
+    gtag('event', EVENTS.PRODUCT_VIEW, {
+      currency: 'USD',
+      items: [{
+        item_id: productId,
+        item_name: productName,
+        item_category: category,
+      }],
+    })
+  },
+
+  // Usuario toca el CTA principal del Hero
+  heroCTAClick: () => {
+    gtag('event', EVENTS.HERO_CTA_CLICK, {
+      event_category: 'engagement',
+    })
+  },
 }
