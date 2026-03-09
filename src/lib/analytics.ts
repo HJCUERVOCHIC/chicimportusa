@@ -29,11 +29,12 @@ export const EVENTS = {
   // ── Métodos para disparar eventos ──
 
   // Usuario toca "Ver en WhatsApp" — KPI principal
-  whatsappClick: (productId: string, productName: string) => {
+  // productName es opcional para llamadas de CTA genérico
+  whatsappClick: (productId: string, productName?: string) => {
     gtag('event', 'whatsapp_click', {
       event_category: 'engagement',
       product_id: productId,
-      product_name: productName,
+      product_name: productName ?? productId,
     })
   },
 
