@@ -18,25 +18,21 @@ function gtag(...args: unknown[]) {
   }
 }
 
-// Constantes de nombres de eventos — usadas en CatalogClient, ProductCard, etc.
+// EVENTS — constantes de nombre Y métodos para disparar eventos
+// Usado en CatalogClient, ProductCard, ProductDetail, etc.
 export const EVENTS = {
-  WHATSAPP_CLICK: 'whatsapp_click',
-  FILTER_APPLIED: 'filter_applied',
-  PRODUCT_VIEW:   'view_item',
-  HERO_CTA_CLICK: 'hero_cta_click',
-  PAGE_VIEW:      'page_view',
-} as const
+  // ── Nombres de evento (strings) ──
+  WHATSAPP_CLICK: 'whatsapp_click' as const,
+  FILTER_APPLIED: 'filter_applied' as const,
+  PRODUCT_VIEW:   'view_item'      as const,
+  HERO_CTA_CLICK: 'hero_cta_click' as const,
+  PAGE_VIEW:      'page_view'      as const,
 
-// Helpers tipados para disparar eventos desde cualquier componente
-export const Analytics = {
-  // Llamado automáticamente en cada navegación (SPA)
-  pageView: (url: string) => {
-    gtag('config', GA_ID, { page_path: url })
-  },
+  // ── Métodos para disparar eventos ──
 
   // Usuario toca "Ver en WhatsApp" — KPI principal
   whatsappClick: (productId: string, productName: string) => {
-    gtag('event', EVENTS.WHATSAPP_CLICK, {
+    gtag('event', 'whatsapp_click', {
       event_category: 'engagement',
       product_id: productId,
       product_name: productName,
@@ -45,16 +41,16 @@ export const Analytics = {
 
   // Usuario aplica un filtro en el catálogo
   filterApplied: (filterType: string, filterValue: string) => {
-    gtag('event', EVENTS.FILTER_APPLIED, {
+    gtag('event', 'filter_applied', {
       event_category: 'catalog',
-      filter_type: filterType,   // 'genero' | 'categoria' | 'marca'
+      filter_type: filterType,
       filter_value: filterValue,
     })
   },
 
   // Usuario llega a la página de detalle de un producto
   productView: (productId: string, productName: string, category: string) => {
-    gtag('event', EVENTS.PRODUCT_VIEW, {
+    gtag('event', 'view_item', {
       currency: 'USD',
       items: [{
         item_id: productId,
@@ -66,8 +62,19 @@ export const Analytics = {
 
   // Usuario toca el CTA principal del Hero
   heroCTAClick: () => {
-    gtag('event', EVENTS.HERO_CTA_CLICK, {
+    gtag('event', 'hero_cta_click', {
       event_category: 'engagement',
     })
   },
+}
+
+// Analytics — alias para uso en Analytics.tsx (NavigationTracker)
+export const Analytics = {
+  pageView: (url: string) => {
+    gtag('config', GA_ID, { page_path: url })
+  },
+  whatsappClick: EVENTS.whatsappClick,
+  filterApplied: EVENTS.filterApplied,
+  productView:   EVENTS.productView,
+  heroCTAClick:  EVENTS.heroCTAClick,
 }
