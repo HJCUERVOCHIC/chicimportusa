@@ -38,6 +38,14 @@ export const EVENTS = {
     })
   },
 
+  // Usuario toca un enlace de red social (Instagram, TikTok, etc.)
+  socialClick: (platform: string) => {
+    gtag('event', 'social_click', {
+      event_category: 'engagement',
+      platform,
+    })
+  },
+
   // Usuario aplica filtros en el catálogo (género, categoría, marca, orden)
   catalogoFiltro: (filterType: string, filterValue: string) => {
     gtag('event', 'filter_applied', {
@@ -85,4 +93,5 @@ export const Analytics = {
   filterApplied: EVENTS.filterApplied,
   productView:   EVENTS.productView,
   heroCTAClick:  EVENTS.heroCTAClick,
+  socialClick:   EVENTS.socialClick,
 }
