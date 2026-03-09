@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from 'next'
 import { Bebas_Neue, Space_Grotesk } from 'next/font/google'
+import { Suspense } from 'react'
 import './globals.css'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
+import AnalyticsScripts from '@/components/Analytics'
 
 // -----------------------------------------------------------
 // Fuentes — Etapa 3: Streetwear/Urban
@@ -122,6 +124,10 @@ export default function RootLayout({
         <Header />
         <main>{children}</main>
         <Footer />
+        {/* ── Etapa 5: Analytics — GA4 + Microsoft Clarity ── */}
+        <Suspense fallback={null}>
+          <AnalyticsScripts />
+        </Suspense>
       </body>
     </html>
   )
