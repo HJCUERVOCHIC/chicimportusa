@@ -2,29 +2,20 @@
 
 // ─────────────────────────────────────────────
 //  ChicImportUSA — Analytics Scripts
-//  GA4 + Microsoft Clarity
-//  Etapa 5
-// ─────────────────────────────────────────────
-//  Uso en layout.tsx:
-//
-//  import { Suspense } from 'react'
-//  import AnalyticsScripts from '@/components/Analytics'
-//
-//  <Suspense fallback={null}>
-//    <AnalyticsScripts />
-//  </Suspense>
+//  GA4 + Microsoft Clarity — Etapa 5
+//  Fix: Suspense interno para NavigationTracker
 // ─────────────────────────────────────────────
 
 import Script from 'next/script'
 import { usePathname, useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, Suspense } from 'react'
 import { Analytics } from '@/lib/analytics'
 
 const GA_ID      = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
 const CLARITY_ID = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID
 const isProd     = process.env.NODE_ENV === 'production'
 
-// Registra cada cambio de ruta como page_view en GA4
+// Separado en su propio componente con Suspense propio
 function NavigationTracker() {
   const pathname     = usePathname()
   const searchParams = useSearchParams()
@@ -38,7 +29,6 @@ function NavigationTracker() {
 }
 
 export default function AnalyticsScripts() {
-  // No cargar en desarrollo — evita contaminar los datos
   if (!isProd) return null
 
   return (
@@ -77,8 +67,10 @@ export default function AnalyticsScripts() {
         </Script>
       )}
 
-      {/* Tracker de navegación SPA — requiere Suspense en layout.tsx */}
-      <NavigationTracker />
+      {/* Suspense propio — obligatorio para useSearchParams */}
+      <Suspense fallback={null}>
+        <NavigationTracker />
+      </Suspense>
     </>
   )
 }
