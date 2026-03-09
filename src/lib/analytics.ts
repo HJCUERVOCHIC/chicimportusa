@@ -18,8 +18,6 @@ function gtag(...args: unknown[]) {
   }
 }
 
-// EVENTS — constantes de nombre Y métodos para disparar eventos
-// Usado en CatalogClient, ProductCard, ProductDetail, etc.
 export const EVENTS = {
   // ── Nombres de evento (strings) ──
   WHATSAPP_CLICK: 'whatsapp_click' as const,
@@ -39,7 +37,16 @@ export const EVENTS = {
     })
   },
 
-  // Usuario aplica un filtro en el catálogo
+  // Usuario aplica filtros en el catálogo (género, categoría, marca, orden)
+  catalogoFiltro: (filterType: string, filterValue: string) => {
+    gtag('event', 'filter_applied', {
+      event_category: 'catalog',
+      filter_type: filterType,
+      filter_value: filterValue,
+    })
+  },
+
+  // Alias de catalogoFiltro para compatibilidad
   filterApplied: (filterType: string, filterValue: string) => {
     gtag('event', 'filter_applied', {
       event_category: 'catalog',
