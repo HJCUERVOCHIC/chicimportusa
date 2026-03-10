@@ -110,6 +110,9 @@ export const metadata: Metadata = {
       { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
     ],
   },
+  verification: {
+     google: '<meta name="google-site-verification" content="BpWGYqq-QlFmoNJ2ERu5uF0ypeU-FM2KpKE2HcWb9qQ" />', // el código que te da Google
+  },
   manifest: '/manifest.json',
 }
 
