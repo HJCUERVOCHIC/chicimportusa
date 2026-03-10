@@ -111,7 +111,7 @@ export const metadata: Metadata = {
     ],
   },
   verification: {
-     google: '<meta name="google-site-verification" content="BpWGYqq-QlFmoNJ2ERu5uF0ypeU-FM2KpKE2HcWb9qQ" />', // el código que te da Google
+     google: 'BpWGYqq-QlFmoNJ2ERu5uF0ypeU-FM2KpKE2HcWb9qQ', 
   },
   manifest: '/manifest.json',
 }
