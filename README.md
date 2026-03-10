@@ -325,3 +325,179 @@ NEXT_PUBLIC_SITE_URL=https://chicimportusa.com
 - ✅ Páginas legales (Términos y Política de Privacidad)
 - ✅ Centralización de enlace WhatsApp al grupo de publicaciones
 - ✅ Footer actualizado con enlaces legales
+
+
+
+## API del Catálogo
+
+La API vive en `admin.chicimportusa.com`. Se consume desde el servidor mediante un **proxy CORS** en `src/app/api/catalogo/[...path]/route.ts` para evitar exposición del origen.
+
+### Endpoints utilizados
+
+| Endpoint | Función |
+|----------|---------|
+| `GET /api/catalogo/productos` | Lista de productos con filtros opcionales |
+| `GET /api/catalogo/productos/:id` | Producto individual |
+| `GET /api/catalogo/categorias` | Listado de categorías |
+| `GET /api/catalogo/marcas` | Listado de marcas |
+
+### Respuesta de productos
+
+```ts
+// ProductosResponse
+{
+  total: number
+  publicacion_activa: boolean
+  actualizado_en: string
+  categorias: string[]
+  productos: Producto[]
+}
+```
+
+### ISR — Revalidación
+
+- Catálogo y producto: `revalidate: 300` (5 minutos)
+- Sitemap: `revalidate: 3600` (1 hora)
+
+---
+
+## Analytics (Etapa 5)
+
+### Variables de entorno (Vercel — solo Production)
+
+```
+NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+NEXT_PUBLIC_CLARITY_PROJECT_ID=XXXXXXXXXX
+```
+
+### Eventos implementados
+
+| Evento | Descripción | KPI |
+|--------|-------------|-----|
+| `whatsapp_click` | Clic en cualquier botón de WhatsApp | ⭐ Conversión principal |
+| `page_view` | Vista de página (NavigationTracker) | |
+| `view_item` | Vista de detalle de producto | |
+| `filter_applied` | Uso de filtros en catálogo | |
+| `hero_cta_click` | Clic en CTA del hero | |
+
+### Implementación
+
+`Analytics.tsx` es un Client Component con `NavigationTracker` que usa `usePathname` + `useSearchParams`. Requiere `<Suspense>` en `layout.tsx` para que el build de Vercel no falle.
+
+```tsx
+// layout.tsx
+<Suspense fallback={null}>
+  <AnalyticsScripts />
+</Suspense>
+```
+
+---
+
+## SEO (Etapa 6)
+
+### sitemap.xml dinámico
+
+Generado en `app/sitemap.ts`. Consume la API directamente para incluir todos los productos.
+
+| Página | Prioridad | Frecuencia |
+|--------|-----------|------------|
+| `/` | 1.0 | weekly |
+| `/catalogo` | 0.9 | daily |
+| `/como-funciona` | 0.5 | monthly |
+| `/terminos-y-condiciones` | 0.3 | yearly |
+| `/politica-de-privacidad` | 0.3 | yearly |
+| `/producto/[id]` (×N) | 0.8 | weekly |
+
+### robots.txt
+
+```
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://www.chicimportusa.com/sitemap.xml
+```
+
+### JSON-LD — Datos estructurados
+
+Tipo `OnlineStore` en `<head>` del `layout.tsx`. Incluye nombre, URL, descripción, área de servicio (Colombia), contacto WhatsApp, y redes sociales (`sameAs`).
+
+### Open Graph dinámico por producto
+
+Cada `/producto/[id]` genera su propio `generateMetadata()` con imagen real del producto desde Supabase, nombre y precio. Permite previews correctos al compartir por WhatsApp.
+
+### Google Search Console
+
+- Propiedad verificada con etiqueta HTML via `metadata.verification.google`
+- Sitemap enviado y en estado **Correcto**
+
+---
+
+## Patrones y decisiones técnicas
+
+### Marquee carousel (FeaturedProducts)
+
+```ts
+// Ancho explícito para evitar resets de animación
+const totalW = productos.length * cardW
+// @keyframes definido en globals.css (no inline) para estabilidad en mobile
+// Sin maskImage — deshabilita GPU acceleration en mobile
+// Sin <a> dentro de <Link> — causa hydration failure en React
+```
+
+### CategoryNav sticky
+
+Dos filas: géneros en la primera, categorías en la segunda. Scroll horizontal con `overflow-x: auto` y `scrollbar-hidden`. En mobile se colapsa en un bottom sheet (`FilterDrawer`).
+
+### Proxy de API
+
+```ts
+// src/app/api/catalogo/[...path]/route.ts
+// Reescribe todas las peticiones a admin.chicimportusa.com
+// Soluciona CORS en componentes cliente y durante SSR
+```
+
+### WhatsApp URLs
+
+Centralizadas en `src/lib/constants.ts` — nunca hardcodeadas en componentes.
+
+---
+
+## Variables de entorno
+
+```env
+# API del catálogo
+CATALOG_API_URL=https://admin.chicimportusa.com/api/catalogo
+
+# Analytics (solo en Production en Vercel)
+NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+NEXT_PUBLIC_CLARITY_PROJECT_ID=XXXXXXXXXX
+```
+
+---
+
+## Lecciones aprendidas
+
+| Problema | Solución |
+|----------|----------|
+| Bebas Neue sin lowercase | Siempre agregar clase `uppercase` |
+| `useSearchParams` rompe build | Envolver `NavigationTracker` en `<Suspense>` |
+| Sitemap sin productos (fetch circular) | Llamar directamente a la API externa, no al proxy interno |
+| `revalidateTag` en Next.js 16 | Requiere segundo argumento `'max'` |
+| Propiedades duplicadas en arrays TS | Causan fallas silenciosas en build de Vercel |
+| `lucide-react` no disponible | Reemplazar con SVGs inline |
+| Cache del browser enmascara deploys | Siempre probar en incógnito |
+| `verification.google` en metadata | Solo el código, no el `<meta>` completo |
+
+---
+
+## Historial de etapas
+
+| Etapa | Contenido |
+|-------|-----------|
+| **1** | Baseline — setup inicial del proyecto |
+| **2** | Catálogo con API nativa + proxy CORS + página `/producto/[id]` + Open Graph para WhatsApp |
+| **3** | Homepage Dark Streetwear/Urban (Hero, FeaturedProducts, Categories, HowItWorks, Testimonials, FinalCTA) |
+| **4** | Páginas de soporte + CategoryNav sticky con pills + FilterDrawer mobile (bottom sheet) + fixes del carousel |
+| **5** | GA4 + Microsoft Clarity — `whatsapp_click` como KPI principal de conversión |
+| **6** | `sitemap.xml` dinámico + `robots.txt` + JSON-LD `OnlineStore` + Google Search Console verificada |
