@@ -121,9 +121,9 @@ const jsonLd = {
     availableLanguage: 'Spanish',
   },
   sameAs: [
-    SITE_CONFIG.instagram,  // Asegúrate de tener SITE_CONFIG.instagram en constants.ts
-    SITE_CONFIG.tiktok,     // Asegúrate de tener SITE_CONFIG.tiktok en constants.ts
-  ].filter(Boolean), // Filtra undefined si alguna red no está configurada
+    'https://www.instagram.com/chicimportusa',
+    'https://www.tiktok.com/@chicimportusa',
+  ],
   currenciesAccepted: 'COP',
   paymentAccepted: 'Transferencia bancaria, Nequi, Daviplata',
   priceRange: '$$',
