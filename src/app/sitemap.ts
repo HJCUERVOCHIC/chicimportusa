@@ -1,57 +1,97 @@
-import { MetadataRoute } from 'next'
-import { getAllPosts } from '@/sanity/lib/fetchers'
+// ============================================================
+// ChicImportUSA — app/sitemap.ts · Etapa 6 SEO
+// Genera sitemap.xml dinámico con páginas estáticas + productos.
+// ============================================================
 
-const BASE_URL = 'https://chicimportusa.com'
+import type { MetadataRoute } from 'next';
+import { SITE_CONFIG } from '@/lib/constants';
+
+// Tipo mínimo del producto para el sitemap
+interface ProductoSitemap {
+  id: string | number;
+  updated_at?: string;
+}
+
+async function getProductosParaSitemap(): Promise<ProductoSitemap[]> {
+  try {
+    // Usamos el proxy interno para evitar CORS y reutilizar la misma ruta que el catálogo
+    const baseUrl =
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}`
+        : SITE_CONFIG.url;
+
+    const res = await fetch(`${baseUrl}/api/catalogo/productos?limit=1000`, {
+      next: { revalidate: 3600 }, // Revalidar cada hora
+    });
+
+    if (!res.ok) return [];
+
+    const data = await res.json();
+
+    // La API puede devolver { data: [...] } o directamente el array
+    const productos: ProductoSitemap[] = Array.isArray(data)
+      ? data
+      : Array.isArray(data?.data)
+        ? data.data
+        : [];
+
+    return productos;
+  } catch {
+    // Si la API falla en build time, el sitemap se genera sin productos
+    // (es mejor que romper el build)
+    console.warn('[sitemap] No se pudieron obtener productos:', 'API no disponible');
+    return [];
+  }
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Páginas estáticas
+  const baseUrl = SITE_CONFIG.url;
+  const ahora = new Date();
+
+  // ── Páginas estáticas ──────────────────────────────────────
   const staticPages: MetadataRoute.Sitemap = [
     {
-      url: BASE_URL,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 1,
-    },
-    {
-      url: `${BASE_URL}/como-funciona`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/publicaciones`,
-      lastModified: new Date(),
+      url: baseUrl,
+      lastModified: ahora,
       changeFrequency: 'weekly',
+      priority: 1.0,
+    },
+    {
+      url: `${baseUrl}/catalogo`,
+      lastModified: ahora,
+      changeFrequency: 'daily',
       priority: 0.9,
     },
     {
-      url: `${BASE_URL}/noticias`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
+      url: `${baseUrl}/como-funciona`,
+      lastModified: ahora,
+      changeFrequency: 'monthly',
+      priority: 0.5,
     },
     {
-      url: `${BASE_URL}/whatsapp`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
+      url: `${baseUrl}/terminos-y-condiciones`,
+      lastModified: ahora,
+      changeFrequency: 'yearly',
+      priority: 0.3,
     },
-  ]
+    {
+      url: `${baseUrl}/politica-de-privacidad`,
+      lastModified: ahora,
+      changeFrequency: 'yearly',
+      priority: 0.3,
+    },
+  ];
 
-  // Páginas dinámicas (noticias)
-  let dynamicPages: MetadataRoute.Sitemap = []
-  
-  try {
-    const posts = await getAllPosts()
-    dynamicPages = posts.map((post) => ({
-      url: `${BASE_URL}/noticias/${post.slug.current}`,
-      lastModified: new Date(post.publishedAt),
-      changeFrequency: 'monthly' as const,
-      priority: 0.6,
-    }))
-  } catch (error) {
-    console.error('Error generating sitemap:', error)
-  }
+  // ── Páginas dinámicas de productos ────────────────────────
+  const productos = await getProductosParaSitemap();
 
-  return [...staticPages, ...dynamicPages]
+  const productPages: MetadataRoute.Sitemap = productos.map((p) => ({
+    url: `${baseUrl}/producto/${p.id}`,
+    lastModified: p.updated_at ? new Date(p.updated_at) : ahora,
+    changeFrequency: 'weekly' as const,
+    priority: 0.8,
+  }));
+
+  return [...staticPages, ...productPages];
 }
