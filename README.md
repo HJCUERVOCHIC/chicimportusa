@@ -501,3 +501,31 @@ NEXT_PUBLIC_CLARITY_PROJECT_ID=XXXXXXXXXX
 | **4** | Páginas de soporte + CategoryNav sticky con pills + FilterDrawer mobile (bottom sheet) + fixes del carousel |
 | **5** | GA4 + Microsoft Clarity — `whatsapp_click` como KPI principal de conversión |
 | **6** | `sitemap.xml` dinámico + `robots.txt` + JSON-LD `OnlineStore` + Google Search Console verificada |
+
+
+# ChicImportUSA — Fixes de Conversión
+> Todos los archivos son reemplazos completos. Copiar sobre los originales.
+
+## Archivos incluidos
+
+| Archivo destino | Cambio |
+|---|---|
+| `src/components/WhatsAppFAB.tsx` | ✅ NUEVO — FAB flotante verde, se oculta en /producto/* |
+| `src/components/HeroSection.tsx` | ✅ NUEVO — Sección bienvenida para visitantes nuevos |
+| `src/components/ProductCard.tsx` | Fix 1 — Nombre del producto en mensaje WhatsApp de tarjetas |
+| `src/app/page.tsx` | Fix 3 — HeroSection antes del catálogo |
+| `src/app/layout.tsx` | Fix 4 — WhatsAppFAB en todas las páginas |
+| `public/img/herotenis.jpg` | Imagen de fondo del Hero |
+
+## Comandos Git
+
+```bash
+# Copia los archivos sobre tu proyecto, luego:
+git add .
+git commit -m "fix: conversión — nombre en WA (Fix1), Hero homepage (Fix3), FAB WhatsApp (Fix4)"
+git push origin main
+```
+
+## Fix 2 (ya resuelto)
+ProductDetail.tsx ya tenía el nombre correcto desde el objeto del producto.
+No requiere cambios.

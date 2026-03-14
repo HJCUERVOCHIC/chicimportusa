@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChicImport Growth — Estrategia 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red: #D90429;
+    --red-dark: #a8031f;
+    --red-light: #ff2244;
+    --black: #0a0a0a;
+    --dark: #111318;
+    --mid: #1e2128;
+    --soft: #2a2d36;
+    --muted: #6b7280;
+    --light: #e8eaf0;
+    --white: #ffffff;
+    --gold: #f5c842;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--black);
+    color: var(--white);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+    padding: 80px 40px;
+    background: var(--black);
+  }
+
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(217,4,41,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(217,4,41,0.06) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridPulse 6s ease-in-out infinite;
+  }
+
+  @keyframes gridPulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(217,4,41,0.2) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    animation: glowPulse 4s ease-in-out infinite;
+  }
+
+  @keyframes glowPulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+    50% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+  }
+
+  .hero-badge {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(217,4,41,0.15);
+    border: 1px solid rgba(217,4,41,0.4);
+    border-radius: 100px;
+    padding: 6px 18px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--red-light);
+    margin-bottom: 32px;
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--red-light);
+    border-radius: 50%;
+    animation: blink 1.5s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+  }
+
+  .hero-eyebrow {
+    position: relative;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    position: relative;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 12vw, 140px);
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+
+  .hero h1 span {
+    color: var(--red);
+    display: block;
+  }
+
+  .hero-sub {
+    position: relative;
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--muted);
+    max-width: 520px;
+    margin: 24px auto 0;
+    line-height: 1.7;
+  }
+
+  .hero-sub strong {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .scroll-line {
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, transparent, var(--red));
+    animation: scrollDrop 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollDrop {
+    0%, 100% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 100px 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(217,4,41,0.25);
+    max-width: 60px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 6vw, 72px);
+    line-height: 1;
+    letter-spacing: 0.02em;
+    margin-bottom: 16px;
+  }
+
+  .section-desc {
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 560px;
+    line-height: 1.8;
+    margin-bottom: 64px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.08), transparent);
+  }
+
+  /* ── THE PROBLEM ── */
+  .problem-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-bottom: 40px;
+  }
+
+  .problem-card {
+    background: var(--mid);
+    padding: 36px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .problem-card::before {
+    content: attr(data-num);
+    position: absolute;
+    right: 24px; top: 20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px;
+    color: rgba(255,255,255,0.04);
+    line-height: 1;
+  }
+
+  .problem-card.before {
+    border-left: 3px solid rgba(255,255,255,0.15);
+  }
+
+  .problem-card.after {
+    border-left: 3px solid var(--red);
+  }
+
+  .problem-card .tag {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  .problem-card.after .tag {
+    color: var(--red-light);
+    opacity: 1;
+  }
+
+  .problem-card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.05em;
+    margin-bottom: 24px;
+  }
+
+  .flow-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .flow-step {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 14px;
+    color: var(--light);
+  }
+
+  .flow-step:last-child { border-bottom: none; }
+
+  .flow-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--muted);
+    flex-shrink: 0;
+  }
+
+  .problem-card.after .flow-dot {
+    background: var(--red);
+  }
+
+  .flow-arrow {
+    font-size: 10px;
+    color: var(--muted);
+    text-align: center;
+    padding: 2px 0;
+    opacity: 0.4;
+  }
+
+  .problem-card.after .flow-arrow {
+    color: var(--red-light);
+    opacity: 0.6;
+  }
+
+  /* ── FUNNEL ── */
+  .funnel-wrapper {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+
+  .funnel-stage {
+    display: grid;
+    grid-template-columns: 48px 1fr 200px;
+    align-items: stretch;
+    gap: 0;
+    position: relative;
+  }
+
+  .funnel-num {
+    background: var(--mid);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--muted);
+    border-right: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .funnel-stage.active .funnel-num {
+    background: var(--red);
+    color: var(--white);
+  }
+
+  .funnel-body {
+    background: var(--mid);
+    padding: 24px 28px;
+  }
+
+  .funnel-stage.active .funnel-body {
+    background: var(--soft);
+  }
+
+  .funnel-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+
+  .funnel-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .funnel-metric {
+    background: var(--dark);
+    border-left: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 20px 24px;
+    gap: 4px;
+  }
+
+  .funnel-stage.active .funnel-metric {
+    background: var(--mid);
+    border-left-color: var(--red);
+  }
+
+  .metric-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .metric-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--white);
+    text-align: right;
+  }
+
+  .funnel-stage.active .metric-value {
+    color: var(--red-light);
+  }
+
+  /* ── AUTOMATION ── */
+  .auto-flow {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    position: relative;
+    margin-bottom: 60px;
+  }
+
+  .auto-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    padding: 32px 16px;
+  }
+
+  .auto-node::after {
+    content: '→';
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--red);
+    font-size: 18px;
+    font-weight: 300;
+  }
+
+  .auto-node:last-child::after { display: none; }
+
+  .auto-icon {
+    width: 56px; height: 56px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 14px;
+    position: relative;
+  }
+
+  .auto-icon.catalog { background: rgba(217,4,41,0.15); border: 1px solid rgba(217,4,41,0.3); }
+  .auto-icon.n8n { background: rgba(255,100,0,0.15); border: 1px solid rgba(255,100,0,0.3); }
+  .auto-icon.gemini { background: rgba(66,133,244,0.15); border: 1px solid rgba(66,133,244,0.3); }
+  .auto-icon.buffer { background: rgba(0,186,122,0.15); border: 1px solid rgba(0,186,122,0.3); }
+  .auto-icon.social { background: rgba(200,60,250,0.15); border: 1px solid rgba(200,60,250,0.3); }
+
+  .auto-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+
+  .auto-role {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+    max-width: 100px;
+  }
+
+  /* ── CONTENT MIX ── */
+  .mix-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px;
+  }
+
+  .mix-card {
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mix-card.auto {
+    background: var(--mid);
+    grid-column: 1 / 2;
+  }
+
+  .mix-card.human {
+    background: var(--dark);
+    border: 1px solid rgba(255,255,255,0.06);
+    grid-column: 2 / 3;
+  }
+
+  .mix-pct {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .mix-card.auto .mix-pct { color: var(--red); }
+  .mix-card.human .mix-pct { color: rgba(255,255,255,0.2); }
+
+  .mix-title {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .mix-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .mix-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--light);
+    padding: 8px 12px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 6px;
+  }
+
+  .mix-item .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .mix-card.auto .dot { background: var(--red); }
+  .mix-card.human .dot { background: var(--muted); }
+
+  /* ── TIMELINE ── */
+  .timeline {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3px;
+    position: relative;
+  }
+
+  .timeline-phase {
+    background: var(--mid);
+    padding: 32px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .timeline-phase::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--soft);
+  }
+
+  .timeline-phase.p1::before { background: rgba(217,4,41,0.4); }
+  .timeline-phase.p2::before { background: rgba(217,4,41,0.6); }
+  .timeline-phase.p3::before { background: rgba(217,4,41,0.8); }
+  .timeline-phase.p4::before { background: var(--red); }
+
+  .phase-period {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 12px;
+  }
+
+  .phase-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+  }
+
+  .phase-items {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .phase-item {
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    line-height: 1.5;
+  }
+
+  .phase-item::before {
+    content: '–';
+    color: var(--red);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ── METRICS ── */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+  }
+
+  .metric-card {
+    background: var(--mid);
+    padding: 36px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .metric-card.highlight {
+    background: var(--red);
+    grid-column: 1 / -1;
+  }
+
+  .metric-stage {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .metric-card.highlight .metric-stage {
+    color: rgba(255,255,255,0.6);
+  }
+
+  .metric-kpi {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.03em;
+    margin-bottom: 8px;
+    line-height: 1;
+  }
+
+  .metric-card.highlight .metric-kpi {
+    font-size: 36px;
+  }
+
+  .metric-explain {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .metric-card.highlight .metric-explain {
+    color: rgba(255,255,255,0.7);
+  }
+
+  /* ── COSTS ── */
+  .cost-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 24px;
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .cost-row:last-child { border-bottom: none; }
+
+  .cost-name {
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .cost-tag {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .cost-tag.owned { background: rgba(217,4,41,0.2); color: var(--red-light); }
+  .cost-tag.new { background: rgba(255,255,255,0.08); color: var(--muted); }
+
+  .cost-amount {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    text-align: right;
+    min-width: 120px;
+  }
+
+  .cost-amount.free { color: #22c55e; }
+  .cost-amount.paid { color: var(--white); }
+
+  .cost-total {
+    background: var(--red);
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 3px;
+  }
+
+  .cost-total-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.05em;
+  }
+
+  .cost-total-amount {
+    font-family: 'DM Mono', monospace;
+    font-size: 22px;
+    font-weight: 500;
+  }
+
+  /* ── CLOSING ── */
+  .closing {
+    text-align: center;
+    padding: 120px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .closing-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(217,4,41,0.12) 0%, transparent 70%);
+  }
+
+  .closing-quote {
+    position: relative;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(32px, 5vw, 56px);
+    line-height: 1.2;
+    max-width: 800px;
+    margin: 0 auto 40px;
+    letter-spacing: 0.02em;
+  }
+
+  .closing-quote span { color: var(--red); }
+
+  .closing-meta {
+    position: relative;
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 32px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .footer-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.08em;
+  }
+
+  .footer-brand span { color: var(--red); }
+
+  .footer-meta {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-align: right;
+  }
+
+  /* ── FULL-WIDTH WRAPPER ── */
+  .full {
+    background: var(--dark);
+  }
+
+  .full-alt {
+    background: var(--black);
+  }
+
+  /* ── HIGHLIGHT BOX ── */
+  .highlight-box {
+    border: 1px solid rgba(217,4,41,0.3);
+    background: rgba(217,4,41,0.07);
+    padding: 28px 32px;
+    margin-bottom: 48px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .highlight-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .highlight-text {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--light);
+  }
+
+  .highlight-text strong {
+    color: var(--white);
+  }
+
+  @media (max-width: 768px) {
+    section { padding: 60px 24px; }
+    .problem-cards, .mix-grid, .auto-flow, .timeline, .metrics-grid { grid-template-columns: 1fr; }
+    .auto-node::after { display: none; }
+    .funnel-stage { grid-template-columns: 40px 1fr; }
+    .funnel-metric { display: none; }
+    .timeline-phase.p4 { grid-column: auto; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+    .footer-meta { text-align: center; }
+    .cost-row { grid-template-columns: 1fr auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-badge">Documento estratégico — Confidencial</div>
+  <p class="hero-eyebrow">ChicImportUSA · Marzo 2026</p>
+  <h1>CHIC<span>IMPORT<br>GROWTH</span></h1>
+  <p class="hero-sub">
+    El plan para <strong>escalar la adquisición de clientes</strong> usando contenido automatizado, catálogo digital y WhatsApp como canal de cierre.
+  </p>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+  </div>
+</div>
+
+<!-- SECCIÓN 1: EL CAMBIO -->
+<div class="full">
+<section>
+  <p class="section-label">01 — El cambio estratégico</p>
+  <h2 class="section-title">De dónde venimos.<br>A dónde vamos.</h2>
+  <p class="section-desc">El modelo anterior mezclaba vitrina y canal de venta en el mismo lugar. El nuevo separa cada función para que cada una opere mejor.</p>
+
+  <div class="problem-cards">
+    <div class="problem-card before" data-num="A">
+      <p class="tag">Modelo anterior</p>
+      <h3>Todo por el grupo</h3>
+      <div class="flow-steps">
+        <div class="flow-step"><span class="flow-dot"></span> Exposición en redes</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step"><span class="flow-dot"></span> Grupo de WhatsApp</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step"><span class="flow-dot"></span> Venta</div>
+      </div>
+      <p style="margin-top:20px; font-size:12px; color:var(--muted); line-height:1.6;">
+        El grupo hacía todo: vitrina, atención, cierre y comunidad. No escala. Cada nuevo cliente requería crecer el grupo.
+      </p>
+    </div>
+    <div class="problem-card after" data-num="B">
+      <p class="tag">Modelo Growth</p>
+      <h3>Cada canal hace su trabajo</h3>
+      <div class="flow-steps">
+        <div class="flow-step"><span class="flow-dot"></span> Exposición (redes + SEO)</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step"><span class="flow-dot"></span> Catálogo público (vitrina)</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step"><span class="flow-dot"></span> Chat 1:1 de WhatsApp (cierre)</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step"><span class="flow-dot"></span> Pedido confirmado</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step"><span class="flow-dot"></span> Grupo (retención y recompra)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <span class="highlight-icon">💡</span>
+    <p class="highlight-text">
+      <strong>El grupo deja de ser la puerta de entrada y pasa a ser una recompensa.</strong> Los clientes que ya compraron acceden a un espacio exclusivo con novedades anticipadas y ofertas especiales. Eso lo hace más valioso, no menos.
+    </p>
+  </div>
+</section>
+</div>
+
+<div class="divider"></div>
+
+<!-- SECCIÓN 2: EL FUNNEL -->
+<div class="full-alt">
+<section>
+  <p class="section-label">02 — El funnel de conversión</p>
+  <h2 class="section-title">El camino del cliente</h2>
+  <p class="section-desc">Cada etapa tiene una función específica y una métrica que la define. El objetivo es optimizar cada eslabón de la cadena.</p>
+
+  <div class="funnel-wrapper">
+    <div class="funnel-stage">
+      <div class="funnel-num">1</div>
+      <div class="funnel-body">
+        <p class="funnel-name">Exposición</p>
+        <p class="funnel-desc">Instagram, TikTok y Google encuentran nuevos clientes que no nos conocen todavía. Aquí entra el contenido automatizado.</p>
+      </div>
+      <div class="funnel-metric">
+        <p class="metric-label">Herramienta</p>
+        <p class="metric-value">Instagram · TikTok</p>
+      </div>
+    </div>
+
+    <div class="funnel-stage">
+      <div class="funnel-num">2</div>
+      <div class="funnel-body">
+        <p class="funnel-name">Catálogo público</p>
+        <p class="funnel-desc">chicimportusa.com es la vitrina 24/7. Productos, precios, categorías y fotos. Genera confianza antes de que haya conversación.</p>
+      </div>
+      <div class="funnel-metric">
+        <p class="metric-label">Métricas</p>
+        <p class="metric-value">Sesiones · Tiempo en página</p>
+      </div>
+    </div>
+
+    <div class="funnel-stage active">
+      <div class="funnel-num">3</div>
+      <div class="funnel-body">
+        <p class="funnel-name">Clic en WhatsApp ← conversión clave</p>
+        <p class="funnel-desc">El momento en que el interés se convierte en acción. Ya está instrumentado en GA4 como el evento principal del negocio.</p>
+      </div>
+      <div class="funnel-metric">
+        <p class="metric-label">Evento GA4</p>
+        <p class="metric-value">whatsapp_click</p>
+      </div>
+    </div>
+
+    <div class="funnel-stage">
+      <div class="funnel-num">4</div>
+      <div class="funnel-body">
+        <p class="funnel-name">Chat 1:1 — cierre personalizado</p>
+        <p class="funnel-desc">La ventaja competitiva real. Atención personalizada que ningún ecommerce puede dar. El chat confirma talla, precio y disponibilidad.</p>
+      </div>
+      <div class="funnel-metric">
+        <p class="metric-label">Canal</p>
+        <p class="metric-value">WhatsApp Business</p>
+      </div>
+    </div>
+
+    <div class="funnel-stage">
+      <div class="funnel-num">5</div>
+      <div class="funnel-body">
+        <p class="funnel-name">Pedido confirmado</p>
+        <p class="funnel-desc">50% de anticipo para separar el producto. El proceso de pago y entrega que ya funciona en Core.</p>
+      </div>
+      <div class="funnel-metric">
+        <p class="metric-label">Métricas</p>
+        <p class="metric-value">Pedidos · Ticket promedio</p>
+      </div>
+    </div>
+
+    <div class="funnel-stage">
+      <div class="funnel-num">6</div>
+      <div class="funnel-body">
+        <p class="funnel-name">Grupo (retención)</p>
+        <p class="funnel-desc">Post-compra, el cliente entra al grupo exclusivo. Aquí viven las novedades, recompras y la comunidad de marca.</p>
+      </div>
+      <div class="funnel-metric">
+        <p class="metric-label">Objetivo</p>
+        <p class="metric-value">Recompra · Referidos</p>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<div class="divider"></div>
+
+<!-- SECCIÓN 3: EL MOTOR DE CONTENIDO -->
+<div class="full">
+<section>
+  <p class="section-label">03 — El motor de contenido</p>
+  <h2 class="section-title">Cómo se genera el contenido</h2>
+  <p class="section-desc">Un sistema automatizado convierte los productos del catálogo en publicaciones diarias en Instagram y TikTok, sin intervención del equipo.</p>
+
+  <div class="auto-flow">
+    <div class="auto-node">
+      <div class="auto-icon catalog">🗂️</div>
+      <p class="auto-name">Catálogo</p>
+      <p class="auto-role">Fuente de productos, fotos y precios</p>
+    </div>
+    <div class="auto-node">
+      <div class="auto-icon n8n">⚡</div>
+      <p class="auto-name">n8n</p>
+      <p class="auto-role">Automatización y orquestación del flujo</p>
+    </div>
+    <div class="auto-node">
+      <div class="auto-icon gemini">✨</div>
+      <p class="auto-name">Gemini AI</p>
+      <p class="auto-role">Genera imágenes, videos y captions</p>
+    </div>
+    <div class="auto-node">
+      <div class="auto-icon buffer">📅</div>
+      <p class="auto-name">Buffer</p>
+      <p class="auto-role">Programa y publica automáticamente</p>
+    </div>
+    <div class="auto-node">
+      <div class="auto-icon social">📱</div>
+      <p class="auto-name">Redes</p>
+      <p class="auto-role">Instagram y TikTok publicados</p>
+    </div>
+  </div>
+
+  <div class="mix-grid">
+    <div class="mix-card auto">
+      <p class="mix-pct">80%</p>
+      <p class="mix-title">Contenido automatizado</p>
+      <div class="mix-items">
+        <div class="mix-item"><span class="dot"></span>Post de producto nuevo desde catálogo</div>
+        <div class="mix-item"><span class="dot"></span>Carrusel "Top productos de la semana"</div>
+        <div class="mix-item"><span class="dot"></span>Story de precio actualizado</div>
+        <div class="mix-item"><span class="dot"></span>Caption generado por IA con voz de marca</div>
+        <div class="mix-item"><span class="dot"></span>Hashtags y CTA optimizados por categoría</div>
+      </div>
+    </div>
+    <div class="mix-card human">
+      <p class="mix-pct">20%</p>
+      <p class="mix-title">Toque humano (15 min/semana)</p>
+      <div class="mix-items">
+        <div class="mix-item"><span class="dot"></span>Video de unboxing real (30 seg)</div>
+        <div class="mix-item"><span class="dot"></span>Story "esto llegó hoy"</div>
+        <div class="mix-item"><span class="dot"></span>Respuesta a comentarios</div>
+        <div class="mix-item"><span class="dot"></span>Foto de producto en mano</div>
+      </div>
+      <p style="margin-top:16px; font-size:12px; color:var(--muted); line-height:1.6;">
+        El contenido humano genera los picos de engagement que alimentan el algoritmo. El automatizado garantiza la frecuencia diaria.
+      </p>
+    </div>
+  </div>
+</section>
+</div>
+
+<div class="divider"></div>
+
+<!-- SECCIÓN 4: POR QUÉ FUNCIONA -->
+<div class="full-alt">
+<section>
+  <p class="section-label">04 — Por qué esto genera crecimiento</p>
+  <h2 class="section-title">El mecanismo real</h2>
+  <p class="section-desc">La automatización no crece el negocio directamente. Lo que hace es garantizar consistencia, y la consistencia es lo que los algoritmos premian.</p>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:3px; margin-bottom:3px;">
+    <div style="background:var(--mid); padding:32px; border-top:3px solid var(--red);">
+      <p style="font-family:'Bebas Neue',sans-serif; font-size:48px; color:var(--red); line-height:1;">01</p>
+      <p style="font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:0.05em; margin:12px 0 10px;">Efecto de acumulación</p>
+      <p style="font-size:13px; color:var(--muted); line-height:1.7;">Cada post es un activo permanente. Un Reel publicado hoy puede traer visitas en 6 meses. Con 5 posts/semana, en 6 meses tienes 120+ puertas de entrada al catálogo.</p>
+    </div>
+    <div style="background:var(--mid); padding:32px; border-top:3px solid rgba(217,4,41,0.5);">
+      <p style="font-family:'Bebas Neue',sans-serif; font-size:48px; color:rgba(217,4,41,0.5); line-height:1;">02</p>
+      <p style="font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:0.05em; margin:12px 0 10px;">Señal de autoridad</p>
+      <p style="font-size:13px; color:var(--muted); line-height:1.7;">Instagram y TikTok premian la consistencia. Una cuenta que publica todos los días durante 30 días recibe más alcance orgánico por post que una esporádica.</p>
+    </div>
+    <div style="background:var(--mid); padding:32px; border-top:3px solid rgba(217,4,41,0.3);">
+      <p style="font-family:'Bebas Neue',sans-serif; font-size:48px; color:rgba(217,4,41,0.3); line-height:1;">03</p>
+      <p style="font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:0.05em; margin:12px 0 10px;">SEO social</p>
+      <p style="font-size:13px; color:var(--muted); line-height:1.7;">TikTok funciona como buscador. Alguien que escribe "tenis Nike importados Colombia" puede encontrar nuestros videos. A más contenido, más superficie de descubrimiento.</p>
+    </div>
+  </div>
+
+  <div style="background:var(--red); padding:32px; display:flex; align-items:center; gap:24px;">
+    <p style="font-size:40px; flex-shrink:0;">🎯</p>
+    <div>
+      <p style="font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:0.05em; margin-bottom:8px;">LA CADENA CAUSAL COMPLETA</p>
+      <p style="font-size:13px; line-height:1.8; color:rgba(255,255,255,0.85);">
+        Publicación diaria → más impresiones → más seguidores → más clics al catálogo → más <strong>whatsapp_click</strong> → más chats 1:1 → más pedidos confirmados
+      </p>
+    </div>
+  </div>
+</section>
+</div>
+
+<div class="divider"></div>
+
+<!-- SECCIÓN 5: TIMELINE -->
+<div class="full">
+<section>
+  <p class="section-label">05 — Plan de implementación</p>
+  <h2 class="section-title">Primeros 90 días</h2>
+  <p class="section-desc">El crecimiento orgánico no es lineal — es lento al inicio y se acelera. La automatización permite aguantar las primeras semanas sin depender de energía sostenida.</p>
+
+  <div class="timeline">
+    <div class="timeline-phase p1">
+      <p class="phase-period">Semana 1–2</p>
+      <p class="phase-title">Base técnica</p>
+      <div class="phase-items">
+        <p class="phase-item">Configurar n8n y conectar al catálogo API</p>
+        <p class="phase-item">Diseñar plantillas de contenido en Gemini</p>
+        <p class="phase-item">Conectar Buffer a Instagram y TikTok</p>
+        <p class="phase-item">Probar con 5 productos manualmente</p>
+      </div>
+    </div>
+    <div class="timeline-phase p2">
+      <p class="phase-period">Semana 3–4</p>
+      <p class="phase-title">Automatización activa</p>
+      <div class="phase-items">
+        <p class="phase-item">Activar trigger automático del catálogo</p>
+        <p class="phase-item">Publicación diaria funcionando sola</p>
+        <p class="phase-item">Respuestas automáticas en DMs vía ManyChat</p>
+        <p class="phase-item">Primeros datos en GA4 y Metricool</p>
+      </div>
+    </div>
+    <div class="timeline-phase p3">
+      <p class="phase-period">Mes 2</p>
+      <p class="phase-title">Optimización</p>
+      <div class="phase-items">
+        <p class="phase-item">Analizar qué posts generan más clics al catálogo</p>
+        <p class="phase-item">Ajustar captions y formatos según datos reales</p>
+        <p class="phase-item">Activar stories de urgencia ("últimas unidades")</p>
+        <p class="phase-item">Primera revisión de conversión WhatsApp</p>
+      </div>
+    </div>
+    <div class="timeline-phase p4">
+      <p class="phase-period">Mes 3+</p>
+      <p class="phase-title">Crecimiento compuesto</p>
+      <div class="phase-items">
+        <p class="phase-item">El sistema funciona de forma autónoma</p>
+        <p class="phase-item">Base de seguidores amplifica cada nuevo post</p>
+        <p class="phase-item">SEO social empieza a producir tráfico recurrente</p>
+        <p class="phase-item">Evaluar pauta pagada con datos de conversión</p>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<div class="divider"></div>
+
+<!-- SECCIÓN 6: MÉTRICAS -->
+<div class="full-alt">
+<section>
+  <p class="section-label">06 — Métricas de éxito</p>
+  <h2 class="section-title">Qué vamos a medir</h2>
+  <p class="section-desc">Una métrica por etapa del funnel. Simple, medible y directamente conectada con ventas reales.</p>
+
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <p class="metric-stage">Redes sociales</p>
+      <p class="metric-kpi">Clics al link en bio</p>
+      <p class="metric-explain">Cuántas personas pasan de Instagram/TikTok al catálogo. Medido con Metricool.</p>
+    </div>
+    <div class="metric-card">
+      <p class="metric-stage">Catálogo</p>
+      <p class="metric-kpi">Sesiones + product views</p>
+      <p class="metric-explain">Cuántas personas navegan el catálogo y qué productos ven. Medido con GA4.</p>
+    </div>
+    <div class="metric-card">
+      <p class="metric-stage">Conversión</p>
+      <p class="metric-kpi">whatsapp_click</p>
+      <p class="metric-explain">El evento más importante del sitio. Ya instrumentado en GA4. El único que conecta digital con venta real.</p>
+    </div>
+    <div class="metric-card highlight">
+      <p class="metric-stage">La métrica que controla todo el sistema</p>
+      <p class="metric-kpi">Tasa: whatsapp_click ÷ sesiones del catálogo</p>
+      <p class="metric-explain">Si este porcentaje sube semana sobre semana, el sistema está funcionando. Si no sube, hay un problema identificable en algún eslabón de la cadena.</p>
+    </div>
+    <div class="metric-card">
+      <p class="metric-stage">Operación</p>
+      <p class="metric-kpi">Chats 1:1 iniciados</p>
+      <p class="metric-explain">Volumen real de conversaciones de venta generadas por el sistema digital.</p>
+    </div>
+    <div class="metric-card">
+      <p class="metric-stage">Negocio</p>
+      <p class="metric-kpi">Pedidos confirmados</p>
+      <p class="metric-explain">La métrica final. Registrado manualmente en hoja de cálculo con fuente de adquisición.</p>
+    </div>
+  </div>
+</section>
+</div>
+
+<div class="divider"></div>
+
+<!-- SECCIÓN 7: INVERSIÓN -->
+<div class="full">
+<section>
+  <p class="section-label">07 — Inversión requerida</p>
+  <h2 class="section-title">Stack de herramientas</h2>
+  <p class="section-desc">La mayoría del stack ya existe o tiene costo mínimo. La inversión principal es el tiempo de configuración inicial.</p>
+
+  <div style="background:var(--mid); padding:40px 36px; margin-bottom:3px;">
+    <div class="cost-row">
+      <span class="cost-name">Gemini AI Suite (imágenes, video, texto) <span class="cost-tag owned">Ya activo</span></span>
+      <span></span>
+      <span class="cost-amount free">$0 adicional</span>
+    </div>
+    <div class="cost-row">
+      <span class="cost-name">n8n Cloud (automatización) <span class="cost-tag new">Nuevo</span></span>
+      <span></span>
+      <span class="cost-amount paid">~$20 USD / mes</span>
+    </div>
+    <div class="cost-row">
+      <span class="cost-name">Buffer (programación de publicaciones) <span class="cost-tag new">Nuevo</span></span>
+      <span></span>
+      <span class="cost-amount paid">~$6 USD / mes</span>
+    </div>
+    <div class="cost-row">
+      <span class="cost-name">Metricool (analítica de redes) <span class="cost-tag new">Nuevo</span></span>
+      <span></span>
+      <span class="cost-amount free">Gratis</span>
+    </div>
+    <div class="cost-row">
+      <span class="cost-name">ManyChat (auto-respuesta en DMs) <span class="cost-tag new">Nuevo</span></span>
+      <span></span>
+      <span class="cost-amount free">Gratis hasta 1.000 contactos</span>
+    </div>
+    <div class="cost-row">
+      <span class="cost-name">chicimportusa.com — catálogo + analytics <span class="cost-tag owned">Ya activo</span></span>
+      <span></span>
+      <span class="cost-amount free">$0 adicional</span>
+    </div>
+  </div>
+  <div class="cost-total">
+    <span class="cost-total-label">Inversión mensual adicional total</span>
+    <span class="cost-total-amount">~$26 USD / mes</span>
+  </div>
+
+  <p style="font-size:12px; color:var(--muted); margin-top:16px; line-height:1.7;">
+    * Si se opta por self-hosting de n8n en Railway, el costo baja a ~$11 USD/mes. La diferencia la decide el nivel de comodidad técnica del equipo.
+  </p>
+</section>
+</div>
+
+<!-- CIERRE -->
+<div class="closing">
+  <div class="closing-bg"></div>
+  <p class="closing-quote">
+    La automatización no crece el negocio.<br>
+    Lo que crece el negocio es la <span>consistencia</span><br>
+    que la automatización hace posible.
+  </p>
+  <p class="closing-meta">ChicImport Growth · Estrategia de contenido y adquisición · 2026</p>
+</div>
+
+<footer>
+  <p class="footer-brand">CHIC<span>IMPORT</span>USA</p>
+  <p class="footer-meta">Documento interno — Uso exclusivo del equipo de socios<br>Marzo 2026 · chicimportusa.com</p>
+</footer>
+
+</body>
+</html>

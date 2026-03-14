@@ -5,6 +5,7 @@ import './globals.css'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import AnalyticsScripts from '@/components/Analytics'
+import WhatsAppFAB from '@/components/WhatsAppFAB';
 
 // -----------------------------------------------------------
 // Fuentes — Etapa 3: Streetwear/Urban
@@ -173,6 +174,8 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <AnalyticsScripts />
         </Suspense>
+        {/* ── Conversión: FAB flotante de WhatsApp ── */}
+        <WhatsAppFAB />
       </body>
     </html>
   )
