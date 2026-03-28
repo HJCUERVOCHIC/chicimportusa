@@ -1,14 +1,19 @@
 // ============================================================
 // ChicImportUSA — Homepage = Catálogo completo
 // Carga destacados en paralelo, solo cuando no hay filtros.
-// v2: agrega HeroCarousel de categorías sobre el catálogo.
+// v2: features controlados por feature flags (env vars).
+//
+// FEATURE FLAGS (activar en .env.local para desarrollo):
+//   NEXT_PUBLIC_HERO_CAROUSEL=true
 // ============================================================
 
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { getProductos, getCategorias, getMarcas } from '@/lib/api-catalogo';
+import { getHeroCategorias } from '@/lib/api';
 import { SITE_CONFIG } from '@/lib/constants';
 import CatalogClient from '@/components/catalogo/CatalogClient';
+import HeroCarousel from '@/components/sections/HeroCarousel';
 import { FilterBarSkeleton, ProductGridSkeleton } from '@/components/ui/Skeleton';
 
 export const metadata: Metadata = {
@@ -28,6 +33,9 @@ export const metadata: Metadata = {
 };
 
 export const revalidate = 300;
+
+// Feature flags
+const FF_HERO_CAROUSEL = process.env.NEXT_PUBLIC_HERO_CAROUSEL === 'true';
 
 interface HomePageProps {
   searchParams: Promise<{
@@ -50,7 +58,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
   const hayFiltros = categoriaActiva || marcaActiva || generoActivo || busquedaActiva;
 
-  const [dataProductos, dataCategorias, dataMarcas, dataDestacados] =
+  const [dataProductos, dataCategorias, dataMarcas, dataDestacados, heroCategorias] =
     await Promise.all([
       getProductos({
         categoria: categoriaActiva,
@@ -62,16 +70,16 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       getCategorias(generoActivo),
       getMarcas(categoriaActiva, generoActivo),
       hayFiltros ? Promise.resolve(null) : getProductos({ destacados: true, limite: 8 }),
-      // HeroCarousel: deshabilitado temporalmente — activar cuando esté listo
-      // getHeroCategorias(),
+      // Solo hace el fetch si el flag está activo
+      FF_HERO_CAROUSEL ? getHeroCategorias() : Promise.resolve([]),
     ]);
 
   return (
     <main id="contenido-principal">
-      {/* HeroCarousel: deshabilitado temporalmente
-      {heroCategorias.length > 0 && !hayFiltros && (
+      {/* Carousel hero — controlado por NEXT_PUBLIC_HERO_CAROUSEL */}
+      {FF_HERO_CAROUSEL && heroCategorias.length > 0 && !hayFiltros && (
         <HeroCarousel categorias={heroCategorias} />
-      )} */}
+      )}
 
       <Suspense
         fallback={
