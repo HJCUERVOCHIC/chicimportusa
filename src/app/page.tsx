@@ -7,10 +7,8 @@
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { getProductos, getCategorias, getMarcas } from '@/lib/api-catalogo';
-import { getHeroCategorias } from '@/lib/api';
 import { SITE_CONFIG } from '@/lib/constants';
 import CatalogClient from '@/components/catalogo/CatalogClient';
-import HeroCarousel from '@/components/sections/HeroCarousel';
 import { FilterBarSkeleton, ProductGridSkeleton } from '@/components/ui/Skeleton';
 
 export const metadata: Metadata = {
@@ -50,10 +48,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const busquedaActiva  = params?.buscar    || undefined;
   const ordenActivo     = (params?.orden as 'reciente' | 'precio_asc' | 'precio_desc') || undefined;
 
-  // Solo traer destacados cuando no hay filtros activos
   const hayFiltros = categoriaActiva || marcaActiva || generoActivo || busquedaActiva;
 
-  const [dataProductos, dataCategorias, dataMarcas, dataDestacados, heroCategorias] =
+  const [dataProductos, dataCategorias, dataMarcas, dataDestacados] =
     await Promise.all([
       getProductos({
         categoria: categoriaActiva,
@@ -65,16 +62,16 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       getCategorias(generoActivo),
       getMarcas(categoriaActiva, generoActivo),
       hayFiltros ? Promise.resolve(null) : getProductos({ destacados: true, limite: 8 }),
-      // El carousel se oculta solo si el admin no ha subido imágenes hero
-      getHeroCategorias(),
+      // HeroCarousel: deshabilitado temporalmente — activar cuando esté listo
+      // getHeroCategorias(),
     ]);
 
   return (
     <main id="contenido-principal">
-      {/* Carousel hero — solo se renderiza si hay categorías con imagen */}
+      {/* HeroCarousel: deshabilitado temporalmente
       {heroCategorias.length > 0 && !hayFiltros && (
         <HeroCarousel categorias={heroCategorias} />
-      )}
+      )} */}
 
       <Suspense
         fallback={
