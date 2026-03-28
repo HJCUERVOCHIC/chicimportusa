@@ -27,10 +27,15 @@ export const WHATSAPP_URL =
   process.env.NEXT_PUBLIC_WHATSAPP_URL ||
   'https://chat.whatsapp.com/KXwhlBpFKeh8521CBRvJp6';
 
-/** API del catálogo (plataforma admin) — usado por server components */
+/** API del catálogo v1 (plataforma admin) — usado por server components y sitemap */
 export const CATALOG_API_URL =
   process.env.NEXT_PUBLIC_CATALOG_API_URL ||
   'https://admin.chicimportusa.com/api/catalogo';
+
+/** API del catálogo v2 — campos nuevos: descuentos, oferta_exclusiva, hero-categorias */
+export const CATALOG_API_URL_V2 =
+  process.env.NEXT_PUBLIC_CATALOG_API_URL_V2 ||
+  'https://admin.chicimportusa.com/api/catalogo/v2';
 
 /** Redes sociales */
 export const SOCIAL_LINKS = {
