@@ -39,8 +39,11 @@ export interface Categoria {
   total_productos: number;
 }
 
-export interface HeroCategoria extends Categoria {
-  hero_image_url: string;
+export interface HeroCategoria {
+  id: string;
+  nombre: string;
+  imagenHero: string;
+  total_productos?: number;
 }
 
 export interface Marca {
