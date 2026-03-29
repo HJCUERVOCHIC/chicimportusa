@@ -11,9 +11,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 const SLIDES = [
-  { id: 1, src: '/img/Hero_1.jpg', alt: 'ChicImportUSA — Productos importados desde USA' },
-  { id: 2, src: '/img/Hero_2.jpg', alt: 'ChicImportUSA — Destacados de la temporada' },
-  { id: 3, src: '/img/Hero_3.jpg', alt: 'ChicImportUSA — Ofertas especiales' },
+  { id: 1, src: '/img/Hero_1.png', alt: 'ChicImportUSA — Productos importados desde USA' },
+  { id: 2, src: '/img/Hero_2.png', alt: 'ChicImportUSA — Destacados de la temporada' },
+  { id: 3, src: '/img/Hero_3.png', alt: 'ChicImportUSA — Ofertas especiales' },
 ];
 
 export default function HeroCarousel() {
@@ -50,7 +50,7 @@ export default function HeroCarousel() {
   return (
     <section
       className="relative w-full overflow-hidden bg-[#111]"
-      style={{ aspectRatio: '16/9', maxHeight: '520px' }}
+      style={{ height: '50vh', minHeight: '260px', maxHeight: '480px' }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onTouchStart={onTouchStart}
@@ -80,11 +80,11 @@ export default function HeroCarousel() {
       ))}
 
       {/* Botones — abajo izquierda, sobre todos los slides */}
-      <div className="absolute bottom-4 sm:bottom-8 left-4 sm:left-10 z-20 flex flex-col sm:flex-row gap-2 sm:gap-3">
+      <div className="absolute bottom-8 left-5 sm:left-10 z-20 flex flex-wrap gap-3">
         {/* Ofertas Especiales — botón principal, más prominente */}
         <Link
           href="/?oferta_exclusiva=true"
-          className="inline-flex items-center gap-2 bg-[#D90429] hover:bg-[#B80323] text-white px-5 py-2.5 rounded-lg text-sm font-bold font-body tracking-[0.04em] transition-colors duration-200 shadow-[0_4px_16px_rgba(217,4,41,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+          className="inline-flex items-center gap-1.5 bg-[#D90429] hover:bg-[#B80323] text-white px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-lg text-xs sm:text-sm font-bold font-body tracking-[0.04em] transition-colors duration-200 shadow-[0_4px_16px_rgba(217,4,41,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         >
           Ofertas Especiales
           <svg aria-hidden="true" width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
@@ -94,7 +94,7 @@ export default function HeroCarousel() {
         {/* Productos Destacados — botón secundario, más sutil */}
         <Link
           href="/?destacados=true"
-          className="inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 backdrop-blur-sm text-white border border-white/30 hover:border-white/50 px-5 py-2.5 rounded-lg text-sm font-bold font-body tracking-[0.04em] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+          className="inline-flex items-center gap-1.5 bg-white/15 hover:bg-white/25 backdrop-blur-sm text-white border border-white/30 hover:border-white/50 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-lg text-xs sm:text-sm font-bold font-body tracking-[0.04em] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         >
           Productos Destacados
           <svg aria-hidden="true" width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
