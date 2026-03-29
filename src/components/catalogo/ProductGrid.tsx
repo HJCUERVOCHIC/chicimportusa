@@ -3,10 +3,10 @@
 // ============================================================
 
 import ProductCard from './ProductCard';
-import type { Producto } from '@/types/catalogo';
+import type { ProductoV2 } from '@/types/catalogo';
 
 interface ProductGridProps {
-  productos: Producto[];
+  productos: ProductoV2[];
   sinPublicaciones?: boolean;
 }
 
