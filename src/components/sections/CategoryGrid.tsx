@@ -2,8 +2,8 @@
 
 // ============================================================
 // ChicImportUSA — CategoryGrid · Nieve Activa
-// Grid dinámico de categorías con imagen hero.
-// Preserva query params existentes (genero, buscar, etc.)
+// Mobile: scroll horizontal compacto
+// Desktop: grid adaptativo según número de categorías
 // ============================================================
 
 import Image from 'next/image';
@@ -23,16 +23,51 @@ export default function CategoryGrid({ categorias }: CategoryGridProps) {
   const buildHref = (categoriaId: string) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set('categoria', categoriaId);
-    // Resetear marca y búsqueda al cambiar categoría, pero preservar género
     params.delete('marca');
     params.delete('buscar');
     return `/?${params.toString()}`;
   };
 
   return (
-    <section className="py-8 px-4 sm:px-6 bg-white">
-      <div className="max-w-7xl mx-auto">
-        <div className={`grid gap-3 sm:gap-4 ${getGridCols(categorias.length)}`}>
+    <section className="bg-white py-4 sm:py-8">
+
+      {/* ── Mobile: scroll horizontal ─────────────────────── */}
+      <div className="sm:hidden px-4">
+        <div
+          className="flex gap-3 overflow-x-auto pb-2"
+          style={{ scrollbarWidth: 'none' }}
+        >
+          {categorias.map((cat) => (
+            <Link
+              key={cat.id}
+              href={buildHref(cat.id)}
+              className="group relative flex-shrink-0 overflow-hidden rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D90429]"
+              style={{ width: '110px', height: '110px' }}
+            >
+              <Image
+                src={cat.imagenHero}
+                alt={cat.nombre}
+                fill
+                sizes="110px"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-2">
+                <h3 className="font-display text-white leading-none tracking-[0.04em] text-[13px]">
+                  {cat.nombre.toUpperCase()}
+                </h3>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Desktop: grid adaptativo ──────────────────────── */}
+      <div className="hidden sm:block max-w-7xl mx-auto px-6">
+        <div className={`grid gap-4 ${getGridCols(categorias.length)}`}>
           {categorias.map((cat) => (
             <Link
               key={cat.id}
@@ -44,7 +79,7 @@ export default function CategoryGrid({ categorias }: CategoryGridProps) {
                 src={cat.imagenHero}
                 alt={cat.nombre}
                 fill
-                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                sizes="(max-width: 1024px) 33vw, 20vw"
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none';
@@ -63,15 +98,16 @@ export default function CategoryGrid({ categorias }: CategoryGridProps) {
           ))}
         </div>
       </div>
+
     </section>
   );
 }
 
 function getGridCols(count: number): string {
   if (count <= 2) return 'grid-cols-2';
-  if (count === 3) return 'grid-cols-2 sm:grid-cols-3';
-  if (count === 4) return 'grid-cols-2 sm:grid-cols-4';
-  if (count === 5) return 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5';
-  if (count === 6) return 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-6';
-  return 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4';
+  if (count === 3) return 'grid-cols-3';
+  if (count === 4) return 'grid-cols-4';
+  if (count === 5) return 'grid-cols-3 lg:grid-cols-5';
+  if (count === 6) return 'grid-cols-3 lg:grid-cols-6';
+  return 'grid-cols-3 lg:grid-cols-4';
 }
