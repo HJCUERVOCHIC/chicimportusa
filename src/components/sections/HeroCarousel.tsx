@@ -11,9 +11,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 const SLIDES = [
-  { id: 1, src: '/img/Hero_1.png', alt: 'ChicImportUSA — Productos importados desde USA' },
-  { id: 2, src: '/img/Hero_2.png', alt: 'ChicImportUSA — Destacados de la temporada' },
-  { id: 3, src: '/img/Hero_3.png', alt: 'ChicImportUSA — Ofertas especiales' },
+  { id: 1, src: '/img/Hero_1.jpg', alt: 'ChicImportUSA — Productos importados desde USA' },
+  { id: 2, src: '/img/Hero_2.jpg', alt: 'ChicImportUSA — Destacados de la temporada' },
+  { id: 3, src: '/img/Hero_3.jpg', alt: 'ChicImportUSA — Ofertas especiales' },
 ];
 
 export default function HeroCarousel() {
@@ -50,7 +50,7 @@ export default function HeroCarousel() {
   return (
     <section
       className="relative w-full overflow-hidden bg-[#111]"
-      style={{ height: '50vh', minHeight: '260px', maxHeight: '480px' }}
+      style={{ aspectRatio: '16/9', maxHeight: '520px' }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onTouchStart={onTouchStart}
@@ -80,7 +80,7 @@ export default function HeroCarousel() {
       ))}
 
       {/* Botones — abajo izquierda, sobre todos los slides */}
-      <div className="absolute bottom-8 left-5 sm:left-10 z-20 flex flex-wrap gap-3">
+      <div className="absolute bottom-4 sm:bottom-8 left-4 sm:left-10 z-20 flex flex-col sm:flex-row gap-2 sm:gap-3">
         {/* Ofertas Especiales — botón principal, más prominente */}
         <Link
           href="/?oferta_exclusiva=true"
