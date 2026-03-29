@@ -22,12 +22,12 @@ ChicImportUSA opera mediante **publicaciones periódicas** de productos importad
 
 | Tecnología | Uso |
 |------------|-----|
-| **Next.js 14** | Framework React con App Router |
+| **Next.js 16** | Framework React con App Router |
 | **TypeScript** | Tipado estático |
 | **TailwindCSS** | Estilos utilitarios |
-| **Sanity CMS** | Gestión de contenido dinámico |
 | **Vercel** | Hosting y deploy |
 | **GoDaddy** | Dominio y DNS |
+| **Supabase Storage** | CDN de imágenes de productos y categorías |
 
 ---
 
@@ -37,53 +37,109 @@ ChicImportUSA opera mediante **publicaciones periódicas** de productos importad
 chicimportusa/
 ├── src/
 │   ├── app/                          # Páginas (App Router)
-│   │   ├── page.tsx                  # Home
+│   │   ├── page.tsx                  # Home = Catálogo completo
 │   │   ├── layout.tsx                # Layout global
 │   │   ├── globals.css               # Estilos globales
-│   │   ├── publicaciones/            # Página de publicaciones
+│   │   ├── api/
+│   │   │   ├── catalogo/[...path]/   # Proxy CORS → admin API v1
+│   │   │   └── revalidate/           # Endpoint de revalidación ISR
+│   │   ├── producto/[id]/            # Detalle de producto
+│   │   ├── como-funciona/            # Página informativa
 │   │   ├── terminos-y-condiciones/   # Términos legales
 │   │   └── politica-de-privacidad/   # Política de privacidad
 │   ├── components/
-│   │   ├── ui/                       # Componentes base (Button, Card, Badge)
-│   │   ├── layout/                   # Header, Footer
-│   │   └── sections/                 # Secciones de página
+│   │   ├── ui/                       # Componentes base (Button, Card, Badge, Skeleton)
+│   │   ├── layout/                   # Header, Footer, WhatsAppFloat
+│   │   ├── catalogo/                 # CatalogClient, ProductCard, ProductGrid, ProductDetail
+│   │   ├── product/                  # ProductDetail (vista detalle)
+│   │   └── sections/                 # HeroCarousel, GeneroNav, CategoryGrid, y otras secciones
 │   ├── lib/
-│   │   ├── sanity.ts                 # Cliente Sanity
-│   │   └── queries.ts                # Queries GROQ
-│   ├── sanity/
-│   │   └── lib/
-│   │       └── fetchers.ts           # Funciones de fetch
+│   │   ├── constants.ts              # URLs, config centralizada
+│   │   ├── api-catalogo.ts           # Helpers server-side → API v2
+│   │   ├── api.ts                    # Helpers adicionales v2 (hero-categorias, etc.)
+│   │   ├── analytics.ts              # Eventos GA4
+│   │   └── utils.ts                  # Utilidades generales
 │   └── types/
-│       └── index.ts                  # Tipos TypeScript y constantes globales
+│       └── catalogo.ts               # Tipos TypeScript: Producto, ProductoV2, etc.
 ├── public/
-│   └── img/                          # Assets estáticos
-├── sanity/
-│   └── schemas/                      # Schemas de Sanity CMS
+│   └── img/                          # Assets estáticos (Hero_1.png, Hero_2.png, Hero_3.png, logos)
 ├── next.config.js
-├── tailwind.config.ts
-└── .npmrc                            # legacy-peer-deps=true
+└── tailwind.config.ts
 ```
 
 ---
 
-## 🎨 Sistema de Diseño
+## 🎨 Sistema de Diseño — "Nieve Activa"
 
 ### Paleta de Colores
 
 | Variable | Valor | Uso |
 |----------|-------|-----|
-| `bg` | `#FFFFFF` | Fondo principal |
-| `text` | `#111111` | Texto principal |
-| `muted` | `#4B5563` | Texto secundario |
-| `muted-2` | `#9CA3AF` | Texto terciario |
-| `border` | `#E5E7EB` | Bordes |
-| `accent` | `#D90429` | Color de acento (rojo) |
-| `accent-hover` | `#B80322` | Hover del acento |
+| Fondo | `#FFFFFF` | Fondo principal |
+| Header/Footer | `#111111` | Fondos oscuros |
+| Accent | `#D90429` | Color de acento (rojo) |
+| Accent hover | `#B80323` | Hover del acento |
+| WhatsApp | `#25D366` | Botones WhatsApp |
+| Oferta badge | `purple-600` | Badge oferta exclusiva |
+| Descuento | `amber-400` | Fondo precio con descuento |
 
 ### Tipografía
 
-- **Fuente:** Inter (Google Fonts)
-- **Enfoque:** Mobile-first, responsive
+- **Display:** Bebas Neue — títulos impactantes
+- **Body:** Space Grotesk — cuerpo moderno y legible
+
+---
+
+## 🔌 API del Catálogo — v1 y v2
+
+La API vive en `admin.chicimportusa.com`. Se consume directamente desde Server Components con ISR.
+
+### Regla fundamental
+
+> v1 permanece activa. v2 es aditiva — agrega campos sin romper interfaces existentes.
+
+### Endpoints v2 utilizados
+
+| Endpoint | Función |
+|----------|---------|
+| `GET /api/catalogo/v2/productos` | Lista con filtros: categoria, marca, genero, destacados, oferta_exclusiva |
+| `GET /api/catalogo/v2/productos/:id` | Producto individual con campos v2 |
+| `GET /api/catalogo/v2/categorias` | Categorías activas con conteo |
+| `GET /api/catalogo/v2/marcas` | Marcas activas con conteo |
+| `GET /api/catalogo/v2/generos` | Géneros con productos publicados (dinámico) |
+| `GET /api/catalogo/v2/hero-categorias` | Categorías con imagen hero para grid |
+
+### Campos nuevos en v2
+
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `oferta_exclusiva` | `boolean` | Producto en oferta exclusiva |
+| `tiene_descuento` | `boolean` | Tiene precio rebajado activo |
+| `precio_sin_descuento` | `number \| null` | Precio original antes del descuento |
+| `genero` | incluye `ninos` y `ninas` | Géneros adicionales vs v1 |
+
+> `destacado` y `oferta_exclusiva` son mutuamente excluyentes — garantizado desde el admin.
+
+### Parámetros de filtro v2
+
+| Parámetro | Descripción |
+|-----------|-------------|
+| `categoria` | Filtra por id de categoría |
+| `marca` | Filtra por nombre de marca |
+| `genero` | hombre, mujer, unisex, ninos, ninas |
+| `destacados=true` | Solo productos destacados (con 's') |
+| `oferta_exclusiva=true` | Solo productos en oferta exclusiva |
+| `buscar` | Búsqueda por texto |
+| `orden` | reciente, precio_asc, precio_desc |
+
+### ISR — Revalidación
+
+- Todos los endpoints: `revalidate: 300` (5 minutos)
+- Revalidación manual: `GET /api/revalidate?secret=SECRET&path=/`
+
+### Proxy CORS
+
+El proxy en `src/app/api/catalogo/[...path]/route.ts` reenvía peticiones de client components al admin. Los server components llaman directamente a la API v2 sin pasar por el proxy.
 
 ---
 
@@ -91,101 +147,116 @@ chicimportusa/
 
 | Ruta | Descripción |
 |------|-------------|
-| `/` | Homepage con todas las secciones |
-| `/publicaciones` | Catálogo embebido de publicaciones activas |
+| `/` | Home = Catálogo completo con hero, géneros, categorías y productos |
+| `/producto/[id]` | Detalle de producto con badges v2 y precio tachado |
+| `/como-funciona` | Página informativa del proceso |
 | `/terminos-y-condiciones` | Términos y condiciones legales |
 | `/politica-de-privacidad` | Política de privacidad |
 
 ---
 
-## 🧩 Secciones del Homepage
+## 🏠 Estructura del Home
 
-El homepage está compuesto por las siguientes secciones (en orden):
+El home muestra en orden:
 
-1. **BannerCarousel** - Banners dinámicos desde Sanity (si hay)
-2. **Hero** - Imagen principal con CTA a WhatsApp
-3. **HowItWorks** - Cómo funciona el proceso
-4. **Rules** - Reglas del negocio
-5. **Categories** - Categorías de productos (6 categorías)
-6. **PublicacionesPreview** - Preview del catálogo con enlace a `/publicaciones`
-7. **ProcesoCompra** - 5 pasos del proceso de compra
-8. **Testimonials** - Testimonios de clientes
-9. **LatestNews** - Últimas noticias desde Sanity (si hay)
-10. **FinalCTA** - CTA final para unirse al grupo de WhatsApp
+1. **GeneroNav** — barra sticky con géneros dinámicos desde `/v2/generos`. Solo muestra géneros con productos publicados.
+2. **HeroCarousel** — carousel estático con 3 imágenes locales (`Hero_1.png`, `Hero_2.png`, `Hero_3.png`). Botones: "Ofertas Especiales" (principal) y "Productos Destacados" (secundario). Solo visible sin filtros activos.
+3. **CategoryGrid** — grid dinámico de categorías con imagen hero desde `/v2/hero-categorias`. Siempre visible. Se adapta al número de categorías disponibles.
+4. **CatalogClient** — catálogo filtrable con sidebar (marcas, orden), búsqueda y grid de productos.
 
 ---
 
-## 📦 Categorías de Productos
+## 🧩 Componentes Clave
 
-1. Tenis deportivos
-2. Tenis casuales
-3. Ediciones especiales
-4. Ropa deportiva
-5. Ropa casual
-6. Accesorios
+### GeneroNav
+- Barra sticky en `top-[57px]`, fondo `#111`
+- Géneros dinámicos desde la API — si no hay productos de un género, no aparece
+- Al hacer clic en "Todo" limpia todos los filtros
+- Al cambiar género preserva la categoría activa
+
+### CategoryGrid
+- Grid responsivo que se adapta al número de categorías (2-9+)
+- Altura fija de 120px, imágenes con overlay y nombre
+- Al hacer clic en una categoría preserva el género activo
+- Imágenes servidas desde Supabase Storage CDN
+
+### ProductCard
+- Soporta `Producto` (v1) y `ProductoV2` — detecta automáticamente el tipo
+- Badge morado "Oferta" para `oferta_exclusiva = true`
+- Badge rojo "Destacado" para `destacado = true`
+- Precio con fondo amber cuando `tiene_descuento = true`
+- WhatsApp overlay en hover (fuera del Link para evitar `<a>` anidado)
+
+### HeroCarousel
+- 3 imágenes estáticas en `/public/img/`
+- Auto-avance 5s, flechas, dots, swipe mobile
+- Altura 50vh (min 260px, max 480px)
+- Botón principal: Ofertas Especiales → `/?oferta_exclusiva=true`
+- Botón secundario: Productos Destacados → `/?destacados=true`
 
 ---
 
 ## 🔗 Constantes Globales
 
-Ubicación: `src/types/index.ts`
+Ubicación: `src/lib/constants.ts`
+
+Todas las URLs sensibles leen desde variables de entorno con fallback hardcodeado:
 
 ```typescript
-// Enlace centralizado de WhatsApp (grupo de publicaciones)
-export const WHATSAPP_LINK = 'https://chat.whatsapp.com/KXwhlBpFKeh8521CBRvJp6'
-export const WHATSAPP_CTA_TEXT = 'Unirme al WhatsApp'
+export const WHATSAPP_URL    = process.env.NEXT_PUBLIC_WHATSAPP_URL    || '...'
+export const WHATSAPP_PHONE  = process.env.NEXT_PUBLIC_WHATSAPP_PHONE  || '573150619888'
+export const CATALOG_API_URL = process.env.NEXT_PUBLIC_CATALOG_API_URL || '...'
+export const CATALOG_API_URL_V2 = process.env.NEXT_PUBLIC_CATALOG_API_URL_V2 || '...'
+export const SOCIAL_LINKS = {
+  instagram: process.env.NEXT_PUBLIC_INSTAGRAM_URL || 'https://www.instagram.com/chic_importusa/',
+  tiktok:    process.env.NEXT_PUBLIC_TIKTOK_URL    || 'https://www.tiktok.com/@chic_importusa',
+}
 ```
-
-> **Importante:** Todos los componentes usan `WHATSAPP_LINK` para mantener consistencia. Si cambia el grupo, solo se actualiza este archivo.
 
 ---
 
-## 🗄 Sanity CMS
+## 🌐 Variables de Entorno
 
-### Contenido Dinámico
-
-| Schema | Descripción |
-|--------|-------------|
-| `banner` | Banners promocionales del carrusel |
-| `testimonial` | Testimonios de clientes |
-| `post` | Noticias y actualizaciones |
-
-### Configuración
+### Requeridas en Vercel (Production)
 
 ```env
-NEXT_PUBLIC_SANITY_PROJECT_ID=xxxxx
-NEXT_PUBLIC_SANITY_DATASET=production
-SANITY_API_TOKEN=xxxxx
-SANITY_REVALIDATE_SECRET=xxxxx
+# Redes sociales y contacto
+NEXT_PUBLIC_WHATSAPP_URL=https://chat.whatsapp.com/KXwhlBpFKeh8521CBRvJp6
+NEXT_PUBLIC_WHATSAPP_PHONE=573150619888
+NEXT_PUBLIC_INSTAGRAM_URL=https://www.instagram.com/chic_importusa/
+NEXT_PUBLIC_TIKTOK_URL=https://www.tiktok.com/@chic_importusa
+
+# API del catálogo
+NEXT_PUBLIC_CATALOG_API_URL=https://admin.chicimportusa.com/api/catalogo
+NEXT_PUBLIC_CATALOG_API_URL_V2=https://admin.chicimportusa.com/api/catalogo/v2
+
+# Analytics
+NEXT_PUBLIC_GA_MEASUREMENT_ID=G-9QYJT0QJ5C
+NEXT_PUBLIC_CLARITY_ID=vstgzyomj1
+
+# Revalidación ISR
+REVALIDATE_SECRET=...
 ```
 
-### Revalidación
+### Para desarrollo local (.env.local)
 
-- ISR con `revalidate = 900` (15 minutos)
-- Webhook para actualizaciones instantáneas desde Sanity
+Copiar las mismas variables. El fallback hardcodeado en `constants.ts` cubre el caso de que no exista el archivo.
 
 ---
 
 ## 🚀 Desarrollo Local
-
-### Prerrequisitos
-
-- Node.js 18+
-- npm
-
-### Instalación
 
 ```bash
 # Clonar repositorio
 git clone https://github.com/HJCUERVOCHIC/chicimportusa.git
 cd chicimportusa
 
-# Instalar dependencias (importante: usar --legacy-peer-deps)
+# Instalar dependencias
 npm install --legacy-peer-deps
 
 # Configurar variables de entorno
 cp .env.example .env.local
-# Editar .env.local con credenciales
+# Editar .env.local con los valores reales
 
 # Servidor de desarrollo
 npm run dev
@@ -204,328 +275,96 @@ npm run lint     # Linting
 
 ## 🌐 Deploy
 
-El proyecto está desplegado en **Vercel** con:
-
-- Deploy automático desde rama `main`
-- Dominio personalizado: `chicimportusa.com`
-- Variables de entorno configuradas en Vercel Dashboard
-
-### Proceso de Deploy
+Deploy automático desde rama `main` via Vercel.
 
 ```bash
 git add .
 git commit -m "descripción del cambio"
-git push origin main
+git push
 # Vercel despliega automáticamente
 ```
 
----
-
-## 📱 Integración WhatsApp
-
-### Grupo de Publicaciones
-
-Todos los CTAs de WhatsApp dirigen al grupo de publicaciones:
+### Revalidar caché manualmente
 
 ```
-https://chat.whatsapp.com/KXwhlBpFKeh8521CBRvJp6
+GET https://www.chicimportusa.com/api/revalidate?secret=SECRET&path=/
 ```
-
-### Componentes que usan WhatsApp
-
-- `Button` (con prop `isWhatsApp`)
-- `Hero`
-- `FinalCTA`
-- `Footer`
-- `PublicacionesPreview`
-- `PublicacionesEmbed`
-- `ProcesoCompra`
 
 ---
 
-## 📑 Páginas Legales
+## 📊 Analytics
 
-### Términos y Condiciones (`/terminos-y-condiciones`)
+| Herramienta | ID |
+|-------------|-----|
+| Google Analytics 4 | `G-9QYJT0QJ5C` |
+| Microsoft Clarity | `vstgzyomj1` |
 
-Incluye:
-- Identidad del comercio
-- Alcance del sitio web
-- Disponibilidad de productos
-- Proceso de compra
-- Pagos
-- Tiempos de entrega
-- Cambios, devoluciones y cancelaciones
-- Responsabilidad
-- Propiedad intelectual
-- Protección de datos
+### Eventos principales
 
-### Política de Privacidad (`/politica-de-privacidad`)
-
-Incluye:
-- Información recopilada
-- Uso de la información
-- Protección de la información
-- Compartición de datos
-- Derechos del usuario
-- Uso de cookies
+| Evento | Descripción |
+|--------|-------------|
+| `whatsapp_click` | Clic en cualquier botón WhatsApp — conversión principal |
+| `catalogo_filtro` | Uso de filtros (género, categoría, marca, orden) |
+| `social_click` | Clic en Instagram o TikTok |
 
 ---
 
-## 🔄 Catálogo de Publicaciones
+## 🛡 SEO
 
-El catálogo se embebe desde una aplicación separada:
-
-```
-https://chicimportusa.vercel.app/catalogo?embed=1
-```
-
-### Componentes
-
-- **PublicacionesPreview:** Preview en homepage (iframe no interactivo)
-- **PublicacionesEmbed:** Vista completa en `/publicaciones` (iframe interactivo)
+- **Sitemap dinámico** en `app/sitemap.ts` — consume API directamente (no el proxy)
+- **robots.txt** — permite todo excepto `/api/`
+- **JSON-LD** tipo `OnlineStore` en `<head>` del layout
+- **Open Graph** dinámico por producto en `/producto/[id]`
+- **Google Search Console** verificada
 
 ---
 
-## 📝 Notas Importantes
+## 🔄 Revalidación ISR
 
-1. **Imágenes:** Ubicadas en `/public/img/` (no `/public/images/`)
-2. **Dependencias:** Usar `npm install --legacy-peer-deps`
-3. **Caché:** Limpiar caché del navegador después de deploys para ver cambios
-4. **Mobile-first:** Todos los componentes están optimizados para móvil primero
+El endpoint `GET /api/revalidate` acepta:
+- `?secret=SECRET` — requerido
+- `?path=/` — revalida una ruta específica
+- `?tag=nombre` — revalida un tag específico
+
+Para revalidar todo el catálogo después de actualizar productos o imágenes en el admin:
+
+```
+https://www.chicimportusa.com/api/revalidate?secret=SECRET&path=/
+```
 
 ---
 
-## 🛡 Variables de Entorno
+## 📝 Lecciones Aprendidas
 
-```env
-# Sanity CMS
-NEXT_PUBLIC_SANITY_PROJECT_ID=
-NEXT_PUBLIC_SANITY_DATASET=production
-SANITY_API_TOKEN=
-SANITY_REVALIDATE_SECRET=
+| Problema | Solución |
+|----------|----------|
+| `<a>` anidado en ProductCard | WhatsApp overlay fuera del `<Link>` de imagen |
+| Géneros hardcodeados | Endpoint `/v2/generos` dinámico desde la API |
+| Filtros género + categoría separados | `GeneroNav` y `CategoryGrid` preservan params mutuamente |
+| `searchParams` no reactivo en client | `useEffect` sincroniza estado con cambios de URL |
+| API v2 usa `destacados` (con s) | Parámetro correcto verificado directamente en el endpoint |
+| Imágenes hero en categorías eran landscape | Grid con altura fija 120px en lugar de aspect ratio |
+| `onError` en Server Component | Agregar `'use client'` al componente con handlers |
+| Variables de entorno vs hardcoded | Usar env vars con fallback en `constants.ts` |
+| Caché ISR no se actualiza | Usar endpoint `/api/revalidate` o esperar 5 min |
 
-# Site URL
-NEXT_PUBLIC_SITE_URL=https://chicimportusa.com
-```
+---
+
+## 📅 Historial de Versiones
+
+| Versión | Contenido |
+|---------|-----------|
+| **Etapa 1-6** | Setup inicial, catálogo v1, diseño, analytics, SEO |
+| **Fase 0 — API v2** | Proxy v2, helpers tipados, `CATALOG_API_URL_V2` en constants |
+| **Fase 1 — Features v2** | HeroCarousel estático, GeneroNav dinámico, CategoryGrid, badges oferta/destacado, precio tachado amber, ProductDetail v2, filtros combinables género+categoría, botones hero funcionales |
 
 ---
 
 ## 👥 Contacto
 
+- **Héctor:** hjcuervo@chicimportusa.com
+- **Social Media:** tatianag@chicimportusa.com
+- **Instagram:** [@chic_importusa](https://www.instagram.com/chic_importusa/)
+- **TikTok:** [@chic_importusa](https://www.tiktok.com/@chic_importusa)
 - **WhatsApp:** [Grupo de publicaciones](https://chat.whatsapp.com/KXwhlBpFKeh8521CBRvJp6)
 - **Sitio web:** [chicimportusa.com](https://chicimportusa.com)
-
----
-
-## 📅 Última Actualización
-
-**Enero 2026**
-
-- ✅ Sección "Proceso de compra" implementada
-- ✅ Páginas legales (Términos y Política de Privacidad)
-- ✅ Centralización de enlace WhatsApp al grupo de publicaciones
-- ✅ Footer actualizado con enlaces legales
-
-
-
-## API del Catálogo
-
-La API vive en `admin.chicimportusa.com`. Se consume desde el servidor mediante un **proxy CORS** en `src/app/api/catalogo/[...path]/route.ts` para evitar exposición del origen.
-
-### Endpoints utilizados
-
-| Endpoint | Función |
-|----------|---------|
-| `GET /api/catalogo/productos` | Lista de productos con filtros opcionales |
-| `GET /api/catalogo/productos/:id` | Producto individual |
-| `GET /api/catalogo/categorias` | Listado de categorías |
-| `GET /api/catalogo/marcas` | Listado de marcas |
-
-### Respuesta de productos
-
-```ts
-// ProductosResponse
-{
-  total: number
-  publicacion_activa: boolean
-  actualizado_en: string
-  categorias: string[]
-  productos: Producto[]
-}
-```
-
-### ISR — Revalidación
-
-- Catálogo y producto: `revalidate: 300` (5 minutos)
-- Sitemap: `revalidate: 3600` (1 hora)
-
----
-
-## Analytics (Etapa 5)
-
-### Variables de entorno (Vercel — solo Production)
-
-```
-NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
-NEXT_PUBLIC_CLARITY_PROJECT_ID=XXXXXXXXXX
-```
-
-### Eventos implementados
-
-| Evento | Descripción | KPI |
-|--------|-------------|-----|
-| `whatsapp_click` | Clic en cualquier botón de WhatsApp | ⭐ Conversión principal |
-| `page_view` | Vista de página (NavigationTracker) | |
-| `view_item` | Vista de detalle de producto | |
-| `filter_applied` | Uso de filtros en catálogo | |
-| `hero_cta_click` | Clic en CTA del hero | |
-
-### Implementación
-
-`Analytics.tsx` es un Client Component con `NavigationTracker` que usa `usePathname` + `useSearchParams`. Requiere `<Suspense>` en `layout.tsx` para que el build de Vercel no falle.
-
-```tsx
-// layout.tsx
-<Suspense fallback={null}>
-  <AnalyticsScripts />
-</Suspense>
-```
-
----
-
-## SEO (Etapa 6)
-
-### sitemap.xml dinámico
-
-Generado en `app/sitemap.ts`. Consume la API directamente para incluir todos los productos.
-
-| Página | Prioridad | Frecuencia |
-|--------|-----------|------------|
-| `/` | 1.0 | weekly |
-| `/catalogo` | 0.9 | daily |
-| `/como-funciona` | 0.5 | monthly |
-| `/terminos-y-condiciones` | 0.3 | yearly |
-| `/politica-de-privacidad` | 0.3 | yearly |
-| `/producto/[id]` (×N) | 0.8 | weekly |
-
-### robots.txt
-
-```
-User-agent: *
-Allow: /
-Disallow: /api/
-
-Sitemap: https://www.chicimportusa.com/sitemap.xml
-```
-
-### JSON-LD — Datos estructurados
-
-Tipo `OnlineStore` en `<head>` del `layout.tsx`. Incluye nombre, URL, descripción, área de servicio (Colombia), contacto WhatsApp, y redes sociales (`sameAs`).
-
-### Open Graph dinámico por producto
-
-Cada `/producto/[id]` genera su propio `generateMetadata()` con imagen real del producto desde Supabase, nombre y precio. Permite previews correctos al compartir por WhatsApp.
-
-### Google Search Console
-
-- Propiedad verificada con etiqueta HTML via `metadata.verification.google`
-- Sitemap enviado y en estado **Correcto**
-
----
-
-## Patrones y decisiones técnicas
-
-### Marquee carousel (FeaturedProducts)
-
-```ts
-// Ancho explícito para evitar resets de animación
-const totalW = productos.length * cardW
-// @keyframes definido en globals.css (no inline) para estabilidad en mobile
-// Sin maskImage — deshabilita GPU acceleration en mobile
-// Sin <a> dentro de <Link> — causa hydration failure en React
-```
-
-### CategoryNav sticky
-
-Dos filas: géneros en la primera, categorías en la segunda. Scroll horizontal con `overflow-x: auto` y `scrollbar-hidden`. En mobile se colapsa en un bottom sheet (`FilterDrawer`).
-
-### Proxy de API
-
-```ts
-// src/app/api/catalogo/[...path]/route.ts
-// Reescribe todas las peticiones a admin.chicimportusa.com
-// Soluciona CORS en componentes cliente y durante SSR
-```
-
-### WhatsApp URLs
-
-Centralizadas en `src/lib/constants.ts` — nunca hardcodeadas en componentes.
-
----
-
-## Variables de entorno
-
-```env
-# API del catálogo
-CATALOG_API_URL=https://admin.chicimportusa.com/api/catalogo
-
-# Analytics (solo en Production en Vercel)
-NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
-NEXT_PUBLIC_CLARITY_PROJECT_ID=XXXXXXXXXX
-```
-
----
-
-## Lecciones aprendidas
-
-| Problema | Solución |
-|----------|----------|
-| Bebas Neue sin lowercase | Siempre agregar clase `uppercase` |
-| `useSearchParams` rompe build | Envolver `NavigationTracker` en `<Suspense>` |
-| Sitemap sin productos (fetch circular) | Llamar directamente a la API externa, no al proxy interno |
-| `revalidateTag` en Next.js 16 | Requiere segundo argumento `'max'` |
-| Propiedades duplicadas en arrays TS | Causan fallas silenciosas en build de Vercel |
-| `lucide-react` no disponible | Reemplazar con SVGs inline |
-| Cache del browser enmascara deploys | Siempre probar en incógnito |
-| `verification.google` en metadata | Solo el código, no el `<meta>` completo |
-
----
-
-## Historial de etapas
-
-| Etapa | Contenido |
-|-------|-----------|
-| **1** | Baseline — setup inicial del proyecto |
-| **2** | Catálogo con API nativa + proxy CORS + página `/producto/[id]` + Open Graph para WhatsApp |
-| **3** | Homepage Dark Streetwear/Urban (Hero, FeaturedProducts, Categories, HowItWorks, Testimonials, FinalCTA) |
-| **4** | Páginas de soporte + CategoryNav sticky con pills + FilterDrawer mobile (bottom sheet) + fixes del carousel |
-| **5** | GA4 + Microsoft Clarity — `whatsapp_click` como KPI principal de conversión |
-| **6** | `sitemap.xml` dinámico + `robots.txt` + JSON-LD `OnlineStore` + Google Search Console verificada |
-
-
-# ChicImportUSA — Fixes de Conversión
-> Todos los archivos son reemplazos completos. Copiar sobre los originales.
-
-## Archivos incluidos
-
-| Archivo destino | Cambio |
-|---|---|
-| `src/components/WhatsAppFAB.tsx` | ✅ NUEVO — FAB flotante verde, se oculta en /producto/* |
-| `src/components/HeroSection.tsx` | ✅ NUEVO — Sección bienvenida para visitantes nuevos |
-| `src/components/ProductCard.tsx` | Fix 1 — Nombre del producto en mensaje WhatsApp de tarjetas |
-| `src/app/page.tsx` | Fix 3 — HeroSection antes del catálogo |
-| `src/app/layout.tsx` | Fix 4 — WhatsAppFAB en todas las páginas |
-| `public/img/herotenis.jpg` | Imagen de fondo del Hero |
-
-## Comandos Git
-
-```bash
-# Copia los archivos sobre tu proyecto, luego:
-git add .
-git commit -m "fix: conversión — nombre en WA (Fix1), Hero homepage (Fix3), FAB WhatsApp (Fix4)"
-git push origin main
-```
-
-## Fix 2 (ya resuelto)
-ProductDetail.tsx ya tenía el nombre correcto desde el objeto del producto.
-No requiere cambios.

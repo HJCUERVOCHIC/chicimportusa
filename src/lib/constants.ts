@@ -91,7 +91,7 @@ export const BRAND = {
 export const IMAGE_CDN_HOST = 'kwprtjcfoawvpjvtefwx.supabase.co';
 
 /** Número de WhatsApp para mensajes directos (sin +) */
-export const WHATSAPP_PHONE = '573150619888'; // ← Actualizar con el número real
+export const WHATSAPP_PHONE = process.env.NEXT_PUBLIC_WHATSAPP_PHONE || '573150619888';
 
 // -----------------------------------------------------------
 // Analytics (Etapa 5 — skeleton por ahora)

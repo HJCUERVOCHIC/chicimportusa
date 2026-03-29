@@ -2,6 +2,7 @@
 
 // ============================================================
 // ChicImportUSA — ProductCard · Nieve Activa
+// Soporta Producto (v1) y ProductoV2 con badges y precio tachado.
 // ============================================================
 
 import { useState } from 'react';
@@ -11,18 +12,33 @@ import { WHATSAPP_PHONE, SITE_CONFIG } from '@/lib/constants';
 import { EVENTS } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 import { IconWhatsApp } from '@/components/ui/Icons';
-import type { Producto } from '@/types/catalogo';
+import type { Producto, ProductoV2 } from '@/types/catalogo';
+
+function isProductoV2(p: Producto | ProductoV2): p is ProductoV2 {
+  return 'oferta_exclusiva' in p;
+}
 
 interface ProductCardProps {
-  producto: Producto;
+  producto: Producto | ProductoV2;
 }
 
 export default function ProductCard({ producto }: ProductCardProps) {
   const [hovered, setHovered] = useState(false);
 
-  const productoUrl      = `/producto/${producto.id}`;
-  const whatsappMessage  = `Hola! Me interesa este producto:\n${producto.nombre}\n${SITE_CONFIG.url}/producto/${producto.id}`;
-  const whatsappHref     = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(whatsappMessage)}`;
+  const productoUrl     = `/producto/${producto.id}`;
+  const whatsappMessage = `Hola! Me interesa este producto:\n${SITE_CONFIG.url}/producto/${producto.id}`;
+  const whatsappHref    = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(whatsappMessage)}`;
+
+  const esV2           = isProductoV2(producto);
+  const ofertaExclusiva = esV2 && producto.oferta_exclusiva;
+  const tieneDescuento  = esV2 && producto.tiene_descuento && producto.precio_sin_descuento !== null;
+
+  // oferta_exclusiva y destacado son mutuamente excluyentes — oferta tiene prioridad visual
+  const badgeDerecha = ofertaExclusiva
+    ? { label: 'Oferta', className: 'bg-purple-600' }
+    : producto.destacado
+    ? { label: 'Destacado', className: 'bg-[#D90429]' }
+    : null;
 
   return (
     <article
@@ -62,15 +78,18 @@ export default function ProductCard({ producto }: ProductCardProps) {
           </div>
         )}
 
-        {/* Badge categoría */}
+        {/* Badge categoría — esquina izquierda */}
         <span className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-sm rounded px-2.5 py-1 text-[10px] font-bold text-white tracking-[0.08em] font-body">
           {producto.categoria.emoji} {producto.categoria.nombre}
         </span>
 
-        {/* Badge destacado */}
-        {producto.destacado && (
-          <span className="absolute top-2.5 right-2.5 bg-[#D90429] rounded px-2.5 py-1 text-[9px] font-bold text-white tracking-[0.1em] uppercase font-body">
-            Destacado
+        {/* Badge destacado / oferta exclusiva — esquina derecha */}
+        {badgeDerecha && (
+          <span className={cn(
+            'absolute top-2.5 right-2.5 rounded px-2.5 py-1 text-[9px] font-bold text-white tracking-[0.1em] uppercase font-body',
+            badgeDerecha.className
+          )}>
+            {badgeDerecha.label}
           </span>
         )}
 
@@ -108,9 +127,26 @@ export default function ProductCard({ producto }: ProductCardProps) {
         <h3 className="text-sm font-semibold text-gray-900 mt-1 font-body line-clamp-2 hover:text-[#D90429] transition-colors">
           {producto.nombre}
         </h3>
-        <p className="text-lg font-bold text-gray-900 mt-2.5 font-body" style={{ fontVariantNumeric: 'tabular-nums' }}>
-          {producto.precio_formateado}
-        </p>
+
+        {/* Precio con o sin descuento */}
+        {tieneDescuento && esV2 ? (
+          <div className="flex items-baseline gap-2 mt-2.5">
+            <p className="text-lg font-bold text-gray-900 font-body" style={{ fontVariantNumeric: 'tabular-nums' }}>
+              {producto.precio_formateado}
+            </p>
+            <p className="text-sm text-gray-400 font-body line-through" style={{ fontVariantNumeric: 'tabular-nums' }}>
+              {new Intl.NumberFormat('es-CO', {
+                style: 'currency',
+                currency: 'COP',
+                minimumFractionDigits: 0,
+              }).format(producto.precio_sin_descuento!)}
+            </p>
+          </div>
+        ) : (
+          <p className="text-lg font-bold text-gray-900 mt-2.5 font-body" style={{ fontVariantNumeric: 'tabular-nums' }}>
+            {producto.precio_formateado}
+          </p>
+        )}
       </Link>
     </article>
   );

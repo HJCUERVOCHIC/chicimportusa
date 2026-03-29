@@ -1,7 +1,7 @@
 'use client';
 
 // ============================================================
-// ChicImportUSA — ProductDetail · Nieve Activa
+// ChicImportUSA — ProductDetail · Nieve Activa · v2
 // ============================================================
 
 import Image from 'next/image';
@@ -9,28 +9,27 @@ import Link from 'next/link';
 import { WHATSAPP_PHONE, SITE_CONFIG } from '@/lib/constants';
 import { EVENTS } from '@/lib/analytics';
 import { IconWhatsApp } from '@/components/ui/Icons';
-import type { Producto } from '@/types/catalogo';
+import type { ProductoV2 } from '@/types/catalogo';
 
 interface ProductDetailProps {
-  producto: Producto;
+  producto: ProductoV2;
 }
 
 export default function ProductDetail({ producto }: ProductDetailProps) {
   const whatsappMessage = `Hola! Me interesa este producto:\n${producto.nombre}\n${SITE_CONFIG.url}/producto/${producto.id}`;
   const whatsappHref    = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(whatsappMessage)}`;
-
-  const shareUrl = `${SITE_CONFIG.url}/producto/${producto.id}`;
+  const shareUrl        = `${SITE_CONFIG.url}/producto/${producto.id}`;
 
   const handleShare = async () => {
     if (navigator.share) {
-      try {
-        await navigator.share({ title: producto.nombre, url: shareUrl });
-      } catch {/* cancelled */}
+      try { await navigator.share({ title: producto.nombre, url: shareUrl }); } catch {/* cancelled */}
     } else {
       await navigator.clipboard.writeText(shareUrl);
     }
     EVENTS.whatsappClick('producto_share', producto.nombre);
   };
+
+  const tieneDescuento = producto.tiene_descuento && producto.precio_sin_descuento !== null;
 
   return (
     <div className="min-h-screen bg-white">
@@ -73,11 +72,16 @@ export default function ProductDetail({ producto }: ProductDetailProps) {
               </div>
             )}
 
-            {producto.destacado && (
+            {/* Badge imagen — oferta_exclusiva tiene prioridad sobre destacado */}
+            {producto.oferta_exclusiva ? (
+              <span className="absolute top-4 left-4 bg-purple-600 text-white text-xs font-bold font-body px-3 py-1.5 rounded-full">
+                Oferta exclusiva
+              </span>
+            ) : producto.destacado ? (
               <span className="absolute top-4 left-4 bg-[#D90429] text-white text-xs font-bold font-body px-3 py-1.5 rounded-full">
                 Destacado
               </span>
-            )}
+            ) : null}
           </div>
 
           {/* Info */}
@@ -105,12 +109,24 @@ export default function ProductDetail({ producto }: ProductDetailProps) {
             </h1>
 
             {/* Precio */}
-            <p
-              className="text-4xl font-black text-gray-900 font-body mb-6"
-              style={{ fontVariantNumeric: 'tabular-nums' }}
-            >
-              {producto.precio_formateado}
-            </p>
+            {tieneDescuento ? (
+              <div className="flex items-baseline gap-3 mb-6">
+                <p className="text-4xl font-black text-gray-900 font-body" style={{ fontVariantNumeric: 'tabular-nums' }}>
+                  {producto.precio_formateado}
+                </p>
+                <p className="text-xl text-gray-400 font-body line-through" style={{ fontVariantNumeric: 'tabular-nums' }}>
+                  {new Intl.NumberFormat('es-CO', {
+                    style: 'currency',
+                    currency: 'COP',
+                    minimumFractionDigits: 0,
+                  }).format(producto.precio_sin_descuento!)}
+                </p>
+              </div>
+            ) : (
+              <p className="text-4xl font-black text-gray-900 font-body mb-6" style={{ fontVariantNumeric: 'tabular-nums' }}>
+                {producto.precio_formateado}
+              </p>
+            )}
 
             {/* Descripción */}
             {producto.descripcion && (
@@ -167,7 +183,6 @@ export default function ProductDetail({ producto }: ProductDetailProps) {
               </button>
             </div>
 
-            {/* Nota proceso */}
             <p className="text-xs text-gray-400 mt-5 font-body leading-relaxed">
               Al escribir por WhatsApp confirmaremos disponibilidad, talla y precio final.
               50% de pago para separar el producto.

@@ -1,19 +1,17 @@
 // ============================================================
 // ChicImportUSA — Homepage = Catálogo completo
-// Carga destacados en paralelo, solo cuando no hay filtros.
-// v2: features controlados por feature flags (env vars).
-//
-// FEATURE FLAGS (activar en .env.local para desarrollo):
-//   NEXT_PUBLIC_HERO_CAROUSEL=true
+// v2: HeroCarousel estático + features v2 activos.
 // ============================================================
 
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
-import { getProductos, getCategorias, getMarcas } from '@/lib/api-catalogo';
+import { getProductos, getCategorias, getMarcas, getGeneros } from '@/lib/api-catalogo';
 import { getHeroCategorias } from '@/lib/api';
 import { SITE_CONFIG } from '@/lib/constants';
 import CatalogClient from '@/components/catalogo/CatalogClient';
 import HeroCarousel from '@/components/sections/HeroCarousel';
+import GeneroNav from '@/components/sections/GeneroNav';
+import CategoryGrid from '@/components/sections/CategoryGrid';
 import { FilterBarSkeleton, ProductGridSkeleton } from '@/components/ui/Skeleton';
 
 export const metadata: Metadata = {
@@ -34,9 +32,6 @@ export const metadata: Metadata = {
 
 export const revalidate = 300;
 
-// Feature flags
-const FF_HERO_CAROUSEL = process.env.NEXT_PUBLIC_HERO_CAROUSEL === 'true';
-
 interface HomePageProps {
   searchParams: Promise<{
     categoria?: string;
@@ -44,6 +39,8 @@ interface HomePageProps {
     genero?: string;
     buscar?: string;
     orden?: string;
+    oferta_exclusiva?: string;
+    destacados?: string;
   }>;
 }
 
@@ -54,11 +51,13 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const marcaActiva     = params?.marca     || undefined;
   const generoActivo    = params?.genero    || undefined;
   const busquedaActiva  = params?.buscar    || undefined;
-  const ordenActivo     = (params?.orden as 'reciente' | 'precio_asc' | 'precio_desc') || undefined;
+  const ordenActivo          = (params?.orden as 'reciente' | 'precio_asc' | 'precio_desc') || undefined;
+  const ofertaExclusivaActiva = params?.oferta_exclusiva === 'true';
+  const destacadoActivo       = params?.destacados === 'true';
 
-  const hayFiltros = categoriaActiva || marcaActiva || generoActivo || busquedaActiva;
+  const hayFiltros = categoriaActiva || marcaActiva || generoActivo || busquedaActiva || ofertaExclusivaActiva || destacadoActivo;
 
-  const [dataProductos, dataCategorias, dataMarcas, dataDestacados, heroCategorias] =
+  const [dataProductos, dataCategorias, dataMarcas, dataGeneros, heroCategorias] =
     await Promise.all([
       getProductos({
         categoria: categoriaActiva,
@@ -66,19 +65,28 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         genero:    generoActivo as 'hombre' | 'mujer' | 'unisex' | undefined,
         buscar:    busquedaActiva,
         orden:     ordenActivo,
+        oferta_exclusiva: ofertaExclusivaActiva || undefined,
+        destacados: destacadoActivo || undefined,
       }),
       getCategorias(generoActivo),
       getMarcas(categoriaActiva, generoActivo),
-      hayFiltros ? Promise.resolve(null) : getProductos({ destacados: true, limite: 8 }),
-      // Solo hace el fetch si el flag está activo
-      FF_HERO_CAROUSEL ? getHeroCategorias() : Promise.resolve([]),
+      getGeneros(),
+      getHeroCategorias(),
     ]);
 
   return (
     <main id="contenido-principal">
-      {/* Carousel hero — controlado por NEXT_PUBLIC_HERO_CAROUSEL */}
-      {FF_HERO_CAROUSEL && heroCategorias.length > 0 && !hayFiltros && (
-        <HeroCarousel categorias={heroCategorias} />
+      {/* GeneroNav — siempre visible */}
+      <Suspense fallback={<div className="h-9 bg-[#111]" />}>
+        <GeneroNav generos={dataGeneros.generos ?? []} />
+      </Suspense>
+
+      {/* HeroCarousel — solo sin filtros activos */}
+      {!hayFiltros && <HeroCarousel />}
+
+      {/* CategoryGrid — siempre visible */}
+      {heroCategorias.length > 0 && (
+        <CategoryGrid categorias={heroCategorias} />
       )}
 
       <Suspense
@@ -93,10 +101,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           initialProductos={dataProductos.productos}
           initialTotal={dataProductos.total}
           initialPublicacionActiva={dataProductos.publicacion_activa}
-          initialCategorias={dataCategorias.categorias}
           initialMarcas={dataMarcas.marcas}
           totalProductos={dataCategorias.total_productos}
-          destacados={dataDestacados?.productos ?? []}
+          initialGeneros={dataGeneros.generos ?? []}
         />
       </Suspense>
     </main>

@@ -1,12 +1,6 @@
 // ============================================================
-// ChicImportUSA — Tipos del Catálogo
-// Reflejan la estructura REAL de la API en producción:
-// https://admin.chicimportusa.com/api/catalogo/*
+// ChicImportUSA — Tipos del Catálogo v2
 // ============================================================
-
-// -----------------------------------------------------------
-// Respuesta de GET /api/catalogo/productos
-// -----------------------------------------------------------
 
 export interface ProductoCategoria {
   id: string;
@@ -14,6 +8,7 @@ export interface ProductoCategoria {
   emoji: string;
 }
 
+// Tipo base v1 — mantener para compatibilidad
 export interface Producto {
   id: string;
   nombre: string;
@@ -28,6 +23,14 @@ export interface Producto {
   destacado: boolean;
 }
 
+// Tipo v2 — extiende Producto con campos nuevos
+export interface ProductoV2 extends Omit<Producto, 'genero'> {
+  genero: 'hombre' | 'mujer' | 'unisex' | 'ninos' | 'ninas' | null;
+  oferta_exclusiva: boolean;
+  tiene_descuento: boolean;
+  precio_sin_descuento: number | null;
+}
+
 export interface CategoriaResumen {
   id: string;
   nombre: string;
@@ -35,16 +38,17 @@ export interface CategoriaResumen {
   cantidad: number;
 }
 
+// ProductosResponse ahora devuelve ProductoV2
 export interface ProductosResponse {
   total: number;
   publicacion_activa: boolean;
   actualizado_en: string;
   categorias: CategoriaResumen[];
-  productos: Producto[];
+  productos: ProductoV2[];
 }
 
 // -----------------------------------------------------------
-// Respuesta de GET /api/catalogo/categorias
+// Respuesta de GET /api/catalogo/v2/categorias
 // -----------------------------------------------------------
 
 export interface CategoriasResponse {
@@ -53,7 +57,7 @@ export interface CategoriasResponse {
 }
 
 // -----------------------------------------------------------
-// Respuesta de GET /api/catalogo/marcas
+// Respuesta de GET /api/catalogo/v2/marcas
 // -----------------------------------------------------------
 
 export interface MarcaItem {
@@ -78,17 +82,32 @@ export interface ApiError {
 }
 
 // -----------------------------------------------------------
-// Parámetros de filtro
+// Parámetros de filtro — v2 incluye ninos/ninas
 // -----------------------------------------------------------
 
 export interface CatalogoFiltros {
   categoria?: string;
   marca?: string;
-  genero?: 'hombre' | 'mujer' | 'unisex';
+  genero?: 'hombre' | 'mujer' | 'unisex' | 'ninos' | 'ninas';
   buscar?: string;
   destacados?: boolean;
   limite?: number;
   orden?: 'reciente' | 'precio_asc' | 'precio_desc';
   precio_min?: number;
   precio_max?: number;
+  oferta_exclusiva?: boolean;
+}
+
+// -----------------------------------------------------------
+// Respuesta de GET /api/catalogo/v2/generos
+// -----------------------------------------------------------
+
+export interface GeneroItem {
+  value: string;
+  label: string;
+  total_productos: number;
+}
+
+export interface GenerosResponse {
+  generos: GeneroItem[];
 }

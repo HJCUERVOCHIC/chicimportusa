@@ -1,15 +1,16 @@
 // ============================================================
-// ChicImportUSA — Cliente API del Catálogo
+// ChicImportUSA — Cliente API del Catálogo v2
 // Funciones tipadas para consumir la API de admin.chicimportusa.com
 // Diseñado para Server Components con ISR (revalidate: 300)
 // ============================================================
 
-import { CATALOG_API_URL } from './constants';
+import { CATALOG_API_URL_V2 } from './constants';
 import type {
-  Producto,
+  ProductoV2,
   ProductosResponse,
   CategoriasResponse,
   MarcasResponse,
+  GenerosResponse,
   CatalogoFiltros,
 } from '@/types/catalogo';
 
@@ -36,7 +37,7 @@ const EMPTY_MARCAS: MarcasResponse = {
 };
 
 // -----------------------------------------------------------
-// GET /api/catalogo/productos
+// GET /api/catalogo/v2/productos
 // -----------------------------------------------------------
 
 export async function getProductos(
@@ -45,71 +46,69 @@ export async function getProductos(
   try {
     const params = new URLSearchParams();
 
-    if (filtros.categoria) params.set('categoria', filtros.categoria);
-    if (filtros.marca) params.set('marca', filtros.marca);
-    if (filtros.genero) params.set('genero', filtros.genero);
-    if (filtros.buscar) params.set('buscar', filtros.buscar);
-    if (filtros.destacados) params.set('destacados', 'true');
-    if (filtros.limite) params.set('limite', filtros.limite.toString());
-    if (filtros.orden) params.set('orden', filtros.orden);
+    if (filtros.categoria)  params.set('categoria',  filtros.categoria);
+    if (filtros.marca)      params.set('marca',      filtros.marca);
+    if (filtros.genero)     params.set('genero',     filtros.genero);
+    if (filtros.buscar)     params.set('buscar',     filtros.buscar);
+    if (filtros.destacados)       params.set('destacados',       'true');
+    if (filtros.oferta_exclusiva) params.set('oferta_exclusiva', 'true');
+    if (filtros.limite)           params.set('limite',           filtros.limite.toString());
+    if (filtros.orden)      params.set('orden',      filtros.orden);
     if (filtros.precio_min) params.set('precio_min', filtros.precio_min.toString());
     if (filtros.precio_max) params.set('precio_max', filtros.precio_max.toString());
 
     const queryString = params.toString();
-    const url = `${CATALOG_API_URL}/productos${queryString ? `?${queryString}` : ''}`;
+    const url = `${CATALOG_API_URL_V2}/productos${queryString ? `?${queryString}` : ''}`;
 
     const res = await fetch(url, {
       next: { revalidate: REVALIDATE_SECONDS },
     });
 
     if (!res.ok) {
-      console.error(`[API Catálogo] Error ${res.status}: ${res.statusText}`);
+      console.error(`[API Catálogo v2] Error ${res.status}: ${res.statusText}`);
       return EMPTY_PRODUCTOS;
     }
 
     return await res.json();
   } catch (error) {
-    console.error('[API Catálogo] Error de red al obtener productos:', error);
+    console.error('[API Catálogo v2] Error de red al obtener productos:', error);
     return EMPTY_PRODUCTOS;
   }
 }
 
 // -----------------------------------------------------------
-// GET /api/catalogo/productos/:id
-// Obtiene un producto individual por su ID.
-// Requiere endpoint en admin: GET /api/catalogo/productos/:id
+// GET /api/catalogo/v2/productos/:id
 // -----------------------------------------------------------
 
 export async function getProductoById(
   id: string
-): Promise<Producto | null> {
+): Promise<ProductoV2 | null> {
   try {
-    const url = `${CATALOG_API_URL}/productos/${id}`;
+    const url = `${CATALOG_API_URL_V2}/productos/${id}`;
 
     const res = await fetch(url, {
       next: { revalidate: REVALIDATE_SECONDS },
     });
 
     if (!res.ok) {
-      console.error(`[API Catálogo] Producto ${id}: error ${res.status}`);
+      console.error(`[API Catálogo v2] Producto ${id}: error ${res.status}`);
       return null;
     }
 
     const data = await res.json();
 
-    // La API puede devolver el producto directamente o dentro de { producto: ... }
     if (data.producto) return data.producto;
-    if (data.id) return data;
+    if (data.id)       return data;
 
     return null;
   } catch (error) {
-    console.error(`[API Catálogo] Error de red al obtener producto ${id}:`, error);
+    console.error(`[API Catálogo v2] Error de red al obtener producto ${id}:`, error);
     return null;
   }
 }
 
 // -----------------------------------------------------------
-// GET /api/catalogo/categorias
+// GET /api/catalogo/v2/categorias
 // -----------------------------------------------------------
 
 export async function getCategorias(
@@ -120,26 +119,26 @@ export async function getCategorias(
     if (genero) params.set('genero', genero);
 
     const queryString = params.toString();
-    const url = `${CATALOG_API_URL}/categorias${queryString ? `?${queryString}` : ''}`;
+    const url = `${CATALOG_API_URL_V2}/categorias${queryString ? `?${queryString}` : ''}`;
 
     const res = await fetch(url, {
       next: { revalidate: REVALIDATE_SECONDS },
     });
 
     if (!res.ok) {
-      console.error(`[API Catálogo] Error ${res.status} en categorías`);
+      console.error(`[API Catálogo v2] Error ${res.status} en categorías`);
       return EMPTY_CATEGORIAS;
     }
 
     return await res.json();
   } catch (error) {
-    console.error('[API Catálogo] Error de red al obtener categorías:', error);
+    console.error('[API Catálogo v2] Error de red al obtener categorías:', error);
     return EMPTY_CATEGORIAS;
   }
 }
 
 // -----------------------------------------------------------
-// GET /api/catalogo/marcas
+// GET /api/catalogo/v2/marcas
 // -----------------------------------------------------------
 
 export async function getMarcas(
@@ -149,23 +148,47 @@ export async function getMarcas(
   try {
     const params = new URLSearchParams();
     if (categoria) params.set('categoria', categoria);
-    if (genero) params.set('genero', genero);
+    if (genero)    params.set('genero',    genero);
 
     const queryString = params.toString();
-    const url = `${CATALOG_API_URL}/marcas${queryString ? `?${queryString}` : ''}`;
+    const url = `${CATALOG_API_URL_V2}/marcas${queryString ? `?${queryString}` : ''}`;
 
     const res = await fetch(url, {
       next: { revalidate: REVALIDATE_SECONDS },
     });
 
     if (!res.ok) {
-      console.error(`[API Catálogo] Error ${res.status} en marcas`);
+      console.error(`[API Catálogo v2] Error ${res.status} en marcas`);
       return EMPTY_MARCAS;
     }
 
     return await res.json();
   } catch (error) {
-    console.error('[API Catálogo] Error de red al obtener marcas:', error);
+    console.error('[API Catálogo v2] Error de red al obtener marcas:', error);
     return EMPTY_MARCAS;
+  }
+}
+
+// -----------------------------------------------------------
+// GET /api/catalogo/v2/generos
+// -----------------------------------------------------------
+
+export async function getGeneros(): Promise<GenerosResponse> {
+  try {
+    const url = `${CATALOG_API_URL_V2}/generos`;
+
+    const res = await fetch(url, {
+      next: { revalidate: REVALIDATE_SECONDS },
+    });
+
+    if (!res.ok) {
+      console.error(`[API Catálogo v2] Error ${res.status} en géneros`);
+      return { generos: [] };
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.error('[API Catálogo v2] Error de red al obtener géneros:', error);
+    return { generos: [] };
   }
 }
