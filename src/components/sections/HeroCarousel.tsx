@@ -96,7 +96,7 @@ export default function HeroCarousel() {
           href="/?destacados=true"
           className="inline-flex items-center gap-1.5 bg-white/15 hover:bg-white/25 backdrop-blur-sm text-white border border-white/30 hover:border-white/50 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-lg text-xs sm:text-sm font-bold font-body tracking-[0.04em] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         >
-          Productos Destacados
+          Productos Exclusivos
           <svg aria-hidden="true" width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
             <path d="m9 18 6-6-6-6" />
           </svg>

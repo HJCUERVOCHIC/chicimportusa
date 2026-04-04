@@ -108,7 +108,15 @@
 
 **✅ Validación:** La app aparece en "Mis apps" con un App ID asignado. Anota el App ID — lo necesitarás más adelante.
 
+921051400836493
+
 ---
+
+
+
+----------------------
+Este paso es donde no se como avanzar
+----------------------
 
 ### Paso 4.2 — Agregar el producto Instagram Graph API
 
@@ -166,6 +174,11 @@
 6. Autoriza con tu cuenta de Facebook
 
 **✅ Validación:** Aparece un token largo en el campo "Token de acceso". Cópialo.
+
+token
+
+EAANFsP2RFY0BRBKlhJ27CDdHNTKZAVClsNFyYot9WaZBdlC6pngTeZBS8FeLDPX4SEymzUt9wVTjSm6UM9UWxUXEZAJ5VZAf1ZAcZCVbCz5TX5xMkzwZCbK9hRnOXxYD15YOCWshjHAZAzk8QaoBPm8SpDUT5AktP4PCZAV7wTiMWec2dORxqWgJAHeWiZCA1BG8YZCif5dfbxhTDxlYCsy8CeQ9WTvElUjNH1ZCaBWmWE4I02LhYyn6XVAqiJ7mHwxWsLuDIP3mZAjb0LkPl4VlAjZBugTZAwZDZD
+
 
 ---
 
